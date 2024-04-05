@@ -20,6 +20,8 @@ import { TableComponent } from "./tasks/table/table.component";
 import { KanbanComponent } from "./tasks/kanban/kanban.component";
 import { CalendarComponent } from "./tasks/calendar/calendar.component";
 import { RoadmapComponent } from "./tasks/roadmap/roadmap.component";
+import { LandingPageComponent } from './landing-page/landing-page.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,8 @@ import { RoadmapComponent } from "./tasks/roadmap/roadmap.component";
     KanbanComponent,
     CalendarComponent,
     RoadmapComponent,
+    LandingPageComponent,
+    LoginComponent,
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],
