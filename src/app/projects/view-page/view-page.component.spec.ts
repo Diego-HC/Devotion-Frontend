@@ -1,23 +1,23 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ViewPageComponent } from './view-page.component';
+import { ViewPageComponent } from "./view-page.component";
+import { ProjectCardComponent } from "../project-card/project-card.component";
 
-describe('ViewPageComponent', () => {
+describe("ViewPageComponent", () => {
   let component: ViewPageComponent;
   let fixture: ComponentFixture<ViewPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ViewPageComponent]
-    })
-    .compileComponents();
-    
+      declarations: [ViewPageComponent, ProjectCardComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(ViewPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });
