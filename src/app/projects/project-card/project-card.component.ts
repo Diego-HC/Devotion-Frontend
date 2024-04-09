@@ -10,7 +10,7 @@ import { Component, Input, OnInit } from "@angular/core";
           class="card card-normal rounded-l-none rounded-md bg-slate-300 w-60 flex flex-col justify-between h-40"
         >
           <h2 class="card-title mx-6 my-4">{{ this.shortName }}</h2>
-          <p class="break-words text-xs m-5">
+          <p class="break-words text-xs mx-5 my-3">
             {{ this.shortDescription }}
           </p>
         </div>
