@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { Input } from '@angular/core';
 import { BadgeComponent } from '../../shared/badge/badge.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-table',
   template: `
-    <div class="w-full md:w-3/4 lg:w-3/4 mx-auto">
+    <div class="table-container">
 <!--      <div class="overflow-x-auto border border-gray-100 rounded-lg">-->
         <table class="table-auto">
           <thead class="bg-gray-100 font-medium">
@@ -19,7 +20,9 @@ import { BadgeComponent } from '../../shared/badge/badge.component';
           </thead>
           <tbody>
           <tr class="hover:bg-gray-50 opacity-50" *ngFor="let task of tasks">
-            <td class="task-name">{{ task.name }}</td>
+            <td class="task-name">
+              <a [routerLink]="getTaskLink(task.id)">{{ task.name | slice:0:35 }}</a>
+            </td>
             <!-- Conditional to change badge color -->
             <td class="badges">
               <app-badge *ngIf="task.status === 'En revisión'" [status]="task.status" class="badge-onReview"></app-badge>
@@ -70,6 +73,11 @@ import { BadgeComponent } from '../../shared/badge/badge.component';
       border: none;
     }
 
+    .header-row:hover {
+      background-color: inherit;
+      opacity: 1;
+    }
+
     tr:hover {
       /*@apply bg-gray-100;*/
       @apply bg-gray-50 opacity-50;
@@ -93,11 +101,20 @@ import { BadgeComponent } from '../../shared/badge/badge.component';
    .no-border {
       border: none !important;
    }
+
+    .table-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
   `]
 })
 export class TableComponent {
   tasks = [
     {
+      id: 1,
       name: 'Junta sprint - Grupo Chasis',
       status: 'Completado',
       startDate: '16 de marzo',
@@ -105,6 +122,7 @@ export class TableComponent {
       asigneeId: 'Alfonso Hernandez'
     },
     {
+      id: 2,
       name: 'Revisión de planos',
       status: 'En revisión',
       startDate: '12 de marzo',
@@ -112,6 +130,7 @@ export class TableComponent {
       asigneeId: 'Mario Bros'
     },
     {
+      id: 3,
       name: 'Junta sprint - Grupo Suspensión',
       status: 'No iniciado',
       startDate: '19 de marzo',
@@ -119,6 +138,7 @@ export class TableComponent {
       asigneeId: 'Max Verstappen'
     },
     {
+      id: 4,
       name: 'Junta sprint - Grupo Motor',
       status: 'En proceso',
       startDate: '22 de marzo',
@@ -141,5 +161,10 @@ export class TableComponent {
       default:
         return '';
     }
+  }
+
+  constructor(private router: Router) {}
+  getTaskLink(taskId: number): string[] {
+    return ['/task', taskId.toString()];
   }
 }
