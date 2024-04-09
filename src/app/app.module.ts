@@ -22,6 +22,7 @@ import { CalendarComponent } from "./tasks/calendar/calendar.component";
 import { RoadmapComponent } from "./tasks/roadmap/roadmap.component";
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginComponent } from './login/login.component';
+import { BadgeComponent } from './shared/badge/badge.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { LoginComponent } from './login/login.component';
     RoadmapComponent,
     LandingPageComponent,
     LoginComponent,
+    BadgeComponent,
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],
