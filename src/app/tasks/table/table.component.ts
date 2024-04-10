@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
   selector: 'app-table',
   template: `
     <div class="table-container">
-<!--      <div class="overflow-x-auto border border-gray-100 rounded-lg">-->
         <table class="table-auto">
           <thead class="bg-gray-100 font-medium">
           <tr class="header-row">
@@ -36,7 +35,6 @@ import { Router } from '@angular/router';
           </tr>
           </tbody>
         </table>
-<!--      </div>-->
     </div>
   `,
   styles: [`
@@ -51,9 +49,10 @@ import { Router } from '@angular/router';
 
     th,
     td {
-      @apply px-6 py-3;
+      @apply font-robotoText px-6 py-3;
       white-space: nowrap;
       overflow: auto;
+      /*box-shadow: 0px 0px 8px rgba(0,0,0.08);*/
       /*border: 1px solid gray;*/
     }
 
@@ -66,11 +65,13 @@ import { Router } from '@angular/router';
     }
 
     tr {
-      border: 1px solid gray;
+      border: 1px solid rgba(128, 128, 128, 0.5);
+      box-shadow: 0px 0px 2px rgba(0,0,0.02);
     }
 
     .header-row {
       border: none;
+      box-shadow: none;
     }
 
     .header-row:hover {
@@ -106,7 +107,7 @@ import { Router } from '@angular/router';
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      height: 80vh;
     }
 
   `]
