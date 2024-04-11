@@ -38,77 +38,80 @@ import { Router } from '@angular/router';
     </div>
   `,
   styles: [`
-   .table-test {
-      @apply w-full ml-20 mr-60;
-     overflow: auto;
-    }
 
-   .thead {
-      @apply text-left;
-    }
+    @media screen and (min-width: 1440px) and (max-width: 3072px) {
+      .table-test {
+        @apply w-full ml-20 mr-60;
+        overflow: auto;
+      }
 
-    th,
-    td {
-      @apply font-robotoText px-6 py-3;
-      white-space: nowrap;
-      overflow: auto;
-      /*box-shadow: 0px 0px 8px rgba(0,0,0.08);*/
-      /*border: 1px solid gray;*/
-    }
+      .thead {
+        @apply text-left;
+      }
 
-    th {
-      @apply text-left italic;
-    }
+      th,
+      td {
+        @apply font-robotoText px-6 py-3;
+        white-space: nowrap;
+        overflow: auto;
+        /*box-shadow: 0px 0px 8px rgba(0,0,0.08);*/
+        /*border: 1px solid gray;*/
+      }
 
-    th {
-      @apply text-gray-500;
-    }
+      th {
+        @apply text-left italic;
+      }
 
-    tr {
-      border: 1px solid rgba(128, 128, 128, 0.5);
-      box-shadow: 0px 0px 2px rgba(0,0,0.02);
-    }
+      th {
+        @apply text-gray-500;
+      }
 
-    .header-row {
-      border: none;
-      box-shadow: none;
-    }
+      tr {
+        border: 1px solid rgba(128, 128, 128, 0.5);
+        box-shadow: 0px 0px 2px rgba(0, 0, 0.02);
+      }
 
-    .header-row:hover {
-      background-color: inherit;
-      opacity: 1;
-    }
+      .header-row {
+        border: none;
+        box-shadow: none;
+      }
 
-    tr:hover {
-      /*@apply bg-gray-100;*/
-      @apply bg-gray-50 opacity-50;
-    }
+      .header-row:hover {
+        background-color: inherit;
+        opacity: 1;
+      }
 
-   /* Additional styling for task name */
-   .task-name {
-     @apply text-left px-4 py-2 font-bold;
-     padding-left: 2rem;
-   }
+      tr:hover {
+        /*@apply bg-gray-100;*/
+        @apply bg-gray-50 opacity-50;
+      }
 
-   .badges {
-     @apply px-6 py-3;
-     white-space: nowrap;
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
-     overflow: auto;
-     text-align: center;
-   }
+      /* Additional styling for task name */
+      .task-name {
+        @apply text-left px-4 py-2 font-bold;
+        padding-left: 2rem;
+      }
 
-   .no-border {
-      border: none !important;
-   }
+      .badges {
+        @apply px-6 py-3;
+        white-space: nowrap;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        overflow: auto;
+        text-align: center;
+      }
 
-    .table-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 60vh;
+      .no-border {
+        border: none !important;
+      }
+
+      .table-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 60vh;
+      }
     }
 
   `]
