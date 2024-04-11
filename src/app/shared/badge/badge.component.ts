@@ -10,12 +10,13 @@ import { Input } from '@angular/core';
     </div>
   `,
   styles: [`
-      .badge {
+    .badge {
     @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium leading-4;
-    position: relative;
+    /*position: relative;*/
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
+        /*right: 50px;*/
   }
 
     .badge span {

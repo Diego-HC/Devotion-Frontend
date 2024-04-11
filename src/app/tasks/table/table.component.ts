@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   selector: 'app-table',
   template: `
     <div class="table-container">
-        <table class="table-auto">
+        <table class="table-test">
           <thead class="bg-gray-100 font-medium">
           <tr class="header-row">
             <th class="text-left italic px-4 py-2 no-border">Tarea</th>
@@ -38,8 +38,8 @@ import { Router } from '@angular/router';
     </div>
   `,
   styles: [`
-   .table {
-      @apply w-full;
+   .table-test {
+      @apply w-full ml-20 mr-60;
      overflow: auto;
     }
 
@@ -94,9 +94,10 @@ import { Router } from '@angular/router';
      @apply px-6 py-3;
      white-space: nowrap;
      display: flex;
-     justify-content: center;
+     justify-content: space-between;
      align-items: center;
      overflow: auto;
+     text-align: center;
    }
 
    .no-border {
@@ -107,7 +108,7 @@ import { Router } from '@angular/router';
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 80vh;
+      height: 60vh;
     }
 
   `]

@@ -30,9 +30,11 @@ interface Project {
             <button (click)="onTabClick('table')" class="configBadge">Tabla</button>
             <button (click)="onTabClick('kanban')" class="configBadge">Kanban</button>
           </div>
+        </div>
       </div>
-      </div>
-      <app-table></app-table>
+<!--      <div class="container">-->
+        <app-table></app-table>
+<!--      </div>-->
     </div>
   `,
   styles: [`
@@ -53,7 +55,7 @@ interface Project {
     }
 
     .goToDashboard {
-      @apply font-bold text-blue-500 hover:underline mt-40 ml-20;
+      @apply font-bold text-blue-500 hover:underline mt-40 ml-20 text-base;
       color: #5CCEFF
     }
 
@@ -65,6 +67,14 @@ interface Project {
       @apply text-lg ml-2 cursor-pointer;
       @apply badge badge-outline;
       color: #5CCEFF;
+    }
+
+    .container {
+      @apply w-full;
+      overflow: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
   `]
