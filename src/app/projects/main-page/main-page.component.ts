@@ -38,43 +38,45 @@ interface Project {
     </div>
   `,
   styles: [`
-    .bigTitle {
-      @apply text-4xl font-bold mb-4 mt-20 ml-20;
-      color: black;
-    }
+    @media screen and (min-width: 1440px) and (max-width: 3072px) {
+      .bigTitle {
+        @apply text-4xl font-bold mb-4 mt-20 ml-20;
+        color: black;
+      }
 
-    .subtitle {
-      @apply font-bold mb-4 mt-20 ml-20;
-      color: black;
-    }
+      .subtitle {
+        @apply font-bold mb-4 mt-20 ml-20;
+        color: black;
+      }
 
-    .description {
-      @apply font-robotoText text-lg text-gray-700 mb-4 ml-20;
-      @apply max-w-3xl;
-      color: #5E6377;
-    }
+      .description {
+        @apply font-robotoText text-lg text-gray-700 mb-4 ml-20;
+        @apply max-w-3xl;
+        color: #5E6377;
+      }
 
-    .goToDashboard {
-      @apply font-bold text-blue-500 hover:underline mt-40 ml-20 text-base;
-      color: #5CCEFF
-    }
+      .goToDashboard {
+        @apply font-bold text-blue-500 hover:underline mt-40 ml-20 text-base;
+        color: #5CCEFF
+      }
 
-    .dashboardIcon {
-      @apply h-6 w-auto mr-2 rounded-full ml-20;
-    }
+      .dashboardIcon {
+        @apply h-6 w-auto mr-2 rounded-full ml-20;
+      }
 
-    .configBadge {
-      @apply text-lg ml-2 cursor-pointer;
-      @apply badge badge-outline;
-      color: #5CCEFF;
-    }
+      .configBadge {
+        @apply text-lg ml-2 cursor-pointer;
+        @apply badge badge-outline;
+        color: #5CCEFF;
+      }
 
-    .container {
-      @apply w-full;
-      overflow: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      .container {
+        @apply w-full;
+        overflow: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
     }
 
   `]
