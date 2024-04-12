@@ -10,22 +10,22 @@ interface Project {
   selector: 'app-main-page',
   template: `
     <div class="overflow-x-auto">
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg">
         <div class="flex items-center justify-between">
             <h1 class="text-4xl font-bold sm:mb-4 sm:mt-20 sm:ml-20">{{ project.name}}</h1>
           <div class="flex items-center space-x-2">
             <a href="/dashboard" class="flex flex-row items-center">
-              <img src="../assets/coconut.webp" alt="Coconut" class="dashboardIcon mr-2">
-              <span class="goToDashboard">Ir a dashboard</span>
+              <img src="../assets/coconut.webp" alt="Coconut" class="h-6 w-6 mr-1 rounded-full ml-20 mr-2">
+              <span class="font-bold hover:underline sm:mt-40 sm:ml-20 text-base text-[#5CCEFF]">Ir a dashboard</span>
             </a>
-            <span class="configBadge">•••</span>
+            <span class="text-lg ml-2 cursor-pointer badge badge-outline text-[#5CCEFF]">•••</span>
           </div>
         </div>
-        <p class="description">
+        <p class="font-robotoText text-lg mb-4 sm:ml-20 max-w-3xl text-[#5E6377]">
           {{ project.description }}
         </p>
         <div class="flex items-center justify-between">
-          <h3 class="subtitle">Tareas</h3>
+          <h3 class="font-bold mb-4 sm:mt-20 sm:ml-20">Tareas</h3>
           <div class="flex flex-row flex-wrap items-center space-x-2">
             <a data-view="table" (click)="onTabClick($event)">
               <img src="../assets/coconut.webp" alt="Coconut" class="dashboardIcon mr-2">
@@ -46,53 +46,9 @@ interface Project {
           </div>
         </div>
       </div>
-<!--      <div class="container">-->
         <app-table></app-table>
-<!--      </div>-->
     </div>
   `,
-  styles: [`
-    @screen sm {
-      /*.bigTitle {*/
-      /*  @apply text-4xl font-bold sm:mb-4 sm:mt-20 sm:ml-20;*/
-      /*  color: black;*/
-      /*}*/
-
-      .subtitle {
-        @apply font-bold mb-4 sm:mt-20 sm:ml-20;
-        color: black;
-      }
-
-      .description {
-        @apply font-robotoText text-lg text-gray-700 mb-4 sm:ml-20;
-        @apply max-w-3xl;
-        color: #5E6377;
-      }
-
-      .goToDashboard {
-        @apply font-bold text-blue-500 hover:underline sm:mt-40 sm:ml-20 text-base;
-        color: #5CCEFF
-      }
-
-      .dashboardIcon {
-        @apply h-6 w-6 mr-1 rounded-full ml-20;
-      }
-
-      .configBadge {
-        @apply text-lg ml-2 cursor-pointer;
-        @apply badge badge-outline;
-        color: #5CCEFF;
-      }
-
-      .container {
-        @apply w-full;
-        overflow: auto;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-    }
-  `]
 })
 export class MainPageComponent {
   project: Project = {

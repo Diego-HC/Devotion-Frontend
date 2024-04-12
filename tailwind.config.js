@@ -4,7 +4,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        robotoText: ["Roboto", "sans-serif"],
+        roboto: ["Roboto"],
+        robotoCondensed: ["Roboto Condensed"],
         inter: ["Inter", "sans-serif"],
       }
     },
