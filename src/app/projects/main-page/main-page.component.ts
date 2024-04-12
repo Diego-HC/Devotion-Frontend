@@ -40,28 +40,28 @@ interface Project {
   styles: [`
     @screen lg {
       .bigTitle {
-        @apply text-4xl font-bold md:mb-4 md:mt-20 md:ml-20;
+        @apply text-4xl font-bold sm:mb-4 sm:mt-20 sm:ml-20;
         color: black;
       }
 
       .subtitle {
-        @apply font-bold mb-4 md:mt-20 md:ml-20;
+        @apply font-bold mb-4 sm:mt-20 sm:ml-20;
         color: black;
       }
 
       .description {
-        @apply font-robotoText text-lg text-gray-700 mb-4 md:ml-20;
+        @apply font-robotoText text-lg text-gray-700 mb-4 sm:ml-20;
         @apply max-w-3xl;
         color: #5E6377;
       }
 
       .goToDashboard {
-        @apply font-bold text-blue-500 hover:underline md:mt-40 md:ml-20 text-base;
+        @apply font-bold text-blue-500 hover:underline sm:mt-40 sm:ml-20 text-base;
         color: #5CCEFF
       }
 
       .dashboardIcon {
-        @apply h-6 w-auto mr-2 rounded-full ml-20;
+        @apply h-6 w-6 mr-2 rounded-full ml-20;
       }
 
       .configBadge {
