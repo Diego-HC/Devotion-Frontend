@@ -38,25 +38,25 @@ interface Project {
     </div>
   `,
   styles: [`
-    @media screen and (min-width: 1440px) and (max-width: 3072px) {
+    @screen lg {
       .bigTitle {
-        @apply text-4xl font-bold mb-4 mt-20 ml-20;
+        @apply text-4xl font-bold md:mb-4 md:mt-20 md:ml-20;
         color: black;
       }
 
       .subtitle {
-        @apply font-bold mb-4 mt-20 ml-20;
+        @apply font-bold mb-4 md:mt-20 md:ml-20;
         color: black;
       }
 
       .description {
-        @apply font-robotoText text-lg text-gray-700 mb-4 ml-20;
+        @apply font-robotoText text-lg text-gray-700 mb-4 md:ml-20;
         @apply max-w-3xl;
         color: #5E6377;
       }
 
       .goToDashboard {
-        @apply font-bold text-blue-500 hover:underline mt-40 ml-20 text-base;
+        @apply font-bold text-blue-500 hover:underline md:mt-40 md:ml-20 text-base;
         color: #5CCEFF
       }
 
@@ -78,7 +78,6 @@ interface Project {
         justify-content: space-between;
       }
     }
-
   `]
 })
 export class MainPageComponent {

@@ -39,9 +39,8 @@ import { Router } from '@angular/router';
   `,
   styles: [`
 
-    @media screen and (min-width: 1440px) and (max-width: 3072px) {
       .table-test {
-        @apply w-full ml-20 mr-60;
+        @apply w-full md:ml-20 md:mr-60;
         overflow: auto;
       }
 
@@ -112,8 +111,6 @@ import { Router } from '@angular/router';
         align-items: center;
         height: 60vh;
       }
-    }
-
   `]
 })
 export class TableComponent {

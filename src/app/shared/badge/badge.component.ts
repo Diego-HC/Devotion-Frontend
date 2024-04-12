@@ -10,7 +10,6 @@ import { Input } from '@angular/core';
     </div>
   `,
   styles: [`
-    @media screen and (min-width: 1440px) and (max-width: 3072px) {
       .badge {
         @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium leading-4;
         /*position: relative;*/
@@ -56,7 +55,6 @@ import { Input } from '@angular/core';
         background-color: #363636;
         color: #FFFFFF;
       }
-    }
   `]
 })
 export class BadgeComponent {
