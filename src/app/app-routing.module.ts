@@ -9,6 +9,8 @@ import { CreateEditPageComponent } from "./projects/create-edit-page/create-edit
 import { TaskCreateEditPageComponent } from "./tasks/task-create-edit-page/task-create-edit-page.component";
 
 const routes: Routes = [
+  { path: '', component: LandingPageComponent },
+  { path: 'login', component: LoginComponent },
   {
     path: "login",
     component: LoginComponent,

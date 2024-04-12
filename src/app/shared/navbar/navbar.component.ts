@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-navbar',
   template: `
     <p>
-      navbar works!
+      navbar not work!
     </p>
   `
 })
