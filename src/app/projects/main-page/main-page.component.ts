@@ -12,7 +12,7 @@ interface Project {
     <div class="overflow-x-auto">
       <div class="bg-white p-6 rounded-lg shadow-md">
         <div class="flex items-center justify-between">
-            <h1 class="text-4xl font-bold sm:mb-4 sm:mt-20 sm:ml-20 bg-black">{{ project.name}}</h1>
+            <h1 class="text-4xl font-bold sm:mb-4 sm:mt-20 sm:ml-20">{{ project.name}}</h1>
           <div class="flex items-center space-x-2">
             <a href="/dashboard" class="flex flex-row items-center">
               <img src="../assets/coconut.webp" alt="Coconut" class="dashboardIcon mr-2">
