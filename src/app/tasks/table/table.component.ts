@@ -40,7 +40,7 @@ import { Router } from '@angular/router';
   styles: [`
 
       .table-test {
-        @apply w-full md:ml-20 md:mr-60;
+        @apply w-full sm:ml-20 sm:mr-60;
         overflow: auto;
       }
 
