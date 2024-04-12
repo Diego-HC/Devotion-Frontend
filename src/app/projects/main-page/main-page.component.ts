@@ -12,7 +12,7 @@ interface Project {
     <div class="overflow-x-auto">
       <div class="bg-white p-6 rounded-lg shadow-md">
         <div class="flex items-center justify-between">
-            <h1 class="bigTitle">{{ project.name}}</h1>
+            <h1 class="text-4xl font-bold sm:mb-4 sm:mt-20 sm:ml-20 bg-black">{{ project.name}}</h1>
           <div class="flex items-center space-x-2">
             <a href="/dashboard" class="flex flex-row items-center">
               <img src="../assets/coconut.webp" alt="Coconut" class="dashboardIcon mr-2">
@@ -26,9 +26,23 @@ interface Project {
         </p>
         <div class="flex items-center justify-between">
           <h3 class="subtitle">Tareas</h3>
-          <div class="flex flex-row items-center space-x-2">
-            <button (click)="onTabClick('table')" class="configBadge">Tabla</button>
-            <button (click)="onTabClick('kanban')" class="configBadge">Kanban</button>
+          <div class="flex flex-row flex-wrap items-center space-x-2">
+            <a data-view="table" (click)="onTabClick($event)">
+              <img src="../assets/coconut.webp" alt="Coconut" class="dashboardIcon mr-2">
+              <span>Tabla</span>
+            </a>
+            <a data-view="kanban" (click)="onTabClick($event)">
+              <img src="../assets/coconut.webp" alt="Coconut" class="dashboardIcon mr-2">
+              <span>Kanban</span>
+            </a>
+            <a data-view="calendar" (click)="onTabClick($event)">
+              <img src="../assets/coconut.webp" alt="Coconut" class="dashboardIcon mr-2">
+              <span>Calendario</span>
+            </a>
+            <a data-view="roadmap" (click)="onTabClick($event)">
+              <img src="../assets/coconut.webp" alt="Coconut" class="dashboardIcon mr-2">
+              <span>Roadmap</span>
+            </a>
           </div>
         </div>
       </div>
@@ -38,11 +52,11 @@ interface Project {
     </div>
   `,
   styles: [`
-    @screen lg {
-      .bigTitle {
-        @apply text-4xl font-bold sm:mb-4 sm:mt-20 sm:ml-20;
-        color: black;
-      }
+    @screen sm {
+      /*.bigTitle {*/
+      /*  @apply text-4xl font-bold sm:mb-4 sm:mt-20 sm:ml-20;*/
+      /*  color: black;*/
+      /*}*/
 
       .subtitle {
         @apply font-bold mb-4 sm:mt-20 sm:ml-20;
@@ -61,7 +75,7 @@ interface Project {
       }
 
       .dashboardIcon {
-        @apply h-6 w-6 mr-2 rounded-full ml-20;
+        @apply h-6 w-6 mr-1 rounded-full ml-20;
       }
 
       .configBadge {
@@ -96,7 +110,8 @@ export class MainPageComponent {
 
   currentView: string = 'table'; // Default view
 
-  onTabClick(tab: string) {
-    this.currentView = tab;
+  onTabClick(event: Event) {
+    const target = event.target as HTMLElement;
+    this.currentView = target.getAttribute('data-view') || '';
   }
 }

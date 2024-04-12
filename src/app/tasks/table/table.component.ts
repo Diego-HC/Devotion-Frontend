@@ -38,9 +38,9 @@ import { Router } from '@angular/router';
     </div>
   `,
   styles: [`
-
+    @screen sm {
       .table-test {
-        @apply w-full sm:ml-20 sm:mr-60;
+        @apply w-full sm:ml-20 sm:mr-60 ml-20;
         overflow: auto;
       }
 
@@ -111,6 +111,7 @@ import { Router } from '@angular/router';
         align-items: center;
         height: 60vh;
       }
+    }
   `]
 })
 export class TableComponent {
