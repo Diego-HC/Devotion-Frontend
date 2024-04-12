@@ -7,7 +7,7 @@ import {Router} from '@angular/router';
   selector: 'app-table',
   template: `
     <div class="flex justify-center items-center h-[60vh]">
-      <table class="w-full sm:ml-20 sm:mr-60 ml-20 overflow-auto">
+      <table class="w-full my-5 overflow-auto">
         <thead class="text-left font-medium">
         <tr class="border-none box-shadow-none">
           <th class="font-roboto text-left italic px-4 py-2 no-border whitespace-nowrap overflow-auto text-[#676767]">

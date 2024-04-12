@@ -11,7 +11,7 @@ import { Input } from "@angular/core";
       <span
         class="w-3 h-3 rounded-full self-start bg-white p-[7px] -ml-1 m-1"
       ></span>
-      <span class="font-inter font-semibold flex-grow">{{
+      <span class="font-inter font-black flex-grow">{{
         status.toUpperCase()
       }}</span>
     </div>
