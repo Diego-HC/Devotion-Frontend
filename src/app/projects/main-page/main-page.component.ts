@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
+import {bgBlack, bgBlue} from "ansi-colors";
 
 interface Project {
   id: number;
@@ -41,56 +42,75 @@ interface Project {
         </p>
         <div class="flex flex-col justify-between">
           <h3 class="font-bold mb-4">Tareas</h3>
-          <div class="flex flex-row items-center gap-4">
+          <div class="flex flex-row items-center gap-5">
             <a data-view="table" (click)="onTabClick('table')">
-              <div class="grid grid-cols-1 grid-rows-1">
+              <div>
+                <span class="col-start-1 row-start-1"></span>
                 <div class="flex flex-col place-items-center justify-center">
-                  <img
-                    src="../assets/coconut.webp"
-                    alt="Coconut"
-                    class="h-6 w-6 rounded-full"
-                  />
+                  <div class="grid grid-cols-1 grid-rows-1 place-items-center h-10">
+                    <span class="col-start-1 row-start-1 bg-[#2A4365] rounded-full p-6"
+                          [ngClass]="{'hidden':this.selectedIcon !== 'table'}"></span>
+                    <img
+                      src="../assets/coconut.webp"
+                      alt="Coconut"
+                      class="h-6 w-6 rounded-full col-start-1 row-start-1"
+                    />
+                  </div>
                   <p>Tabla</p>
                 </div>
               </div>
             </a>
             <a data-view="kanban" (click)="onTabClick('kanban')">
               <div class="flex flex-col place-items-center justify-center">
-                <img
-                  src="../assets/coconut.webp"
-                  alt="Coconut"
-                  class="h-6 w-6 rounded-full"
-                />
+                <div class="grid grid-cols-1 grid-rows-1 place-items-center h-10">
+                  <span class="col-start-1 row-start-1 bg-[#2A4365] rounded-full p-6"
+                        [ngClass]="{'hidden':this.selectedIcon !== 'kanban'}"></span>
+                  <img
+                    src="../assets/coconut.webp"
+                    alt="Coconut"
+                    class="h-6 w-6 rounded-full col-start-1 row-start-1"
+                  />
+                </div>
                 <span>Kanban</span>
               </div>
             </a>
             <a data-view="calendar" (click)="onTabClick('calendar')">
               <div class="flex flex-col place-items-center justify-center">
-                <img
-                  src="../assets/coconut.webp"
-                  alt="Coconut"
-                  class="h-6 w-6 rounded-full"
-                />
+                <div class="grid grid-cols-1 grid-rows-1 place-items-center h-10">
+                  <span class="col-start-1 row-start-1 bg-[#2A4365] rounded-full p-6"
+                        [ngClass]="{'hidden':this.selectedIcon !== 'calendar'}"></span>
+                  <img
+                    src="../assets/coconut.webp"
+                    alt="Coconut"
+                    class="h-6 w-6 rounded-full col-start-1 row-start-1"
+                  />
+                </div>
                 <span>Calendario</span>
               </div>
             </a>
             <a data-view="roadmap" (click)="onTabClick('roadmap')">
               <div class="flex flex-col place-items-center justify-center">
-                <img
-                  src="../assets/coconut.webp"
-                  alt="Coconut"
-                  class="h-6 w-6 rounded-full"
-                />
+                <div class="grid grid-cols-1 grid-rows-1 place-items-center h-10">
+                  <span class="col-start-1 row-start-1 bg-[#2A4365] rounded-full p-6"
+                        [ngClass]="{'hidden':this.selectedIcon !== 'roadmap'}"></span>
+                  <img
+                    src="../assets/coconut.webp"
+                    alt="Coconut"
+                    class="h-6 w-6 rounded-full col-start-1 row-start-1"
+                  />
+                </div>
                 <span>Roadmap</span>
               </div>
             </a>
             <a href="/new/task?Parent={{project.id}}&Type=[Task]" (click)="onTabClick('newTask')">
               <div class="flex flex-col place-items-center justify-center">
-                <img
-                  src="../assets/coconut.webp"
-                  alt="Coconut"
-                  class="h-6 w-6 rounded-full"
-                />
+                <div class="grid grid-cols-1 grid-rows-1 place-items-center h-10">
+                  <img
+                    src="../assets/coconut.webp"
+                    alt="Coconut"
+                    class="h-6 w-6 rounded-full"
+                  />
+                </div>
                 <span>Nueva tarea</span>
               </div>
             </a>
@@ -123,8 +143,13 @@ export class MainPageComponent {
   }
 
   currentView: string = "table"; // Default view
+  selectedIcon: string = "table";
 
   onTabClick(selected: string) {
     this.currentView = selected;
+    this.selectedIcon = selected;
   }
+
+  protected readonly bgBlack = bgBlack;
+  protected readonly bgBlue = bgBlue;
 }
