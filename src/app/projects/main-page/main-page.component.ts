@@ -29,10 +29,12 @@ interface Project {
               >Ir a dashboard</span
               >
             </a>
+            <a href="/edit/project/{{ project.id }}" class="flex flex-row items-center gap-2">
             <span
               class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]"
             >•••</span
             >
+            </a>
           </div>
         </div>
         <p
