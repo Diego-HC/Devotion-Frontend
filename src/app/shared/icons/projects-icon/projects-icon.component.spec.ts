@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewPageComponent } from './view-page.component';
+import { ProjectsIconComponent } from './projects-icon.component';
 
-describe('ViewPageComponent', () => {
-  let component: ViewPageComponent;
-  let fixture: ComponentFixture<ViewPageComponent>;
+describe('ProjectsIconComponent', () => {
+  let component: ProjectsIconComponent;
+  let fixture: ComponentFixture<ProjectsIconComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ViewPageComponent]
+      declarations: [ProjectsIconComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(ViewPageComponent);
+    fixture = TestBed.createComponent(ProjectsIconComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
