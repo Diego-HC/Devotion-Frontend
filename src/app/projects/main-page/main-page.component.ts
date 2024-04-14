@@ -18,7 +18,8 @@ interface Project {
             <h1 class="text-4xl font-bold">
               {{ project.name }}
             </h1>
-            <div class="radial-progress bg-[#E1EFFF] text-[#2A4365] mt-1" style="--value:70; --size:2rem; --thickness: 0.5rem;" role="progressbar"></div>
+            <div class="radial-progress bg-[#E1EFFF] text-[#2A4365] mt-1"
+                 style="--value:70; --size:2rem; --thickness: 0.5rem;" role="progressbar"></div>
           </div>
           <div class="flex flex-row items-center gap-4">
             <a href="/dashboard" class="flex flex-row items-center gap-2">
