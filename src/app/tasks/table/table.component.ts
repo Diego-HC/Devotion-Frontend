@@ -6,7 +6,7 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'app-table',
   template: `
-    <div class="flex justify-center items-center h-[60vh]">
+    <div class="flex justify-center items-center">
       <table class="w-full my-5 overflow-auto">
         <thead class="text-left font-medium">
         <tr class="border-none box-shadow-none">

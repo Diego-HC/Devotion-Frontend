@@ -14,9 +14,12 @@ interface Project {
     <div class="overflow-x-auto mx-20">
       <div class="bg-white py-6 rounded-lg">
         <div class="flex flex-col justify-between mb-7 gap-2">
-          <h1 class="text-4xl font-bold">
-            {{ project.name }}
-          </h1>
+          <div class="flex flex-row gap-4">
+            <h1 class="text-4xl font-bold">
+              {{ project.name }}
+            </h1>
+            <div class="radial-progress bg-[#E1EFFF] text-[#2A4365] mt-1" style="--value:70; --size:2rem; --thickness: 0.5rem;" role="progressbar"></div>
+          </div>
           <div class="flex flex-row items-center gap-4">
             <a href="/dashboard" class="flex flex-row items-center gap-2">
               <img
@@ -47,7 +50,7 @@ interface Project {
               <div>
                 <span class="col-start-1 row-start-1"></span>
                 <div class="flex flex-col place-items-center justify-center">
-                  <div class="grid grid-cols-1 grid-rows-1 place-items-center h-10">
+                  <div class="grid grid-cols-1 grid-rows-1 place-items-center h-12">
                     <span class="col-start-1 row-start-1 bg-[#2A4365] rounded-full p-6"
                           [ngClass]="{'hidden':this.selectedIcon !== 'table'}"></span>
                     <img
@@ -56,13 +59,13 @@ interface Project {
                       class="h-6 w-6 rounded-full col-start-1 row-start-1"
                     />
                   </div>
-                  <p>Tabla</p>
+                  <span class="font-robotoCondensed">Tabla</span>
                 </div>
               </div>
             </a>
             <a data-view="kanban" (click)="onTabClick('kanban')">
               <div class="flex flex-col place-items-center justify-center">
-                <div class="grid grid-cols-1 grid-rows-1 place-items-center h-10">
+                <div class="grid grid-cols-1 grid-rows-1 place-items-center h-12">
                   <span class="col-start-1 row-start-1 bg-[#2A4365] rounded-full p-6"
                         [ngClass]="{'hidden':this.selectedIcon !== 'kanban'}"></span>
                   <img
@@ -71,12 +74,12 @@ interface Project {
                     class="h-6 w-6 rounded-full col-start-1 row-start-1"
                   />
                 </div>
-                <span>Kanban</span>
+                <span class="font-robotoCondensed">Kanban</span>
               </div>
             </a>
             <a data-view="calendar" (click)="onTabClick('calendar')">
               <div class="flex flex-col place-items-center justify-center">
-                <div class="grid grid-cols-1 grid-rows-1 place-items-center h-10">
+                <div class="grid grid-cols-1 grid-rows-1 place-items-center h-12">
                   <span class="col-start-1 row-start-1 bg-[#2A4365] rounded-full p-6"
                         [ngClass]="{'hidden':this.selectedIcon !== 'calendar'}"></span>
                   <img
@@ -85,12 +88,12 @@ interface Project {
                     class="h-6 w-6 rounded-full col-start-1 row-start-1"
                   />
                 </div>
-                <span>Calendario</span>
+                <span class="font-robotoCondensed">Calendario</span>
               </div>
             </a>
             <a data-view="roadmap" (click)="onTabClick('roadmap')">
               <div class="flex flex-col place-items-center justify-center">
-                <div class="grid grid-cols-1 grid-rows-1 place-items-center h-10">
+                <div class="grid grid-cols-1 grid-rows-1 place-items-center h-12">
                   <span class="col-start-1 row-start-1 bg-[#2A4365] rounded-full p-6"
                         [ngClass]="{'hidden':this.selectedIcon !== 'roadmap'}"></span>
                   <img
@@ -99,19 +102,19 @@ interface Project {
                     class="h-6 w-6 rounded-full col-start-1 row-start-1"
                   />
                 </div>
-                <span>Roadmap</span>
+                <span class="font-robotoCondensed">Roadmap</span>
               </div>
             </a>
             <a href="/new/task?Parent={{project.id}}&Type=[Task]" (click)="onTabClick('newTask')">
               <div class="flex flex-col place-items-center justify-center">
-                <div class="grid grid-cols-1 grid-rows-1 place-items-center h-10">
+                <div class="grid grid-cols-1 grid-rows-1 place-items-center h-12">
                   <img
                     src="../assets/coconut.webp"
                     alt="Coconut"
                     class="h-6 w-6 rounded-full"
                   />
                 </div>
-                <span>Nueva tarea</span>
+                <span class="font-robotoCondensed">Nueva tarea</span>
               </div>
             </a>
           </div>
