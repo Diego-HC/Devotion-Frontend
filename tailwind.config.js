@@ -7,6 +7,7 @@ module.exports = {
         roboto: ["Roboto"],
         robotoCondensed: ["Roboto Condensed"],
         inter: ["Inter", "sans-serif"],
+        helvetica: ["Helvetica Neue", "sans-serif"],
       }
     },
   },

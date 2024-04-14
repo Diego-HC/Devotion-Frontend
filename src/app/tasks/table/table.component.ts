@@ -32,7 +32,6 @@ import {Router} from '@angular/router';
           <td class="text-left px-4 py-2 font-semibold">
             <a href="/task/{{task.id}}">{{ task.name | slice:0:35 }}</a>
           </td>
-          <!-- Conditional to change badge color -->
           <td
             class="px-6 py-2 whitespace-nowrap flex justify-between items-center overflow-auto text-center font-black font-inter">
             <app-badge *ngIf="task.status === 'En revisión'" [status]="task.status"></app-badge>

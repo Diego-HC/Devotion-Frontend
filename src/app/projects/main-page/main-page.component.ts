@@ -14,20 +14,16 @@ interface Project {
     <div class="overflow-x-auto mx-20">
       <div class="bg-white py-6 rounded-lg">
         <div class="flex flex-col justify-between mb-7 gap-2">
-          <div class="flex flex-row gap-4">
-            <h1 class="text-4xl font-bold">
+          <div class="flex flex-row gap-6">
+            <h1 class="text-4xl font-helvetica">
               {{ project.name }}
             </h1>
-            <div class="radial-progress bg-[#E1EFFF] text-[#2A4365] mt-1"
+            <div class="radial-progress bg-[#E1EFFF] text-[#2A4365]"
                  style="--value:70; --size:2rem; --thickness: 0.5rem;" role="progressbar"></div>
           </div>
           <div class="flex flex-row items-center gap-4">
             <a href="/dashboard" class="flex flex-row items-center gap-2">
-              <img
-                src="../assets/coconut.webp"
-                alt="Coconut"
-                class="h-6 w-6 rounded-full"
-              />
+              <app-dashboard-icon fill="#5CCEFF" [width]="'25'" [height]="'25'"></app-dashboard-icon>
               <span
                 class="font-bold hover:underline text-base text-[#5CCEFF]"
               >Ir a dashboard</span
@@ -40,7 +36,7 @@ interface Project {
           </div>
         </div>
         <p
-          class="font-robotoText text-lg mb-4 max-w-3xl text-[#5E6377]"
+          class="font-robotoCondensed text-lg mb-4 max-w-3xl text-[#5E6377] font-normal"
         >
           {{ project.description }}
         </p>
