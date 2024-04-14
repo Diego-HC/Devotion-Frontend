@@ -28,6 +28,7 @@ import { DashboardIconComponent } from './shared/icons/dashboard-icon/dashboard-
 import { ProjectsIconComponent } from './shared/icons/projects-icon/projects-icon.component';
 import { FilesIconComponent } from './shared/icons/files-icon/files-icon.component';
 import { PlusIconComponent } from './shared/icons/plus-icon/plus-icon.component';
+import { ProjectCardComponent } from './projects/project-card/project-card.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { PlusIconComponent } from './shared/icons/plus-icon/plus-icon.component'
     ProjectsIconComponent,
     FilesIconComponent,
     PlusIconComponent,
+    ProjectCardComponent
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],
