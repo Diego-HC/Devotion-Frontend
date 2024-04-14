@@ -105,11 +105,7 @@ interface Project {
             <a href="/new/task?Parent={{project.id}}&Type=[Task]" (click)="onTabClick('newTask')">
               <div class="flex flex-col place-items-center justify-center">
                 <div class="grid grid-cols-1 grid-rows-1 place-items-center h-12">
-                  <img
-                    src="../assets/coconut.webp"
-                    alt="Coconut"
-                    class="h-6 w-6 rounded-full"
-                  />
+                  <app-plus-icon fill="#2A4365" [width]="'25'" [height]="'25'"></app-plus-icon>
                 </div>
                 <span class="font-robotoCondensed">Nueva tarea</span>
               </div>
