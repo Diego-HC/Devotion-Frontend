@@ -23,6 +23,11 @@ import { RoadmapComponent } from "./tasks/roadmap/roadmap.component";
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginComponent } from './login/login.component';
 import { BadgeComponent } from './shared/badge/badge.component';
+import { DevotionLogoComponent } from './shared/icons/devotion-logo/devotion-logo.component';
+import { DashboardIconComponent } from './shared/icons/dashboard-icon/dashboard-icon.component';
+import { ProjectsIconComponent } from './shared/icons/projects-icon/projects-icon.component';
+import { FilesIconComponent } from './shared/icons/files-icon/files-icon.component';
+import { PlusIconComponent } from './shared/icons/plus-icon/plus-icon.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +49,11 @@ import { BadgeComponent } from './shared/badge/badge.component';
     LandingPageComponent,
     LoginComponent,
     BadgeComponent,
+    DevotionLogoComponent,
+    DashboardIconComponent,
+    ProjectsIconComponent,
+    FilesIconComponent,
+    PlusIconComponent,
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],
