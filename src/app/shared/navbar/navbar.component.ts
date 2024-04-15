@@ -13,7 +13,7 @@ import { Component } from '@angular/core';
               height = "15"
               width = "55"
             </app-devotion-logo>
-            <h1 class = "font-robotoCondensed font-extrabold text-3xl pl-8">Administración de Proyectos</h1>
+            <h1 class = "font-bold text-3xl pl-8 font-helvetica text-black">Administración de Proyectos</h1>
           </div>
 
           <div class = "flex items-center justify-end pr-2">
