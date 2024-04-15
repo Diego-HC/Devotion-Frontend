@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewPageComponent } from './view-page.component';
+import { DevotionLogoComponent } from './devotion-logo.component';
 
-describe('ViewPageComponent', () => {
-  let component: ViewPageComponent;
-  let fixture: ComponentFixture<ViewPageComponent>;
+describe('DevotionLogoComponent', () => {
+  let component: DevotionLogoComponent;
+  let fixture: ComponentFixture<DevotionLogoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ViewPageComponent]
+      declarations: [DevotionLogoComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(ViewPageComponent);
+    fixture = TestBed.createComponent(DevotionLogoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
