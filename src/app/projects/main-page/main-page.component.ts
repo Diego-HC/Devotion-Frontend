@@ -59,7 +59,7 @@ export interface Project {
           <div class="mx-4 flex-grow">
             <h3 class="font-bold">Subproyectos:</h3>
             <div
-              class="flex flex-col flex-wrap content-start gap-4 ml-2 mt-2 h-56 overflow-x-scroll"
+              class="flex flex-col flex-wrap content-start gap-4 ml-2 mt-2 h-60 overflow-x-scroll"
             >
               @for (subproject of this.project.subprojects; track subproject.id)
               {
