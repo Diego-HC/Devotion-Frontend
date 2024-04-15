@@ -22,7 +22,13 @@ import { CalendarComponent } from "./tasks/calendar/calendar.component";
 import { RoadmapComponent } from "./tasks/roadmap/roadmap.component";
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginComponent } from './login/login.component';
-import { ProjectCardComponent } from './projects/project-card/project-card.component';
+import { BadgeComponent } from './shared/badge/badge.component';
+import { DevotionLogoComponent } from './shared/icons/devotion-logo/devotion-logo.component';
+import { DashboardIconComponent } from './shared/icons/dashboard-icon/dashboard-icon.component';
+import { ProjectsIconComponent } from './shared/icons/projects-icon/projects-icon.component';
+import { FilesIconComponent } from './shared/icons/files-icon/files-icon.component';
+import { PlusIconComponent } from './shared/icons/plus-icon/plus-icon.component';
+import { IconComponent } from './shared/icon/icon.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +49,13 @@ import { ProjectCardComponent } from './projects/project-card/project-card.compo
     RoadmapComponent,
     LandingPageComponent,
     LoginComponent,
-    ProjectCardComponent,
+    BadgeComponent,
+    DevotionLogoComponent,
+    DashboardIconComponent,
+    ProjectsIconComponent,
+    FilesIconComponent,
+    PlusIconComponent,
+    IconComponent,
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],
