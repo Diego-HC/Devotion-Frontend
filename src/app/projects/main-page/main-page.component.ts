@@ -75,7 +75,7 @@ interface Project {
             </app-icon>
             <a href="/new/task?Parent={{project.id}}&Type=[Task]" (click)="onTabClick('newTask')">
               <div class="flex flex-col place-items-center justify-center">
-                <div class="grid grid-cols-1 grid-rows-1 place-items-center h-12">
+                <div class="grid grid-cols-1 grid-rows-1 place-items-center border-2 border-gray-200 rounded-full p-2.5 box-shadow">
                   <app-plus-icon fill="#2A4365" [width]="'25'" [height]="'25'"></app-plus-icon>
                 </div>
                 <span class="font-robotoCondensed">Nueva tarea</span>
