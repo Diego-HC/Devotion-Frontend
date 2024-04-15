@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {Input} from '@angular/core';
-import {BadgeComponent} from '../../shared/badge/badge.component';
 import {Router} from '@angular/router';
 
 @Component({
@@ -28,9 +27,9 @@ import {Router} from '@angular/router';
         </tr>
         </thead>
         <tbody>
-        <tr class="hover:bg-gray-50 border-2 font-robotoCondensed" *ngFor="let task of tasks">
+        <tr class="cursor-pointer hover:bg-gray-50 border-2 font-robotoCondensed" *ngFor="let task of tasks" (click)="navigateToTask(task.id)">
           <td class="text-left px-4 py-2 font-semibold">
-            <a href="/task/{{task.id}}">{{ task.name | slice:0:35 }}</a>
+            {{ task.name | slice:0:35 }}
           </td>
           <td
             class="px-6 py-2 whitespace-nowrap flex justify-between items-center overflow-auto text-center font-black font-inter">
@@ -83,4 +82,10 @@ export class TableComponent {
       asigneeId: 'Lewis Hamilton'
     }
   ];
+
+  constructor(private router: Router) { }
+
+  navigateToTask(taskId: number) {
+    this.router.navigate(['/task', taskId]);
+  }
 }
