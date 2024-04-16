@@ -1,13 +1,12 @@
 import {Component} from '@angular/core';
 import {Input} from '@angular/core';
-import {BadgeComponent} from '../../shared/badge/badge.component';
 import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-table',
   template: `
-    <div class="flex justify-center items-center h-[60vh]">
-      <table class="w-full sm:ml-20 sm:mr-60 ml-20 overflow-auto">
+    <div class="flex justify-center items-center">
+      <table class="w-full my-5 overflow-auto">
         <thead class="text-left font-medium">
         <tr class="border-none box-shadow-none">
           <th class="font-roboto text-left italic px-4 py-2 no-border whitespace-nowrap overflow-auto text-[#676767]">
@@ -28,11 +27,10 @@ import {Router} from '@angular/router';
         </tr>
         </thead>
         <tbody>
-        <tr class="hover:bg-gray-50 border-2 font-robotoCondensed" *ngFor="let task of tasks">
+        <tr class="cursor-pointer hover:bg-gray-50 border-2 font-robotoCondensed" *ngFor="let task of tasks" (click)="navigateToTask(task.id)">
           <td class="text-left px-4 py-2 font-semibold">
-            <a href="/task/{{task.id}}">{{ task.name | slice:0:35 }}</a>
+            {{ task.name | slice:0:35 }}
           </td>
-          <!-- Conditional to change badge color -->
           <td
             class="px-6 py-2 whitespace-nowrap flex justify-between items-center overflow-auto text-center font-black font-inter">
             <app-badge *ngIf="task.status === 'En revisión'" [status]="task.status"></app-badge>
@@ -84,4 +82,10 @@ export class TableComponent {
       asigneeId: 'Lewis Hamilton'
     }
   ];
+
+  constructor(private router: Router) { }
+
+  navigateToTask(taskId: number) {
+    this.router.navigate(['/task', taskId]);
+  }
 }

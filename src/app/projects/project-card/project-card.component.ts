@@ -19,9 +19,9 @@ import { Component, Input, OnInit } from "@angular/core";
   `,
 })
 export class ProjectCardComponent implements OnInit {
-  @Input() id: string = "";
-  @Input() name: string = "";
-  @Input() description: string = "";
+  @Input() id!: string;
+  @Input() name!: string;
+  @Input() description!: string;
 
   shortName!: string;
   shortDescription!: string;
@@ -33,5 +33,11 @@ export class ProjectCardComponent implements OnInit {
       this.description.length > 50
         ? this.description.slice(0, 55) + "..."
         : this.description;
+
+    console.log(
+      this.description,
+      this.description.length,
+      this.shortDescription
+    );
   }
 }

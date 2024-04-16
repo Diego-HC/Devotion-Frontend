@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewPageComponent } from './view-page.component';
+import { SearchSelectComponent } from './search-select.component';
 
-describe('ViewPageComponent', () => {
-  let component: ViewPageComponent;
-  let fixture: ComponentFixture<ViewPageComponent>;
+describe('SearchSelectComponent', () => {
+  let component: SearchSelectComponent;
+  let fixture: ComponentFixture<SearchSelectComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ViewPageComponent]
+      declarations: [SearchSelectComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(ViewPageComponent);
+    fixture = TestBed.createComponent(SearchSelectComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
