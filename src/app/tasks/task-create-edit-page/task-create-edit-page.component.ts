@@ -9,7 +9,8 @@ import { Component } from '@angular/core';
           Nueva Tarea
         </h2>
         <div class="flex flex-row items-center mt-2 gap-4">
-          <input type="text" class="input-md input-bordered md:w-5/12 text-3xl font-helvetica rounded-box font-bold shadow-md"/>
+          <input type="text"
+                 class="input-md input-bordered input-['#5CCEFF'] md:w-5/12 text-3xl font-helvetica rounded-box font-bold shadow-md"/>
           <div class="flex flex-col items-center">
             <button class="btn-circle items-center justify-center" style="background-color: #2A4365">+</button>
             <p class="text-xs font-robotoCondensed">Publicar</p>
@@ -18,11 +19,11 @@ import { Component } from '@angular/core';
         <div class="flex flex-row items-center mt-2 gap-8">
           <div class="flex flex-col items-center">
             <h2 class="font-roboto font-bold">Fecha Inicio</h2>
-            <input type="date" class="input-md input-bordered md:w-40 font-helvetica font-bold"/>
+            <input type="date" class="input-md input-bordered input-['#5CCEFF'] md:w-40 font-helvetica font-bold"/>
           </div>
           <div class="flex flex-col items-center">
             <h2 class="font-roboto font-bold">Fecha Fin</h2>
-            <input type="date" class="input-md input-bordered md:w-40 font-helvetica font-bold"/>
+            <input type="date" class="input-md input-bordered input-['#5CCEFF'] md:w-40 font-helvetica font-bold"/>
           </div>
           <div class="flex flex-col items-center">
             <h2 class="font-roboto font-bold">Prioridad</h2>
@@ -37,9 +38,11 @@ import { Component } from '@angular/core';
           </div>
         </div>
         <h2 class="font-roboto font-bold mt-4">Descripción</h2>
-        <textarea class="textarea-md textarea-bordered w-1/2 h-40 rounded-box shadow-md"></textarea>
-        <h2 class="font-roboto font-bold mt-4">Asignado</h2>
-        <input type="search" class="input-md input-bordered md:w-1/2 font-helvetica font-bold rounded-box shadow-md"/>
+        <textarea class="textarea-md text-['#5CCEFF'] textarea-bordered w-1/2 h-40 rounded-box shadow-md"></textarea>
+        <div class="w-1/2">
+          <h2 class="font-roboto font-bold mt-4">Asignado</h2>
+          <app-search-select></app-search-select>
+        </div>
       </div>
     </div>
   `
