@@ -2,20 +2,10 @@
 module.exports = {
   content: ["./src/**/*.{html,ts}"],
   theme: {
-    extend: {
-      fontFamily: {
-        roboto: ["Roboto"],
-        robotoCondensed: ["Roboto Condensed"],
-        inter: ["Inter", "sans-serif"],
-      }
-    },
+    extend: {},
   },
-  plugins: [
-    require("daisyui"),
-    require("tailwindcss"),
-    require("autoprefixer"),
-  ],
+  plugins: [require("daisyui")],
   daisyui: {
     themes: ["light"],
-  }
+  },
 };
