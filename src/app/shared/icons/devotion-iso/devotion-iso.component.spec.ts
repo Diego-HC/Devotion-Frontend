@@ -1,19 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LoginComponent } from './login.component';
+import { DevotionIsoComponent } from './devotion-iso.component';
 
-describe('LoginComponent', () => {
-  let component: LoginComponent;
-  let fixture: ComponentFixture<LoginComponent>;
+describe('DevotionIsoComponent', () => {
+  let component: DevotionIsoComponent;
+  let fixture: ComponentFixture<DevotionIsoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LoginComponent]
+      declarations: [DevotionIsoComponent]
     })
     .compileComponents();
     
-    
-    fixture = TestBed.createComponent(LoginComponent);
+    fixture = TestBed.createComponent(DevotionIsoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
