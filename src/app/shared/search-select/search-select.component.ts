@@ -5,15 +5,12 @@ import { Component } from '@angular/core';
   template: `
   <div class="form-control mt-4 mb-4">
   <div class="input-group">
-    <input type="search" [(ngModel)]="inputTag" (keyup)="onInputKeyup($event)" class="input input-bordered" />
-    <button class="btn btn-square" (click)="addTag()">
-      <span class="material-icons">Agregar</span>
-    </button>
+    <input type="search" [(ngModel)]="inputTag" (keyup)="onInputKeyup($event)" class="input input-bordered w-full" />
   </div>
   <div class="flex flex-wrap gap-2 mt-2">
-    <div class="badge badge-outline" *ngFor="let tag of tags">
+    <div class="box-content bg-gray-200 p-1 font-robotoCondensed font-bold" *ngFor="let tag of tags">
       {{ tag }}
-      <button class="btn btn-xs btn-circle" (click)="removeTag(tag)">×</button>
+      <button class="btn btn-xs bg-gray-200 border-gray-200" (click)="removeTag(tag)">×</button>
     </div>
   </div>
 </div>

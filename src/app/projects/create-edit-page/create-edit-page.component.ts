@@ -18,8 +18,11 @@ import { Component } from '@angular/core';
           
           <div class = "flex flex-col flex-grow justify-center">
           <h1 class=" text-l font-roboto font-extrabold mb-3">Descripción</h1>
-            <textarea rows = "4" class="textarea textarea-bordered mr-4 shadow-md font-helvetica font-bold text-3xl w-full min-h-10"></textarea>
+            <textarea rows = "4" class="textarea textarea-bordered mr-4 shadow-md font-robotoCondensed text-s w-full min-h-10"></textarea>
           </div>
+          <h1 class=" text-l font-roboto font-extrabold mb-3 mt-3">Líderes</h1>
+          <app-search-select></app-search-select>
+          <h1 class=" text-l font-roboto font-extrabold mb-3 mt-3">Miembros</h1>
           <app-search-select></app-search-select>
         </form>
       </div>
