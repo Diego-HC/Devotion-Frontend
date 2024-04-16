@@ -4,7 +4,7 @@ import { Component } from "@angular/core";
   selector: "app-view-page",
   template: `
     <div
-      class="flex flex-row flex-wrap gap-10 m-10 justify-center md:justify-normal"
+      class="flex flex-row flex-wrap gap-10 m-20 justify-center md:justify-normal"
     >
       @for (project of this.projects; track $index) {
       <app-project-card
@@ -13,6 +13,21 @@ import { Component } from "@angular/core";
         [description]="project.description"
       />
       }
+
+      <a href="/new/project" class="place-self-center w-[15.5rem]">
+        <div class="flex flex-col place-items-center justify-center">
+          <div
+            class="grid grid-cols-1 grid-rows-1 place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow"
+          >
+            <app-plus-icon
+              fill="#2A4365"
+              [width]="'45'"
+              [height]="'45'"
+            ></app-plus-icon>
+          </div>
+          <span class="font-robotoCondensed">Nuevo proyecto</span>
+        </div>
+      </a>
     </div>
   `,
 })
@@ -26,11 +41,5 @@ export class ViewPageComponent {
     },
     { id: "2", name: "Project 2", description: "Description 2" },
     { id: "3", name: "Project 3", description: "Description 3" },
-    {
-      id: "4",
-      name: "mmmmmmmmmm mmmmmmmmmmmmm",
-      description:
-        "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm.",
-    },
   ];
 }

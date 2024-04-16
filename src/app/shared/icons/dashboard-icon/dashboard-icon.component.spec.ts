@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewPageComponent } from './view-page.component';
+import { DashboardIconComponent } from './dashboard-icon.component';
 
-describe('ViewPageComponent', () => {
-  let component: ViewPageComponent;
-  let fixture: ComponentFixture<ViewPageComponent>;
+describe('DashboardIconComponent', () => {
+  let component: DashboardIconComponent;
+  let fixture: ComponentFixture<DashboardIconComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ViewPageComponent]
+      declarations: [DashboardIconComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(ViewPageComponent);
+    fixture = TestBed.createComponent(DashboardIconComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
