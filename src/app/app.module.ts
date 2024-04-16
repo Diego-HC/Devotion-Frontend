@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -30,6 +31,7 @@ import { FilesIconComponent } from './shared/icons/files-icon/files-icon.compone
 import { PlusIconComponent } from './shared/icons/plus-icon/plus-icon.component';
 import { IconComponent } from './shared/icon/icon.component';
 import { ProjectCardComponent } from './projects/project-card/project-card.component';
+import { SearchSelectComponent } from './shared/search-select/search-select.component';
 
 @NgModule({
   declarations: [
@@ -58,8 +60,9 @@ import { ProjectCardComponent } from './projects/project-card/project-card.compo
     PlusIconComponent,
     IconComponent,
     ProjectCardComponent,
+    SearchSelectComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule],
+  imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [],
   bootstrap: [AppComponent],
 })
