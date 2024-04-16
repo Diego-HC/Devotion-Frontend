@@ -20,7 +20,7 @@ import { Component } from '@angular/core';
           <h1 class=" text-l font-roboto font-extrabold mb-3">Descripción</h1>
             <textarea rows = "4" class="textarea textarea-bordered mr-4 shadow-md font-helvetica font-bold text-3xl w-full min-h-10"></textarea>
           </div>
-
+          <app-search-select></app-search-select>
         </form>
       </div>
     </div>
