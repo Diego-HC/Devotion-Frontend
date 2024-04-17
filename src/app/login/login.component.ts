@@ -41,6 +41,6 @@ import { Component } from '@angular/core';
     </div>
   </div>
   `,
-  styleUrls: ['./login.component.css']
+  styleUrls: []
 })
 export class LoginComponent {}
