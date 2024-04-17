@@ -1,17 +1,13 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-landing-page',
   template: `
-    <div class="ml-20">
-      <app-table-icon />
-      <app-kanban-icon />
-      <app-calendar-icon />
-      <app-roadmap-icon />
-      <app-devotion-iso />
-    </div>
-    <button (click)="goToLogin()" class="my-button">Go to Login</button>
+    <a href="/login" class="ml-20">
+      <button class="my-button">Go to Login</button>
+    </a>
+    <p class="ml-20">{{ response?.message ?? "Loading..." }}</p>
   `,
   styles: [`
     .my-button {
@@ -23,10 +19,15 @@ import { Router } from '@angular/router';
     }
   `]
 })
-export class LandingPageComponent {
-  constructor(private router: Router) {}
+export class LandingPageComponent implements OnInit {
+  constructor(private api: ApiService) { }
 
-  goToLogin() {
-    this.router.navigate(['/login']);
+  response: any;
+
+  ngOnInit() {
+    this.api.get('test/').subscribe((response) => {
+      console.log(response);
+      this.response = response;
+    });
   }
 }

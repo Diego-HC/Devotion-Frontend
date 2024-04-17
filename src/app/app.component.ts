@@ -1,16 +1,19 @@
 import { Component } from '@angular/core';
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-root',
-  /*templateUrl: './app.component.html',
-  styleUrl: './app.component.css',*/
   template: `
-    <app-navbar /><app-sidebar />
+    <div *ngIf="router.url !== '/login'">
+      <app-navbar /><app-sidebar />
+    </div>
     <div class="pt-20 pl-5">
       <router-outlet />
-    </div> 
+    </div>
     `
 })
 export class AppComponent {
   title = 'Devotion';
+
+  constructor(public router: Router) { }
 }
