@@ -6,6 +6,6 @@ import { Component, Input } from '@angular/core';
 })
 export class KanbanIconComponent {
   @Input() fill: string = '#2a4365';
-  @Input() width: string = '41';
-  @Input() height: string = '35';
+  @Input() width: string = '29';
+  @Input() height: string = '25';
 }
