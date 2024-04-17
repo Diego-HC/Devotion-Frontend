@@ -76,50 +76,34 @@ export interface Project {
               [selectedIcon]="selectedIcon"
               (selectedIconChange)="onTabClick($event)"
             >
-              <img
-                src="../assets/coconut.webp"
-                alt="Coconut"
-                class="h-6 w-6 rounded-full col-start-1 row-start-1"
-              />
+              <app-table-icon class="col-start-1 row-start-1" [fill]="selectedIcon === 'table' ? '#FFFFFF' : '#2A4365'"></app-table-icon>
             </app-icon>
             <app-icon
               [iconType]="'kanban'"
               [selectedIcon]="selectedIcon"
               (selectedIconChange)="onTabClick($event)"
             >
-              <img
-                src="../assets/coconut.webp"
-                alt="Coconut"
-                class="h-6 w-6 rounded-full col-start-1 row-start-1"
-              />
+              <app-kanban-icon class="col-start-1 row-start-1" [fill]="selectedIcon === 'kanban' ? '#FFFFFF' : '#2A4365'"></app-kanban-icon>
             </app-icon>
             <app-icon
               [iconType]="'calendar'"
               [selectedIcon]="selectedIcon"
               (selectedIconChange)="onTabClick($event)"
             >
-              <img
-                src="../assets/coconut.webp"
-                alt="Coconut"
-                class="h-6 w-6 rounded-full col-start-1 row-start-1"
-              />
+              <app-calendar-icon class="col-start-1 row-start-1" [fill]="selectedIcon === 'calendar' ? '#FFFFFF' : '#2A4365'"></app-calendar-icon>
             </app-icon>
             <app-icon
               [iconType]="'roadmap'"
               [selectedIcon]="selectedIcon"
               (selectedIconChange)="onTabClick($event)"
             >
-              <img
-                src="../assets/coconut.webp"
-                alt="Coconut"
-                class="h-6 w-6 rounded-full col-start-1 row-start-1"
-              />
+              <app-roadmap-icon class="col-start-1 row-start-1" [fill]="selectedIcon === 'roadmap' ? '#FFFFFF' : '#2A4365'"></app-roadmap-icon>
             </app-icon>
             <a
               href="/new/task?Parent={{ project.id }}&Type=[Task]"
               (click)="onTabClick('newTask')"
             >
-              <div class="flex flex-col place-items-center justify-center">
+              <div class="flex flex-col place-items-center justify-center md:mt-4">
                 <div
                   class="grid grid-cols-1 grid-rows-1 place-items-center border-2 border-gray-200 rounded-full p-2.5 box-shadow"
                 >
@@ -140,7 +124,6 @@ export interface Project {
       <app-kanban *ngIf="currentView === 'kanban'" />
       <app-calendar *ngIf="currentView === 'calendar'" />
       <app-roadmap *ngIf="currentView === 'roadmap'" />
-      <app-task-create-edit-page *ngIf="currentView === 'newTask'" />
     </div>
   `,
 })
@@ -159,7 +142,7 @@ export class MainPageComponent {
       id: 1,
       name: "FSAE 2024",
       description:
-        "Ser la mejor escudería en al competencia SAE Formula Student con un vehículo monoplaza reconocido por\n          nuestra excelencia en el diseño y construcción. Aspiramos a inspirar a las generaciones futuras\n          demostrando que con pasión, determinación y trabajo en equipo podemos alcanzar nuestros objetivos en el\n          mundo del automovilismo",
+        "Ser la mejor escudería en al competencia SAE Formula Student con un vehículo monoplaza reconocido por\n          nuestra excelencia en el diseño y construcción. Aspiramos a inspirar a las generaciones futuras\n          demostrando que con pasión, determinación y trabajo en equipo podemos alcanzar nuestros objetivos en el\n          mundo del automovilismo.",
       progress: 50,
 
       subprojects: [

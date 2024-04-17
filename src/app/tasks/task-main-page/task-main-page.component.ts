@@ -74,57 +74,41 @@ export interface Task {
         </p>
 
         <div class="flex flex-col justify-between">
-          <h3 class="font-bold mb-4">Tareas</h3>
+          <h3 class="font-bold md:mb-4 md:mt-12">Tareas</h3>
           <div class="flex flex-row items-center gap-5">
             <app-icon
               [iconType]="'table'"
               [selectedIcon]="selectedIcon"
               (selectedIconChange)="onTabClick($event)"
             >
-              <img
-                src="../assets/coconut.webp"
-                alt="Coconut"
-                class="h-6 w-6 rounded-full col-start-1 row-start-1"
-              />
+              <app-table-icon class="col-start-1 row-start-1" [fill]="selectedIcon === 'table' ? '#FFFFFF' : '#2A4365'"></app-table-icon>
             </app-icon>
             <app-icon
               [iconType]="'kanban'"
               [selectedIcon]="selectedIcon"
               (selectedIconChange)="onTabClick($event)"
             >
-              <img
-                src="../assets/coconut.webp"
-                alt="Coconut"
-                class="h-6 w-6 rounded-full col-start-1 row-start-1"
-              />
+              <app-kanban-icon class="col-start-1 row-start-1" [fill]="selectedIcon === 'kanban' ? '#FFFFFF' : '#2A4365'"></app-kanban-icon>
             </app-icon>
             <app-icon
               [iconType]="'calendar'"
               [selectedIcon]="selectedIcon"
               (selectedIconChange)="onTabClick($event)"
             >
-              <img
-                src="../assets/coconut.webp"
-                alt="Coconut"
-                class="h-6 w-6 rounded-full col-start-1 row-start-1"
-              />
+              <app-calendar-icon class="col-start-1 row-start-1" [fill]="selectedIcon === 'calendar' ? '#FFFFFF' : '#2A4365'"></app-calendar-icon>
             </app-icon>
             <app-icon
               [iconType]="'roadmap'"
               [selectedIcon]="selectedIcon"
               (selectedIconChange)="onTabClick($event)"
             >
-              <img
-                src="../assets/coconut.webp"
-                alt="Coconut"
-                class="h-6 w-6 rounded-full col-start-1 row-start-1"
-              />
+              <app-roadmap-icon class="col-start-1 row-start-1" [fill]="selectedIcon === 'roadmap' ? '#FFFFFF' : '#2A4365'"></app-roadmap-icon>
             </app-icon>
             <a
               href="/new/task?Parent={{ task.id }}&Type=[Task]"
               (click)="onTabClick('newTask')"
             >
-              <div class="flex flex-col place-items-center justify-center">
+              <div class="flex flex-col place-items-center justify-center md:mt-4">
                 <div
                   class="grid grid-cols-1 grid-rows-1 place-items-center border-2 border-gray-200 rounded-full p-2.5 box-shadow"
                 >
@@ -138,6 +122,11 @@ export interface Task {
               </div>
             </a>
           </div>
+          <app-table *ngIf="currentView === 'table'" />
+          <app-kanban *ngIf="currentView === 'kanban'" />
+          <app-calendar *ngIf="currentView === 'calendar'" />
+          <app-roadmap *ngIf="currentView === 'roadmap'" />
+        </div>
       </div>
     </div>
   `
