@@ -4,17 +4,13 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-landing-page',
   template: `
-    <app-devotion-logo
-      width="146"
-      height="40"
-    />
-    <app-dashboard-icon />
-    <app-projects-icon />
-    <app-files-icon />
-    <app-plus-icon />
-    <p>
-      landing-page works!
-    </p>
+    <div class="ml-20">
+      <app-table-icon />
+      <app-kanban-icon />
+      <app-calendar-icon />
+      <app-roadmap-icon />
+      <app-devotion-iso />
+    </div>
     <button (click)="goToLogin()" class="my-button">Go to Login</button>
   `,
   styles: [`

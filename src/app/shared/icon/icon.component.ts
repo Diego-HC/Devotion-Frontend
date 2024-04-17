@@ -8,8 +8,8 @@ import { Input, Output, EventEmitter } from "@angular/core";
       <div>
         <span class="col-start-1 row-start-1"></span>
         <div class="flex flex-col place-items-center justify-center">
-          <div class="grid grid-cols-1 grid-rows-1 place-items-center h-12">
-                    <span class="col-start-1 row-start-1 bg-[#2A4365] rounded-full p-6"
+          <div class="grid grid-cols-1 grid-rows-1 place-items-center h-16">
+                    <span class="col-start-1 row-start-1 bg-[#2A4365] rounded-full p-8"
                           [ngClass]="{'hidden':selectedIcon !== iconType}"></span>
             <ng-content></ng-content>
           </div>
@@ -17,7 +17,7 @@ import { Input, Output, EventEmitter } from "@angular/core";
         </div>
       </div>
     </a>
-  `
+  `,
 })
 export class IconComponent {
   @Input() iconType: string = "table";
