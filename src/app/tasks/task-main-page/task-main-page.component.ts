@@ -108,7 +108,7 @@ export interface Task {
               href="/new/task?Parent={{ task.id }}&Type=[Task]"
               (click)="onTabClick('newTask')"
             >
-              <div class="flex flex-col place-items-center justify-center md:mt-4">
+              <div class="flex flex-col place-items-center justify-center">
                 <div
                   class="grid grid-cols-1 grid-rows-1 place-items-center border-2 border-gray-200 rounded-full p-2.5 box-shadow"
                 >

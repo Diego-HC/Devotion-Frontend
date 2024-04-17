@@ -72,28 +72,28 @@ export interface Project {
           <h3 class="font-bold mb-4">Tareas</h3>
           <div class="flex flex-row items-center gap-5">
             <app-icon
-              [iconType]="'table'"
+              iconType='table'
               [selectedIcon]="selectedIcon"
               (selectedIconChange)="onTabClick($event)"
             >
               <app-table-icon class="col-start-1 row-start-1" [fill]="selectedIcon === 'table' ? '#FFFFFF' : '#2A4365'"></app-table-icon>
             </app-icon>
             <app-icon
-              [iconType]="'kanban'"
+              iconType='kanban'
               [selectedIcon]="selectedIcon"
               (selectedIconChange)="onTabClick($event)"
             >
               <app-kanban-icon class="col-start-1 row-start-1" [fill]="selectedIcon === 'kanban' ? '#FFFFFF' : '#2A4365'"></app-kanban-icon>
             </app-icon>
             <app-icon
-              [iconType]="'calendar'"
+              iconType='calendar'
               [selectedIcon]="selectedIcon"
               (selectedIconChange)="onTabClick($event)"
             >
               <app-calendar-icon class="col-start-1 row-start-1" [fill]="selectedIcon === 'calendar' ? '#FFFFFF' : '#2A4365'"></app-calendar-icon>
             </app-icon>
             <app-icon
-              [iconType]="'roadmap'"
+              iconType='roadmap'
               [selectedIcon]="selectedIcon"
               (selectedIconChange)="onTabClick($event)"
             >
@@ -103,7 +103,7 @@ export interface Project {
               href="/new/task?Parent={{ project.id }}&Type=[Task]"
               (click)="onTabClick('newTask')"
             >
-              <div class="flex flex-col place-items-center justify-center md:mt-4">
+              <div class="flex flex-col place-items-center justify-center">
                 <div
                   class="grid grid-cols-1 grid-rows-1 place-items-center border-2 border-gray-200 rounded-full p-2.5 box-shadow"
                 >

@@ -6,6 +6,6 @@ import { Component, Input } from '@angular/core';
 })
 export class CalendarIconComponent {
   @Input() fill: string = '#2a4365';
-  @Input() width: string = '35';
-  @Input() height: string = '42';
+  @Input() width: string = '25';
+  @Input() height: string = '30';
 }
