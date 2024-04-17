@@ -1,6 +1,7 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { bgBlack, bgBlue } from "ansi-colors";
+import { ApiService} from "../../api.service";
 
 export interface Project {
   id: number;
@@ -17,10 +18,10 @@ export interface Project {
     <div class="overflow-x-auto mx-20">
       <div class="bg-white py-6 rounded-lg">
         <div class="flex flex-row justify-between gap-20">
-          <div class="flex flex-col justify-between mb-7 gap-2">
+          <div class="flex flex-col mb-7 gap-2">
             <div class="flex flex-row gap-6">
               <h1 class="text-4xl font-helvetica">
-                {{ project.name }}
+                {{ response?.name ?? "Loading..." }}
               </h1>
               <div
                 class="radial-progress bg-[#E1EFFF] text-[#2A4365]"
@@ -32,15 +33,15 @@ export interface Project {
               <a href="/dashboard" class="flex flex-row items-center gap-2">
                 <app-dashboard-icon
                   fill="#5CCEFF"
-                  [width]="'25'"
-                  [height]="'25'"
+                  width='25'
+                  height='25'
                 ></app-dashboard-icon>
                 <span class="font-bold hover:underline text-base text-[#5CCEFF]"
                   >Ir a dashboard</span
                 >
               </a>
               <a
-                href="/edit/project/{{ project.id }}"
+                href="/edit/project/{{ response.id }}"
                 class="flex flex-row items-center gap-2"
               >
                 <span
@@ -52,7 +53,7 @@ export interface Project {
             <p
               class="font-robotoCondensed text-lg my-4 max-w-3xl text-[#5E6377] font-normal"
             >
-              {{ project.description }}
+              {{ response.description }}
             </p>
           </div>
 
@@ -61,7 +62,7 @@ export interface Project {
             <div
               class="flex flex-col flex-wrap content-start gap-4 ml-2 mt-2 h-60 overflow-x-scroll"
             >
-              @for (subproject of this.project.subprojects; track subproject.id)
+              @for (subproject of this.response?.subprojects; track subproject.id)
               {
               <app-subproject-card [subproject]="subproject" />
               }
@@ -120,14 +121,14 @@ export interface Project {
         </div>
       </div>
 
-      <app-table *ngIf="currentView === 'table'" />
+      <app-table *ngIf="currentView === 'table'" [tasks]="response?.tasks" />
       <app-kanban *ngIf="currentView === 'kanban'" />
       <app-calendar *ngIf="currentView === 'calendar'" />
       <app-roadmap *ngIf="currentView === 'roadmap'" />
     </div>
   `,
 })
-export class MainPageComponent {
+export class MainPageComponent implements OnInit {
   project: Project = {
     id: 0,
     name: "",
@@ -136,7 +137,10 @@ export class MainPageComponent {
     subprojects: [],
   };
 
-  constructor() {
+  response: any;
+
+  constructor(private api: ApiService) {
+
     // Replace this with your actual JSON data source
     this.project = {
       id: 1,
@@ -211,6 +215,13 @@ export class MainPageComponent {
   onTabClick(selected: string) {
     this.currentView = selected;
     this.selectedIcon = selected;
+  }
+
+  ngOnInit() {
+    this.api.get('projects/887ebfdd-bd39-417c-9b42-90396c2b8e59/').subscribe((response) => {
+      console.log(response);
+      this.response = response;
+    });
   }
 
   protected readonly bgBlack = bgBlack;
