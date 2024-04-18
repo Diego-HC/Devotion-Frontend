@@ -16,7 +16,7 @@ import { HttpHeaders } from '@angular/common/http';
           <input class= "" type="search" [(ngModel)]="inputTag" (click)="fetchMembers()" readonly>
         </div>
     </div>
-  
+
   <div class="scroll-container md:mt-2" style="max-height: 80px; overflow-y: auto;">
   <div class="flex flex-wrap md:gap-2 md:mt-2">
     <div class="box-content bg-gray-200 p-0 font-robotoCondensed font-bold" *ngFor="let member of projectMembers" [class.text-white]="isSelected(member)" [class.bg-[#5CCEFF]]="isSelected(member)">
@@ -32,9 +32,11 @@ export class SearchSelectComponent implements OnInit {
   tags: string[] = [];
   inputTag: string = '';
   projectMembers: any[] = [];
-  
+
   selectedMembers: any[] = [];
+  selectedMembersId: any[] = [];
   selectedLeaders: any[] = [];
+  selectedLeadersId: any[] = [];
 
 
   @Output() selectedMembersOutput = new EventEmitter<any[]>(); // Event emitter for selected members
@@ -44,7 +46,7 @@ export class SearchSelectComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  
+
   fetchMembers() {
     const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0NTg2NzgzLCJpYXQiOjE3MTMyOTA3ODMsImp0aSI6IjA4YjM4MWE4N2M3ODQ1ZGNiOTMxMmUyOWRmYTkxMmU4IiwidXNlcl9pZCI6IjJmNTMwNWMwLTdiMDMtNDcwNy1hNzM2LTM4MWY1OGFkMDI5OSJ9.lAuebpqOQ-VYBmnto-Dtk1oxWgoCVfCcuDFKyAIyQIc"
     const headers = new HttpHeaders({
@@ -59,8 +61,10 @@ export class SearchSelectComponent implements OnInit {
 
   selectMembers(member: any) {
     if (!this.selectedMembers.includes(member)) {
-      this.selectedMembers.push(member.id);
-      this.selectedLeaders.push(member.id);
+      this.selectedMembers.push(member);
+      this.selectedLeadersId.push(member.id);
+      this.selectedLeaders.push(member);
+      this.selectedMembersId.push(member.id);
       this.projectMembers = this.projectMembers.filter(m => m.id !== member.id);
       this.selectedMembersOutput.emit(this.selectedMembers);
       this.selectedLeadersOutput.emit(this.selectedLeaders);
@@ -71,7 +75,7 @@ export class SearchSelectComponent implements OnInit {
     this.selectedMembers = this.selectedMembers.filter(m => m.id !== member.id);
     this.selectedLeaders = this.selectedLeaders.filter(m => m.id !== member.idd);
     this.projectMembers.push(member.id);
-    this.selectedMembersOutput.emit(this.selectedMembers); 
+    this.selectedMembersOutput.emit(this.selectedMembers);
     this.selectedLeadersOutput.emit(this.selectedLeaders);
   }
 
