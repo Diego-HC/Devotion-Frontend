@@ -1,4 +1,8 @@
 import { Component } from "@angular/core";
+import {HttpClient} from '@angular/common/http';
+import {ApiService} from "../../api.service";
+import { HttpHeaders } from '@angular/common/http';
+import { OnInit} from '@angular/core';
 
 @Component({
   selector: "app-view-page",
@@ -31,15 +35,21 @@ import { Component } from "@angular/core";
     </div>
   `,
 })
-export class ViewPageComponent {
-  projects = [
-    {
-      id: "1",
-      name: "Project 1",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec odio nec urna tincidunt lacinia. Nulla facilisi. Nullam nec nunc nec nunc ultricies ultricies.",
-    },
-    { id: "2", name: "Project 2", description: "Description 2" },
-    { id: "3", name: "Project 3", description: "Description 3" },
-  ];
+export class ViewPageComponent implements OnInit{
+  constructor(private api: ApiService, private http: HttpClient) {}
+
+  projectResponse: any;
+  projects : any[] = [];
+
+  ngOnInit(): void {
+    const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0NTg2NzgzLCJpYXQiOjE3MTMyOTA3ODMsImp0aSI6IjA4YjM4MWE4N2M3ODQ1ZGNiOTMxMmUyOWRmYTkxMmU4IiwidXNlcl9pZCI6IjJmNTMwNWMwLTdiMDMtNDcwNy1hNzM2LTM4MWY1OGFkMDI5OSJ9.lAuebpqOQ-VYBmnto-Dtk1oxWgoCVfCcuDFKyAIyQIc"
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${authToken}`
+    })
+    const url = 'https://api.umm-actually.com/me/projects/';
+    this.http.get<any[]>(url, {headers}).subscribe((projects: any[]) => {
+      this.projects = projects;
+      console.log(this.projects);
+    });
+  }
 }
