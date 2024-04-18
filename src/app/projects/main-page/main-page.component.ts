@@ -4,12 +4,13 @@ import { bgBlack, bgBlue } from "ansi-colors";
 import { ApiService} from "../../api.service";
 
 export interface Project {
-  id: number;
+  id: string;
   name: string;
   description: string;
   progress: number;
 
   subprojects?: Project[];
+  tasks?: any[];
 }
 
 @Component({

@@ -30,13 +30,13 @@ import { Project } from "../main-page/main-page.component";
 })
 export class SubprojectCardComponent {
   @Input() subproject: Project = {
-    id: 0,
+    id: "",
     name: "",
     description: "",
     progress: 0,
   };
 
-  id: number = 0;
+  id: string = "";
   name: string = "";
   description: string = "";
   progress: number = 23;
