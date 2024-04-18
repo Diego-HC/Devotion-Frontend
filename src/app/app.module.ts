@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -32,6 +33,11 @@ import { PlusIconComponent } from './shared/icons/plus-icon/plus-icon.component'
 import { IconComponent } from './shared/icon/icon.component';
 import { ProjectCardComponent } from './projects/project-card/project-card.component';
 import { SearchSelectComponent } from './shared/search-select/search-select.component';
+import { TableIconComponent } from './shared/icons/table-icon/table-icon.component';
+import { KanbanIconComponent } from './shared/icons/kanban-icon/kanban-icon.component';
+import { CalendarIconComponent } from './shared/icons/calendar-icon/calendar-icon.component';
+import { RoadmapIconComponent } from './shared/icons/roadmap-icon/roadmap-icon.component';
+import { DevotionIsoComponent } from './shared/icons/devotion-iso/devotion-iso.component';
 
 @NgModule({
   declarations: [
@@ -61,8 +67,13 @@ import { SearchSelectComponent } from './shared/search-select/search-select.comp
     IconComponent,
     ProjectCardComponent,
     SearchSelectComponent,
+    TableIconComponent,
+    KanbanIconComponent,
+    CalendarIconComponent,
+    RoadmapIconComponent,
+    DevotionIsoComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [],
   bootstrap: [AppComponent],
 })

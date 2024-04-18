@@ -6,6 +6,6 @@ import { Component, Input } from '@angular/core';
 })
 export class ProjectsIconComponent {
   @Input() fill: string = '#2a4365';
-  @Input() width: string = '38';
+  @Input() width: string = '39';
   @Input() height: string = '44';
 }

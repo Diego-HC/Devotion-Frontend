@@ -228,7 +228,6 @@ export class MainPageComponent {
   onTabClick(selected: string) {
     this.currentView = selected;
     this.selectedIcon = selected;
-    console.log("Selected view: ", selected);
   }
 
   protected readonly bgBlack = bgBlack;

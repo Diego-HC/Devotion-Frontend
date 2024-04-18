@@ -1,19 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LoginComponent } from './login.component';
+import { KanbanIconComponent } from './kanban-icon.component';
 
-describe('LoginComponent', () => {
-  let component: LoginComponent;
-  let fixture: ComponentFixture<LoginComponent>;
+describe('KanbanIconComponent', () => {
+  let component: KanbanIconComponent;
+  let fixture: ComponentFixture<KanbanIconComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LoginComponent]
+      declarations: [KanbanIconComponent]
     })
     .compileComponents();
     
-    
-    fixture = TestBed.createComponent(LoginComponent);
+    fixture = TestBed.createComponent(KanbanIconComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
