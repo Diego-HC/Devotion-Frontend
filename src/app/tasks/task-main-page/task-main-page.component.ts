@@ -1,25 +1,20 @@
-import { Component } from '@angular/core';
-import {Project} from "../../projects/main-page/main-page.component";
-
-export interface Task {
-  id: number;
-  name: string;
-  status: string;
-  startDate: string;
-  dueDate: string;
-  asigneeId: string;
-  description: string;
-}
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from "@angular/router";
+import { ApiService } from '../../api.service';
 
 @Component({
   selector: 'app-task-main-page',
   template: `
-    <div class="overflow-x-auto mx-20">
+    <app-breadcrumbs
+      *ngIf="response !== undefined"
+      [breadcrumbs]="response.breadcrumbs"
+    />
+    <div class="overflow-x-auto mx-20 mt-4" *ngIf="response !== undefined">
       <div class="bg-white py-6 rounded-lg">
         <div class="flex flex-row justify-between gap-12">
           <div class="flex flex-row gap-6">
             <h1 class="text-4xl font-helvetica">
-              {{ task.name }}
+              {{ response.name }}
             </h1>
             <img
               src="../assets/coconut.webp"
@@ -35,30 +30,30 @@ export interface Task {
           <div class="flex flex-row gap-24">
             <div class="flex flex-col">
               <h2 class="font-roboto font-bold">Asignado</h2>
-              <p class="font-robotoCondensed font-normal">{{ task.asigneeId }}</p>
+              <p class="font-robotoCondensed font-normal">{{ response.asignee }}</p>
             </div>
             <div class="flex flex-col">
               <h2 class="font-roboto font-bold">Fecha Inicio</h2>
-              <p class="font-robotoCondensed font-normal">{{ task.startDate }}</p>
+              <p class="font-robotoCondensed font-normal">{{ response.startDate }}</p>
             </div>
             <div class="flex flex-col">
               <h2 class="font-roboto font-bold">Fecha Fin</h2>
-              <p class="font-robotoCondensed font-normal">{{ task.dueDate }}</p>
+              <p class="font-robotoCondensed font-normal">{{ response.dueDate }}</p>
             </div>
           </div>
         </div>
         <div class="flex flex-row items-center gap-4">
           <div class="dropdown dropdown-bottom">
-            <app-badge [status]="taskStatus" tabindex="0" role="button"></app-badge>
+            <app-badge [status]="statusName(response.status)" tabindex="0" role="button"></app-badge>
             <ul tabindex="0" class="dropdown-content z-[1] menu p-2 bg-base-100 rounded-box w-52">
-              <li><a (click)="updateStatus('No iniciado')">No iniciado</a></li>
-              <li><a (click)="updateStatus('En proceso')">En proceso</a></li>
-              <li><a (click)="updateStatus('En revisión')">En revisión</a></li>
-              <li><a (click)="updateStatus('Completado')"> Completado</a></li>
+              <li><a (click)="updateStatus(0)">No iniciado</a></li>
+              <li><a (click)="updateStatus(1)">En proceso</a></li>
+              <li><a (click)="updateStatus(2)">En revisión</a></li>
+              <li><a (click)="updateStatus(3)">Completado</a></li>
             </ul>
           </div>
           <a
-            href="/edit/project/{{ task.id }}"
+            href="/edit/project/{{ response.id }}"
             class="flex flex-row items-center gap-2"
           >
             <span
@@ -70,14 +65,14 @@ export interface Task {
         <p
           class="font-robotoCondensed text-lg my-4 max-w-3xl text-[#5E6377] font-normal"
         >
-          {{ task.description }}
+          {{ response.description }}
         </p>
 
         <div class="flex flex-col justify-between">
           <h3 class="font-bold md:mb-4 md:mt-12">Tareas</h3>
           <div class="flex flex-row items-center gap-5">
             <app-icon
-              [iconType]="'table'"
+              iconType="table"
               [selectedIcon]="selectedIcon"
               (selectedIconChange)="onTabClick($event)"
             >
@@ -105,7 +100,7 @@ export interface Task {
               <app-roadmap-icon class="col-start-1 row-start-1" [fill]="selectedIcon === 'roadmap' ? '#FFFFFF' : '#2A4365'"></app-roadmap-icon>
             </app-icon>
             <a
-              href="/new/task?Parent={{ task.id }}&Type=[Task]"
+              href="/new/task?Parent={{ response.id }}&Type=[Task]"
               (click)="onTabClick('newTask')"
             >
               <div class="flex flex-col place-items-center justify-center">
@@ -131,35 +126,45 @@ export interface Task {
     </div>
   `
 })
-export class TaskMainPageComponent {
-  task: Task = {
-    id: 0,
-    name: "",
-    status: "",
-    startDate: "",
-    dueDate: "",
-    asigneeId: "",
-    description: ""
-  };
+export class TaskMainPageComponent implements OnInit {
+  response: any;
 
-  constructor() {
-    this.task = {
-      id: 1,
-      name: 'Junta sprint - Grupo Chasis',
-      status: 'Completado',
-      startDate: '16 de marzo',
-      dueDate: '16 de marzo',
-      asigneeId: 'Alfonso Hernandez',
-      description: 'Junta de revisión de sprint con el grupo de chasis'
-    }
+  constructor(private api: ApiService, private route: ActivatedRoute) { }
+
+  ngOnInit() {
+    this.route.params.subscribe(params => {
+      this.api.get(`tasks/${params["id"]}/`).subscribe((response) => {
+        this.response = response;
+      });
+    });
   }
 
   dropdownOpen = false;
-  taskStatus = "En proceso";
 
-  updateStatus(status: string) {
-    this.taskStatus = status;
-    this.dropdownOpen = false;
+  statusName(status: number) {
+    switch (status) {
+      case 0:
+        return "No iniciado";
+      case 1:
+        return "En proceso";
+      case 2:
+        return "En revisión";
+      case 3:
+        return "Completado";
+      default:
+        return "No iniciado";
+    }
+  }
+
+  updateStatus(status: number) {
+    this.api.put(
+      "tasks/23a881c7-b1e9-418d-8673-5f52a04a266d/status/",
+      { status: status },
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0NzUzMTY0LCJpYXQiOjE3MTM0NTcxNjQsImp0aSI6ImEzMGQxYjUwMjQ2ZDQ4NDhiZWNiODg4ZmJkODAzODA4IiwidXNlcl9pZCI6ImEzZDk2Zjg0LTkyM2YtNGRiMi05N2MzLTU4NzVlNjE5ZGI5YyJ9.10qqwK3mK5s2sACmbZqYTu5rlFirhIAA1FKwB8xVuU8"
+    ).subscribe(() => {
+      this.response.status = status;
+      this.dropdownOpen = false;
+    });
   }
 
   currentView: string = "table"; // Default view
@@ -169,39 +174,4 @@ export class TaskMainPageComponent {
     this.currentView = selected;
     this.selectedIcon = selected;
   }
-
-  tasks = [
-    {
-      id: 1,
-      name: 'Junta sprint - Grupo Chasis',
-      status: 'Completado',
-      startDate: '16 de marzo',
-      dueDate: '16 de marzo',
-      asigneeId: 'Alfonso Hernandez'
-    },
-    {
-      id: 2,
-      name: 'Revisión de planos',
-      status: 'En revisión',
-      startDate: '12 de marzo',
-      dueDate: '14 de marzo',
-      asigneeId: 'Mario Bros'
-    },
-    {
-      id: 3,
-      name: 'Junta sprint - Grupo Suspensión',
-      status: 'No iniciado',
-      startDate: '19 de marzo',
-      dueDate: '21 de marzo',
-      asigneeId: 'Max Verstappen'
-    },
-    {
-      id: 4,
-      name: 'Junta sprint - Grupo Motor',
-      status: 'En proceso',
-      startDate: '22 de marzo',
-      dueDate: '24 de marzo',
-      asigneeId: 'Lewis Hamilton'
-    }
-  ];
 }

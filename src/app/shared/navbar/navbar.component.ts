@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
         <div class="flex justify-between h-full items-center">
           <div class = "flex flex-grow pl-20 pr-10">
             <a href="/"><app-devotion-logo fill="#000000" width="100" height="35" /></a>
-            <h1 class="font-semibold text-2xl pl-8 text-black">Administración de Proyectos</h1>
+            <h1 class="font-semibold text-2xl pl-8 text-black line-clamp-1">Administración de Proyectos</h1>
           </div>
 
           <div class="flex items-center justify-end pr-2">
