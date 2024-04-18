@@ -106,7 +106,6 @@ export interface Task {
             </app-icon>
             <a
               href="/new/task?Parent={{ task.id }}&Type=[Task]"
-              (click)="onTabClick('newTask')"
             >
               <div class="flex flex-col place-items-center justify-center">
                 <div

@@ -101,8 +101,7 @@ export interface Project {
               <app-roadmap-icon class="col-start-1 row-start-1" [fill]="selectedIcon === 'roadmap' ? '#FFFFFF' : '#2A4365'"></app-roadmap-icon>
             </app-icon>
             <a
-              href="/new/task?Parent={{ project.id }}&Type=[Task]"
-              (click)="onTabClick('newTask')"
+              href="/new/task?Parent={{ response.id }}&Type=[Task]"
             >
               <div class="flex flex-col place-items-center justify-center">
                 <div
@@ -139,74 +138,13 @@ export class MainPageComponent implements OnInit {
 
   response: any;
 
-  constructor(private api: ApiService) {
+  constructor(private api: ApiService, private router: Router) {}
 
-    // Replace this with your actual JSON data source
-    this.project = {
-      id: 1,
-      name: "FSAE 2024",
-      description:
-        "Ser la mejor escudería en al competencia SAE Formula Student con un vehículo monoplaza reconocido por\n          nuestra excelencia en el diseño y construcción. Aspiramos a inspirar a las generaciones futuras\n          demostrando que con pasión, determinación y trabajo en equipo podemos alcanzar nuestros objetivos en el\n          mundo del automovilismo.",
-      progress: 50,
-
-      subprojects: [
-        {
-          id: 1,
-          name: "Diseño",
-          description: "Diseñar un vehículo monoplaza de carreras",
-          progress: 70,
-        },
-        {
-          id: 2,
-          name: "Fabricación",
-          description:
-            "Construir el vehículo monoplaza de carreras Construir el vehículo monoplaza de carreras",
-          progress: 30,
-        },
-        {
-          id: 3,
-          name: "Pruebas",
-          description: "Realizar pruebas de rendimiento del vehículo",
-          progress: 10,
-        },
-        {
-          id: 4,
-          name: "Marketing",
-          description: "Promocionar la escudería en redes sociales",
-          progress: 90,
-        },
-        {
-          id: 5,
-          name: "Finanzas",
-          description: "Administrar el presupuesto de la escudería",
-          progress: 40,
-        },
-        {
-          id: 6,
-          name: "Recursos Humanos",
-          description: "Gestionar el equipo de trabajo",
-          progress: 60,
-        },
-        {
-          id: 7,
-          name: "Logística",
-          description: "Coordinar la logística de la escudería",
-          progress: 20,
-        },
-        {
-          id: 8,
-          name: "Innovación",
-          description: "Investigar y proponer mejoras en el vehículo",
-          progress: 80,
-        },
-        {
-          id: 9,
-          name: "Sustentabilidad",
-          description: "Implementar prácticas sustentables en la escudería",
-          progress: 50,
-        },
-      ],
-    };
+  navigateToNewTask() {
+    // Navigate to the new task page with route parameters
+    this.router.navigate(['/new/task'], {
+      queryParams: { Parent: this.project.id, Type: 'Task' }
+    });
   }
 
   currentView: string = "table"; // Default view
