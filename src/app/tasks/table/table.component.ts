@@ -1,4 +1,4 @@
-import {Component, Input } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Router} from '@angular/router';
 
 @Component({
@@ -26,7 +26,7 @@ import {Router} from '@angular/router';
         </tr>
         </thead>
         <tbody>
-        <tr class="cursor-pointer hover:bg-gray-50 border-2 font-robotoCondensed" *ngFor="let task of tasks" (click)="navigateToTask(task.id)">
+        <tr class="cursor-pointer hover:bg-gray-50 border-2 font-robotoCondensed" *ngFor="let task of tasks" (click)="navigateToTask(task.id)" >
           <td class="text-left px-4 py-2 font-semibold">
             {{ task.name | slice:0:35 }}
           </td>
@@ -49,10 +49,14 @@ import {Router} from '@angular/router';
 export class TableComponent {
 
   @Input() tasks?: any[];
+  @Input() taskId: string = '';
+  @Output() taskClicked = new EventEmitter<string>();
+  // @Output() allTasks = new EventEmitter<any[]>();
 
   constructor(private router: Router) { }
 
-  navigateToTask(taskId: number) {
-    this.router.navigate(['/task', taskId]);
+
+  navigateToTask(taskId: string) {
+    this.taskClicked.emit(taskId);
   }
 }

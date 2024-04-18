@@ -1,15 +1,16 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Output, Input, EventEmitter } from "@angular/core";
 import { Router } from "@angular/router";
 import { bgBlack, bgBlue } from "ansi-colors";
 import { ApiService} from "../../api.service";
 
 export interface Project {
-  id: number;
+  id: string;
   name: string;
   description: string;
   progress: number;
 
   subprojects?: Project[];
+  tasks?: any[];
 }
 
 @Component({
@@ -62,7 +63,7 @@ export interface Project {
             <div
               class="flex flex-col flex-wrap content-start gap-4 ml-2 mt-2 h-60 overflow-x-scroll"
             >
-              @for (subproject of this.response?.subprojects; track subproject.id)
+              @for (subproject of this.response?.projects; track subproject.id)
               {
               <app-subproject-card [subproject]="subproject" />
               }
@@ -120,7 +121,7 @@ export interface Project {
         </div>
       </div>
 
-      <app-table *ngIf="currentView === 'table'" [tasks]="response?.tasks" />
+      <app-table *ngIf="currentView === 'table'" [tasks]="response?.tasks" (taskClicked)="onTaskClicked($event)" />
       <app-kanban *ngIf="currentView === 'kanban'" />
       <app-calendar *ngIf="currentView === 'calendar'" />
       <app-roadmap *ngIf="currentView === 'roadmap'" />
@@ -129,14 +130,18 @@ export interface Project {
 })
 export class MainPageComponent implements OnInit {
   project: Project = {
-    id: 0,
+    id: "",
     name: "",
     description: "",
     progress: 0,
     subprojects: [],
+    tasks: [],
   };
 
   response: any;
+  @Output () allTasks = new EventEmitter<any[]>();
+
+  selectedTaskId: string = '';
 
   constructor(private api: ApiService, private router: Router) {}
 
@@ -159,7 +164,14 @@ export class MainPageComponent implements OnInit {
     this.api.get('projects/887ebfdd-bd39-417c-9b42-90396c2b8e59/').subscribe((response) => {
       console.log(response);
       this.response = response;
+      this.allTasks.emit(response.tasks);
     });
+  }
+
+  onTaskClicked(taskId: string) {
+    // Navigate to the task page when a task is clicked
+    this.router.navigate(['/task', taskId]);
+    this.selectedTaskId = taskId;
   }
 
   protected readonly bgBlack = bgBlack;

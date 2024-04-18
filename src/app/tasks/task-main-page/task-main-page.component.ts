@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ApiService } from '../../api.service';
 import {Project} from "../../projects/main-page/main-page.component";
 
 export interface Task {
-  id: number;
+  id: string;
   name: string;
-  status: string;
+  description: string;
+  status: number;
   startDate: string;
   dueDate: string;
-  asigneeId: string;
-  description: string;
+  asignee: string;
+  tasks?: Task[];
 }
 
 @Component({
@@ -35,7 +37,7 @@ export interface Task {
           <div class="flex flex-row gap-24">
             <div class="flex flex-col">
               <h2 class="font-roboto font-bold">Asignado</h2>
-              <p class="font-robotoCondensed font-normal">{{ task.asigneeId }}</p>
+              <p class="font-robotoCondensed font-normal">{{ task.asignee }}</p>
             </div>
             <div class="flex flex-col">
               <h2 class="font-roboto font-bold">Fecha Inicio</h2>
@@ -130,28 +132,40 @@ export interface Task {
     </div>
   `
 })
-export class TaskMainPageComponent {
+export class TaskMainPageComponent implements OnInit{
   task: Task = {
-    id: 0,
+    id: "",
     name: "",
-    status: "",
+    status: 0,
     startDate: "",
     dueDate: "",
-    asigneeId: "",
+    asignee: "",
     description: ""
   };
 
-  constructor() {
-    this.task = {
-      id: 1,
-      name: 'Junta sprint - Grupo Chasis',
-      status: 'Completado',
-      startDate: '16 de marzo',
-      dueDate: '16 de marzo',
-      asigneeId: 'Alfonso Hernandez',
-      description: 'Junta de revisión de sprint con el grupo de chasis'
-    }
+  ngOnInit() {
+    this.api.get(`tasks/${this.task.id}}`).subscribe((response: any) => {
+      console.log(response);
+      this.task = response;
+    });
   }
+
+  @Output() taskClicked = new EventEmitter<string>();
+
+  constructor(private api: ApiService) {
+  }
+
+  //constructor() {
+    // this.task = {
+    //   id: "6f7c0fad-c5b2-4694-9365-758f0de32798",
+    //   name: 'Junta sprint - Grupo Chasis',
+    //   status: 2,
+    //   startDate: '16 de marzo',
+    //   dueDate: '16 de marzo',
+    //   asignee: 'Alfonso Hernandez',
+    //   description: 'Junta de revisión de sprint con el grupo de chasis'
+    // }
+  //}
 
   dropdownOpen = false;
   taskStatus = "En proceso";

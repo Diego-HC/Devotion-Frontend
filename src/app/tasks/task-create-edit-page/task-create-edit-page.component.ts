@@ -10,7 +10,7 @@ export interface Task {
   start_date?: string;
   due_date: string;
   parent_project: string;
-  asignee: string;
+  asignee: any;
 }
 
 @Component({
@@ -62,7 +62,7 @@ export interface Task {
         </textarea>
         <div class="w-1/2">
           <h2 class="font-roboto font-bold mt-4">Asignado</h2>
-          <app-search-select (selectedMemberId)="onMemberSelected($event)" ></app-search-select>
+          <app-search-select (selectedMembersOutput)="onMembersSelected($event)" ></app-search-select>
         </div>
       </div>
     </div>
@@ -85,6 +85,10 @@ export class TaskCreateEditPageComponent implements OnInit {
   };
 
   projectId: string = '';
+
+  onMembersSelected(members: string[]) {
+    this.taskData.asignee = members;
+  }
 
   ngOnInit() {
     // Retrieve project ID from route parameters
@@ -113,6 +117,7 @@ export class TaskCreateEditPageComponent implements OnInit {
         priorityValue = -1; // Default value if priority is not recognized
     }
 
+    this.taskData.asignee = this.taskData.asignee.join(',');
     this.taskData.priority = priorityValue;
     this.taskData.parent_project = this.projectId;
 
