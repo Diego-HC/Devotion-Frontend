@@ -118,7 +118,7 @@ export class TaskCreateEditPageComponent implements OnInit {
         priorityValue = -1; // Default value if priority is not recognized
     }
 
-    this.taskData.asignee = this.taskData.asignee.join(',');
+    this.taskData.asignee = this.taskData.asignee.map((x: any) => x.id).join(',');
     this.taskData.priority = priorityValue;
     this.taskData.parent_project = this.projectId;
 
