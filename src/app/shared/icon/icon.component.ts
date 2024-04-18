@@ -17,7 +17,7 @@ import { Input, Output, EventEmitter } from "@angular/core";
         </div>
       </div>
     </a>
-  `
+  `,
 })
 export class IconComponent {
   @Input() iconType: string = "table";

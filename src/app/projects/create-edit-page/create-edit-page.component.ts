@@ -25,7 +25,7 @@ export interface Project {
               <p class = "text-xs font-robotoCondensed">Publicar</p>
             </div>
           </div>
-          
+
           <div class = "flex flex-col flex-grow justify-center">
           <h1 class=" text-l font-roboto font-extrabold mb-3">Descripción</h1>
             <textarea rows = "4" class="textarea textarea-bordered mr-4 shadow-md font-robotoCondensed text-s w-full min-h-10"
@@ -82,5 +82,4 @@ export class CreateEditPageComponent implements OnInit {
       this.projectResponse = response;
     })
   }
-
 }

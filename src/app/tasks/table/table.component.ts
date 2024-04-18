@@ -1,5 +1,4 @@
-import {Component} from '@angular/core';
-import {Input} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Router} from '@angular/router';
 
 @Component({
@@ -27,20 +26,20 @@ import {Router} from '@angular/router';
         </tr>
         </thead>
         <tbody>
-        <tr class="cursor-pointer hover:bg-gray-50 border-2 font-robotoCondensed" *ngFor="let task of tasks" (click)="navigateToTask(task.id)">
+        <tr class="cursor-pointer hover:bg-gray-50 border-2 font-robotoCondensed" *ngFor="let task of tasks" (click)="navigateToTask(task.id)" >
           <td class="text-left px-4 py-2 font-semibold">
             {{ task.name | slice:0:35 }}
           </td>
           <td
             class="px-6 py-2 whitespace-nowrap flex justify-between items-center overflow-auto text-center font-black font-inter">
-            <app-badge *ngIf="task.status === 'En revisión'" [status]="task.status"></app-badge>
-            <app-badge *ngIf="task.status === 'Completado'" [status]="task.status"></app-badge>
-            <app-badge *ngIf="task.status === 'En proceso'" [status]="task.status"></app-badge>
-            <app-badge *ngIf="task.status === 'No iniciado'" [status]="task.status"></app-badge>
+            <app-badge *ngIf="task.status === 0" [status]="'No iniciado'"></app-badge>
+            <app-badge *ngIf="task.status === 1" [status]="'En proceso'"></app-badge>
+            <app-badge *ngIf="task.status === 2" [status]="'En revisión'"></app-badge>
+            <app-badge *ngIf="task.status === 3" [status]="'Completado'"></app-badge>
           </td>
           <td class="text-left px-4 py-2 text-[#5E6377]">{{ task.startDate }}</td>
           <td class="text-left px-4 py-2 text-[#5E6377]">{{ task.dueDate }}</td>
-          <td class="text-left px-4 py-2 text-[#5E6377]">{{ task.asigneeId }}</td>
+          <td class="text-left px-4 py-2 text-[#5E6377]">{{ task.asignee }}</td>
         </tr>
         </tbody>
       </table>
@@ -48,44 +47,14 @@ import {Router} from '@angular/router';
   `,
 })
 export class TableComponent {
-  tasks = [
-    {
-      id: 1,
-      name: 'Junta sprint - Grupo Chasis',
-      status: 'Completado',
-      startDate: '16 de marzo',
-      dueDate: '16 de marzo',
-      asigneeId: 'Alfonso Hernandez'
-    },
-    {
-      id: 2,
-      name: 'Revisión de planos',
-      status: 'En revisión',
-      startDate: '12 de marzo',
-      dueDate: '14 de marzo',
-      asigneeId: 'Mario Bros'
-    },
-    {
-      id: 3,
-      name: 'Junta sprint - Grupo Suspensión',
-      status: 'No iniciado',
-      startDate: '19 de marzo',
-      dueDate: '21 de marzo',
-      asigneeId: 'Max Verstappen'
-    },
-    {
-      id: 4,
-      name: 'Junta sprint - Grupo Motor',
-      status: 'En proceso',
-      startDate: '22 de marzo',
-      dueDate: '24 de marzo',
-      asigneeId: 'Lewis Hamilton'
-    }
-  ];
+
+  @Input() tasks?: any[];
+  @Input() taskId: string = '';
 
   constructor(private router: Router) { }
 
-  navigateToTask(taskId: number) {
+
+  navigateToTask(taskId: string) {
     this.router.navigate(['/task', taskId]);
   }
 }

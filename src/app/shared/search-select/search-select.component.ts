@@ -3,7 +3,6 @@ import {HttpClient} from '@angular/common/http';
 import {ApiService} from "../../api.service";
 import { HttpHeaders } from '@angular/common/http';
 
-
 @Component({
   selector: 'app-search-select',
   template: `
@@ -30,7 +29,6 @@ import { HttpHeaders } from '@angular/common/http';
 })
 
 export class SearchSelectComponent implements OnInit {
-
   tags: string[] = [];
   inputTag: string = '';
   projectMembers: any[] = [];
@@ -91,5 +89,4 @@ export class SearchSelectComponent implements OnInit {
   removeTag(tagToRemove: string): void {
     this.tags = this.tags.filter(tag => tag !== tagToRemove);
   }
-
 }
