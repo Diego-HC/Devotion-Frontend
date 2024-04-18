@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Router} from '@angular/router';
 
 @Component({
@@ -50,13 +50,11 @@ export class TableComponent {
 
   @Input() tasks?: any[];
   @Input() taskId: string = '';
-  @Output() taskClicked = new EventEmitter<string>();
-  // @Output() allTasks = new EventEmitter<any[]>();
 
   constructor(private router: Router) { }
 
 
   navigateToTask(taskId: string) {
-    this.taskClicked.emit(taskId);
+    this.router.navigate(['/task', taskId]);
   }
 }
