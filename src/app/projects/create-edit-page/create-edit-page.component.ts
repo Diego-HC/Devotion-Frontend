@@ -44,8 +44,6 @@ export interface Project {
 export class CreateEditPageComponent implements OnInit {
   constructor (private api: ApiService, private router: Router) {}
 
-  // @Input() projectMembers: any[] = [];
-
   projectResponse: any;
 
   projectData: Project = {
@@ -59,9 +57,6 @@ export class CreateEditPageComponent implements OnInit {
 
   }
 
-  currentSelectedMembers: any[] = [];
-
-
   onMembersSelected(members: string[]) {
     this.projectData.members = members;
   }
@@ -71,16 +66,10 @@ export class CreateEditPageComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.projectData);
     this.projectData.leaders = this.projectData.leaders.join(',');
-    // this.projectData.leaders = this.projectData.leaders.map((x: any) => x.id).join(',');
-    console.log(this.projectData.leaders);
     this.projectData.members = this.projectData.members.join(',');
-    console.log(this.projectData.members);
 
-    console.log(this.projectData);
-
-    this.api.post('projects/', this.projectData, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0NTg2NzgzLCJpYXQiOjE3MTMyOTA3ODMsImp0aSI6IjA4YjM4MWE4N2M3ODQ1ZGNiOTMxMmUyOWRmYTkxMmU4IiwidXNlcl9pZCI6IjJmNTMwNWMwLTdiMDMtNDcwNy1hNzM2LTM4MWY1OGFkMDI5OSJ9.lAuebpqOQ-VYBmnto-Dtk1oxWgoCVfCcuDFKyAIyQIc")
+    this.api.post('projects/', this.projectData)
     .subscribe((response) => {
       this.projectResponse = response;
       // navigate to project page

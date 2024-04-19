@@ -1,6 +1,5 @@
 import {Component, OnInit, Output, EventEmitter, Input} from '@angular/core';
 import {ApiService} from "../../api.service";
-import {HttpHeaders} from '@angular/common/http';
 
 @Component({
   selector: 'app-search-select',
@@ -54,20 +53,11 @@ export class SearchSelectComponent implements OnInit {
   }
 
   fetchMembers() {
-    const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0NTg2NzgzLCJpYXQiOjE3MTMyOTA3ODMsImp0aSI6IjA4YjM4MWE4N2M3ODQ1ZGNiOTMxMmUyOWRmYTkxMmU4IiwidXNlcl9pZCI6IjJmNTMwNWMwLTdiMDMtNDcwNy1hNzM2LTM4MWY1OGFkMDI5OSJ9.lAuebpqOQ-VYBmnto-Dtk1oxWgoCVfCcuDFKyAIyQIc"
-
-    if (this.singleSelectedMode && this.projectId) {
-      // Use project members endpoint if in single selection mode and project ID is provided
-      this.api.get(`projects/${this.projectId}/members`, authToken).subscribe((members: any[]) => {
-        this.projectMembers = members;
-        console.log(this.projectMembers);
-      });
-    } else {
-      this.api.get(`users/`, authToken).subscribe((members: any[]) => {
-        this.projectMembers = members;
-        console.log(this.projectMembers);
-      });
-    }
+    this.api.get(
+      (this.singleSelectedMode && this.projectId) ? `projects/${this.projectId}/members` : "users/"
+    ).subscribe((members: any[]) => {
+      this.projectMembers = members;
+    });
   }
 
   selectMembers(member: any) {
@@ -81,14 +71,8 @@ export class SearchSelectComponent implements OnInit {
       if (!this.selectedMembers.includes(member)) {
         this.selectedMembers.push(member);
         this.selectedLeaders.push(member);
-        // this.selectedMembers = this.selectedMembers.filter(m => m.id !== member.id);
-        // this.selectedLeaders = this.selectedLeaders.filter(m => m.id !== member.id);
         this.selectedMembersId.push(member.id);
         this.selectedLeadersId.push(member.id);
-        // this.selectedMembersId = this.selectedMembersId.filter(id => id !== member.id);
-        // this.selectedLeadersId = this.selectedLeadersId.filter(id => id !== member.id);
-        console.log(this.selectedMembersId);
-        //this.projectMembers.push(member);
         this.selectedMembersOutput.emit(this.selectedMembersId);
         this.selectedLeadersOutput.emit(this.selectedLeadersId);
       }
@@ -98,7 +82,6 @@ export class SearchSelectComponent implements OnInit {
   deselectMembers(member: any) {
     this.selectedMembers = this.selectedMembers.filter(m => m.id !== member.id);
     this.selectedLeaders = this.selectedLeaders.filter(m => m.id !== member.id);
-    //this.projectMembers.push(member.id);
     this.selectedMembersOutput.emit(this.selectedMembers);
     this.selectedLeadersOutput.emit(this.selectedLeaders);
 
@@ -108,13 +91,6 @@ export class SearchSelectComponent implements OnInit {
 
   isSelected(member: any): boolean {
     return this.selectedMembers.includes(member);
-  }
-
-  addTag(): void {
-    if (this.inputTag && !this.tags.includes(this.inputTag)) {
-      this.tags.push(this.inputTag.trim());
-      this.inputTag = '';
-    }
   }
 
   removeTag(tagToRemove: string): void {

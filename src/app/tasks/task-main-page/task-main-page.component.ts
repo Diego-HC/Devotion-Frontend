@@ -159,9 +159,8 @@ export class TaskMainPageComponent implements OnInit {
 
   updateStatus(status: number) {
     this.api.put(
-      "tasks/23a881c7-b1e9-418d-8673-5f52a04a266d/status/",
+      `tasks/${this.response.id}/status/`,
       { status: status },
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0NzUzMTY0LCJpYXQiOjE3MTM0NTcxNjQsImp0aSI6ImEzMGQxYjUwMjQ2ZDQ4NDhiZWNiODg4ZmJkODAzODA4IiwidXNlcl9pZCI6ImEzZDk2Zjg0LTkyM2YtNGRiMi05N2MzLTU4NzVlNjE5ZGI5YyJ9.10qqwK3mK5s2sACmbZqYTu5rlFirhIAA1FKwB8xVuU8"
     ).subscribe(() => {
       this.response.status = status;
       this.dropdownOpen = false;

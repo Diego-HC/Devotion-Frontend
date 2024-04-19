@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ApiService } from '../../api.service';
 
 @Component({
@@ -9,10 +9,12 @@ import { ApiService } from '../../api.service';
         <source src="/assets/animation.mp4" type="video/mp4" />
         Video not supported
       </video>
-      <p class="text-center text-[#5E6377] font-robotoCondensed w-72">{{ this.api.randomTip() }}</p>
+      <p *ngIf="tips === 'true'" class="text-center text-[#5E6377] font-robotoCondensed w-72">{{ this.api.randomTip() }}</p>
     </div>
   `
 })
 export class LoadingComponent {
-  constructor(protected api: ApiService) {}
+  constructor(protected api: ApiService) { }
+
+  @Input() tips: string = "true"
 }
