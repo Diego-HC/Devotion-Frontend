@@ -1,3 +1,4 @@
+import { AuthGoogleService } from './../auth-google.service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -26,9 +27,10 @@ import { Component } from '@angular/core';
       </div>
       <div class="flex justify-center items-center gap-1.5">
         
-          <button class="mbutton" class="bg-blue-800 text-white border-none rounded px-5 py-2.5 cursor-pointer flex items-center gap-1.5">
-            Ingresar con Microsoft
-            <img src="https://www.pngmart.com/files/4/Microsoft-Logo-PNG-Free-Download.png" alt="Microsoft Logo" class="h-5 w-auto">
+          <button (click)="login()" class="mbutton" class="bg-blue-800 text-white border-none rounded px-5 py-2.5 cursor-pointer flex items-center gap-1.5 fill=#2A4365">
+            <img src="https://imagepng.org/wp-content/uploads/2019/08/google-icon.png" alt="Microsoft Logo" class="h-5 w-auto">
+            Ingresar con Google
+            
           </button>
         
       </div>
@@ -43,4 +45,11 @@ import { Component } from '@angular/core';
   `,
   styleUrls: []
 })
-export class LoginComponent {}
+export class LoginComponent {
+  constructor(private AuthGoogleService: AuthGoogleService) {
+
+   }
+  login(){
+    this.AuthGoogleService.login();
+  }
+}
