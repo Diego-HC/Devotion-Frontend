@@ -10,7 +10,7 @@ import {HttpHeaders} from '@angular/common/http';
         <div class="input input-bordered md:w-full shadow-md items-center justify-center">
           <span *ngFor="let member of selectedMembers"
                 class="box-content bg-gray-200 p-0 font-robotoCondensed font-bold px-1 mr-1 text-s items-center tag">
-            {{ member.firstNames }}
+            {{ member.firstNames }} {{ member.lastNames }}
             <button (click)="deselectMembers(member)" class="md:gap-2 md:mt-2">x</button>
           </span>
           <input class="" type="search" [(ngModel)]="inputTag" (click)="fetchMembers()" readonly>
@@ -23,7 +23,7 @@ import {HttpHeaders} from '@angular/common/http';
                [class.text-white]="isSelected(member)" [class.bg-[#5CCEFF]]="isSelected(member)">
             <button class="btn btn-xs px-1 w-full h-full rounded-none bg-gray-200 border-gray-200 "
                     (click)="selectMembers(member)" [class.bg-[#5CCEFF]]="isSelected(member)"
-                    [class.text-white]="isSelected(member)">{{ member.firstNames }}
+                    [class.text-white]="isSelected(member)">{{ member.firstNames }} {{ member.lastNames }}
             </button>
           </div>
         </div>
@@ -88,7 +88,7 @@ export class SearchSelectComponent implements OnInit {
         // this.selectedMembersId = this.selectedMembersId.filter(id => id !== member.id);
         // this.selectedLeadersId = this.selectedLeadersId.filter(id => id !== member.id);
         console.log(this.selectedMembersId);
-        this.projectMembers.push(member);
+        //this.projectMembers.push(member);
         this.selectedMembersOutput.emit(this.selectedMembersId);
         this.selectedLeadersOutput.emit(this.selectedLeadersId);
       }
