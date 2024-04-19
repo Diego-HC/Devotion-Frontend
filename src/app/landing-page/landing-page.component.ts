@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
+import { Router } from '@angular/router';
+import { AuthGoogleService } from '../auth-google.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -7,6 +9,7 @@ import { ApiService } from '../api.service';
     <a href="/login" class="ml-20">
       <button class="my-button">Go to Login</button>
     </a>
+    <button (click)="logOut()" class="my-button">Close session</button>
     <p class="ml-20">{{ response?.message ?? "Loading..." }}</p>
   `,
   styles: [`
@@ -20,7 +23,7 @@ import { ApiService } from '../api.service';
   `]
 })
 export class LandingPageComponent implements OnInit {
-  constructor(private api: ApiService) { }
+  constructor(private api: ApiService, private router: Router, private authGoogleService: AuthGoogleService) { }
 
   response: any;
 
@@ -29,5 +32,10 @@ export class LandingPageComponent implements OnInit {
       console.log(response);
       this.response = response;
     });
+  }
+  logOut(){
+    this.authGoogleService.logout();
+    this.router.navigate(['/login']);
+
   }
 }

@@ -39,6 +39,7 @@ import { CalendarIconComponent } from './shared/icons/calendar-icon/calendar-ico
 import { RoadmapIconComponent } from './shared/icons/roadmap-icon/roadmap-icon.component';
 import { DevotionIsoComponent } from './shared/icons/devotion-iso/devotion-iso.component';
 import { LoadingComponent } from './shared/loading/loading.component';
+import { OAuthModule } from "angular-oauth2-oidc";
 
 @NgModule({
   declarations: [
@@ -75,7 +76,10 @@ import { LoadingComponent } from './shared/loading/loading.component';
     DevotionIsoComponent,
     LoadingComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
+  imports: [BrowserModule,
+    AppRoutingModule,
+    OAuthModule.forRoot(),
+    FormsModule, HttpClientModule,],
   providers: [],
   bootstrap: [AppComponent],
 })
