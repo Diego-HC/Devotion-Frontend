@@ -16,6 +16,7 @@ export interface Project {
 @Component({
   selector: "app-main-page",
   template: `
+    <app-loading *ngIf="response === undefined" />
     <app-breadcrumbs
       *ngIf="response !== undefined"
       [breadcrumbs]="response.breadcrumbs"
@@ -136,7 +137,7 @@ export interface Project {
 export class MainPageComponent implements OnInit {
   response: any;
 
-  constructor(private api: ApiService, private route: ActivatedRoute) { }
+  constructor(protected api: ApiService, private route: ActivatedRoute) { }
 
   currentView: string = "table"; // Default view
   selectedIcon: string = "table";

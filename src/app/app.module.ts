@@ -38,6 +38,7 @@ import { KanbanIconComponent } from './shared/icons/kanban-icon/kanban-icon.comp
 import { CalendarIconComponent } from './shared/icons/calendar-icon/calendar-icon.component';
 import { RoadmapIconComponent } from './shared/icons/roadmap-icon/roadmap-icon.component';
 import { DevotionIsoComponent } from './shared/icons/devotion-iso/devotion-iso.component';
+import { LoadingComponent } from './shared/loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { DevotionIsoComponent } from './shared/icons/devotion-iso/devotion-iso.c
     CalendarIconComponent,
     RoadmapIconComponent,
     DevotionIsoComponent,
+    LoadingComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [],

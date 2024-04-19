@@ -5,6 +5,7 @@ import { ApiService } from '../../api.service';
 @Component({
   selector: 'app-task-main-page',
   template: `
+    <app-loading *ngIf="response === undefined" />
     <app-breadcrumbs
       *ngIf="response !== undefined"
       [breadcrumbs]="response.breadcrumbs"
