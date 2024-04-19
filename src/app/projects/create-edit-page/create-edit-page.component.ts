@@ -72,9 +72,10 @@ export class CreateEditPageComponent implements OnInit {
 
   onSubmit() {
     console.log(this.projectData);
-    this.projectData.leaders = this.projectData.leaders.map((x: any) => x.id).join(',');
+    this.projectData.leaders = this.projectData.leaders.join(',');
+    // this.projectData.leaders = this.projectData.leaders.map((x: any) => x.id).join(',');
     console.log(this.projectData.leaders);
-    this.projectData.members = this.projectData.members.map((x: any) => x.id).join(',');
+    this.projectData.members = this.projectData.members.join(',');
     console.log(this.projectData.members);
 
     console.log(this.projectData);
