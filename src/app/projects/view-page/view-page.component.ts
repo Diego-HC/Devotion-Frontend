@@ -1,12 +1,13 @@
 import { Component } from "@angular/core";
 import { ApiService } from "../../api.service";
-import { OnInit} from '@angular/core';
-import { AuthGoogleService } from "../../auth-google.service";
+import { OnInit } from '@angular/core';
 
 @Component({
   selector: "app-view-page",
   template: `
+    <app-loading *ngIf="projects === undefined" />
     <div
+      *ngIf="projects !== undefined"
       class="flex flex-row flex-wrap gap-10 m-20 justify-center md:justify-normal"
     >
       @for (project of this.projects; track $index) {
@@ -35,21 +36,13 @@ import { AuthGoogleService } from "../../auth-google.service";
   `,
 })
 export class ViewPageComponent implements OnInit{
-  constructor(private api: ApiService, private auth: AuthGoogleService) {}
+  constructor(private api: ApiService) { }
 
-  projectResponse: any;
-  projects : any[] = [];
+  projects: any;
 
   ngOnInit(): void {
-    // this.auth.oAuthService.setupAutomaticSilentRefresh();
-    // if (!this.auth.oAuthService.hasValidAccessToken()) {
-    //   this.auth.oAuthService.initImplicitFlow();
-    // }
-
-    const url = 'me/projects/';
-    this.api.get(url, this.auth.oAuthService.getIdToken()).subscribe((projects) => {
+    this.api.get('me/projects/').subscribe((projects) => {
       this.projects = projects;
-      console.log(this.projects);
     });
   }
 }

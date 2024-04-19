@@ -1,7 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
-import {HttpClient} from '@angular/common/http';
-import {ApiService} from "../../api.service";
+import { Component, OnInit } from '@angular/core';
+import { Router } from "@angular/router";
+import { ApiService } from "../../api.service";
 import { ActivatedRoute} from "@angular/router";
 
 export interface Task {
@@ -71,8 +70,7 @@ export interface Task {
 })
 export class TaskCreateEditPageComponent implements OnInit {
 
-  constructor(private http: HttpClient, private api: ApiService, private route: ActivatedRoute, private router: Router) {
-  }
+  constructor(private api: ApiService, private route: ActivatedRoute, private router: Router) { }
 
   tasksResponse: any;
   taskData: Task = {
@@ -98,10 +96,6 @@ export class TaskCreateEditPageComponent implements OnInit {
     });
   }
 
-  onMemberSelected(memberId: string) {
-    this.taskData.asignee = memberId;
-  }
-
   onSubmit() {
     let priorityValue: number;
     switch (this.selectedPriority) {
@@ -117,18 +111,14 @@ export class TaskCreateEditPageComponent implements OnInit {
       default:
         priorityValue = -1; // Default value if priority is not recognized
     }
-    //this.taskData.asignee = this.taskData.asignee.map((x: any) => x.id).join(',');
+
     this.taskData.priority = priorityValue;
     this.taskData.parent_project = this.projectId;
 
-    console.log(this.taskData);
-
-    this.api.post('tasks/', this.taskData, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0Njc0MzIyLCJpYXQiOjE3MTMzNzgzMjIsImp0aSI6IjRkNGY2MDI0Nzg2NjQ3Y2ZiM2IwNTZhNWI4MDBmYmMxIiwidXNlcl9pZCI6IjI5YzQxNzk0LTAzM2QtNDRlYS05ZWY4LWExMjcxNjZiYmE1NSJ9.yEmFdABl4Mt9YmS-kSoD1QsGi4m73vhBYhkGHt-yJUA")
-      .subscribe((response) => {
+    this.api.post('tasks/', this.taskData).subscribe((response) => {
         this.tasksResponse = response;
-        // navigate to task page
         this.router.navigateByUrl(`/task/${this.tasksResponse.id}`)
-      });
+    });
   }
 
   selectedPriority: string = 'Baja';

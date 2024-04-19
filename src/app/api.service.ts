@@ -1,17 +1,22 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { AuthGoogleService } from "./auth-google.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  // private baseUrl = 'https://api.umm-actually.com/';
-  private baseUrl = 'http://localhost:8000/';
+  private baseUrl = 'https://api.umm-actually.com/';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private auth: AuthGoogleService) { }
 
-  options(token?: string) {
+  options() {
+    if (!this.auth.oAuthService.hasValidAccessToken()) {
+      this.auth.oAuthService.initImplicitFlow();
+    }
+
+    const token = this.auth.oAuthService.getIdToken();
     return {
       headers: new HttpHeaders(token ? {
         Authorization: `Bearer ${token}`
@@ -19,20 +24,24 @@ export class ApiService {
     }
   }
 
-  get(endpoint: string, token?: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}${endpoint}`, this.options(token));
+  get(endpoint: string, requiresToken: boolean = true): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}${endpoint}`, requiresToken ? this.options() : {});
   }
 
-  post(endpoint: string, data: any, token?: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}${endpoint}`, data, this.options(token));
+  post(endpoint: string, data: any, requiresToken: boolean = true): Observable<any> {
+    return this.http.post(
+      `${this.baseUrl}${endpoint}`, data, requiresToken ? this.options() : {});
   }
 
-  put(endpoint: string, data: any, token?: string): Observable<any> {
-    return this.http.put(`${this.baseUrl}${endpoint}`, data, this.options(token));
+  put(endpoint: string, data: any, requiresToken: boolean = true): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}${endpoint}`, data, requiresToken ? this.options() : {});
   }
 
-  delete(endpoint: string, token?: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}${endpoint}`, this.options(token));
+  delete(endpoint: string, requiresToken: boolean = true): Observable<any> {
+    return this.http.delete(
+      `${this.baseUrl}${endpoint}`, requiresToken ? this.options() : {});
   }
 
   tips = [

@@ -33,11 +33,5 @@ export class ProjectCardComponent implements OnInit {
       this.description.length > 50
         ? this.description.slice(0, 55) + "..."
         : this.description;
-
-    console.log(
-      this.description,
-      this.description.length,
-      this.shortDescription
-    );
   }
 }

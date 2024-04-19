@@ -1,5 +1,7 @@
-import {Component, OnInit, OnChanges, SimpleChanges} from '@angular/core';
-import {AuthGoogleService} from "../../auth-google.service";
+import { Router } from "@angular/router";
+import {Component, OnInit, NgZone } from '@angular/core';
+import { AuthGoogleService } from "../../auth-google.service";
+import {SessionStorageService} from "../../session-storage.service";
 
 @Component({
   selector: 'app-navbar',
@@ -13,34 +15,31 @@ import {AuthGoogleService} from "../../auth-google.service";
           </div>
 
           <div class="flex items-center justify-end pr-2">
-          <img [src]="profileUrl" class="w-10 rounded-full" />
-            <h1 class="px-5 align-middle font-robotoCondensed">{{ profileName }}</h1>
+          <img [src]="storage.getItem('profileUrl')" class="w-10 rounded-full" />
+            <p class="px-5 align-middle font-robotoCondensed">{{ storage.getItem('profileName') }}</p>
+            <button (click)="logout()" class="px-5 align-middle font-robotoCondensed">Cerrar Sesión</button>
           </div>
         </div>
       </div>
     </nav>
   `
 })
-export class NavbarComponent implements OnInit, OnChanges {
-  profileName: any;
-  profileUrl: any;
+export class NavbarComponent implements OnInit {
+  constructor(protected auth: AuthGoogleService, private router: Router, private zone: NgZone, protected storage: SessionStorageService) { }
 
-  constructor(private auth: AuthGoogleService) { }
-
-  ngOnInit(): void {
-    // this.auth.oAuthService.setupAutomaticSilentRefresh();
-    // if (!this.auth.oAuthService.hasValidAccessToken()) {
-    //   this.auth.oAuthService.initImplicitFlow();
-    // }
-
-    const profile = this.auth.getProfile();
-    this.profileUrl = profile['picture'];
-    this.profileName = profile['given_name'] + ' ' + profile['family_name'];
+  ngOnInit() {
+    this.auth.profile.subscribe((profile) => {
+      if (!sessionStorage.getItem('profileName') && profile) {
+        this.zone.run(() => {
+          this.storage.setItem('profileName', profile.name);
+          this.storage.setItem('profileUrl', profile.picture);
+        });
+      }
+    });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    const profile = this.auth.getProfile();
-    this.profileName = profile['given_name'] + ' ' + profile['family_name'];
-    this.profileUrl = profile['picture'];
+  logout() {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }

@@ -149,7 +149,6 @@ export class MainPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.auth.getProfile());
     this.route.params.subscribe((params) => {
       this.api.get(`projects/${params["id"]}/`).subscribe((response) => {
         this.response = response;
