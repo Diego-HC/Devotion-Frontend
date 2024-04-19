@@ -23,7 +23,7 @@ import { AuthGoogleService } from '../auth-google.service';
   `]
 })
 export class LandingPageComponent implements OnInit {
-  constructor(private api: ApiService, private router: Router, private authGoogleService: AuthGoogleService) { }
+  constructor(private api: ApiService, private router: Router, private auth: AuthGoogleService) { }
 
   response: any;
 
@@ -33,9 +33,9 @@ export class LandingPageComponent implements OnInit {
       this.response = response;
     });
   }
-  logOut(){
-    this.authGoogleService.logout();
-    this.router.navigate(['/login']);
 
+  logOut() {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }

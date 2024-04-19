@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
-import { AuthConfig,OAuthService } from 'angular-oauth2-oidc';
-
+import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGoogleService {
 
-  constructor(private oAuthService: OAuthService) {
+  constructor(public oAuthService: OAuthService) {
     this.initLogin();
-   }
+  }
 
   initLogin(){
     const config: AuthConfig = {
@@ -24,14 +23,16 @@ export class AuthGoogleService {
     this.oAuthService.setupAutomaticSilentRefresh();
     this.oAuthService.loadDiscoveryDocumentAndTryLogin();
   }
+
   login(){
     this.oAuthService.initLoginFlow();
   }
+
   logout(){
     this.oAuthService.logOut();
   }
-  getPofile(){
+
+  getProfile(){
     return this.oAuthService.getIdentityClaims();
   }
-
 }

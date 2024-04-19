@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, OnInit, OnChanges, SimpleChanges} from '@angular/core';
+import {AuthGoogleService} from "../../auth-google.service";
 
 @Component({
   selector: 'app-navbar',
@@ -12,14 +13,34 @@ import { Component } from '@angular/core';
           </div>
 
           <div class="flex items-center justify-end pr-2">
-          <img src="https://soymotor.com/sites/default/files/2024-02/sergio-perez-2024.png" class="w-10 rounded-full" />
-            <h1 class="px-5 align-middle font-robotoCondensed">Hermenegildo</h1>
+          <img [src]="profileUrl" class="w-10 rounded-full" />
+            <h1 class="px-5 align-middle font-robotoCondensed">{{ profileName }}</h1>
           </div>
         </div>
       </div>
     </nav>
   `
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit, OnChanges {
+  profileName: any;
+  profileUrl: any;
 
+  constructor(private auth: AuthGoogleService) { }
+
+  ngOnInit(): void {
+    // this.auth.oAuthService.setupAutomaticSilentRefresh();
+    // if (!this.auth.oAuthService.hasValidAccessToken()) {
+    //   this.auth.oAuthService.initImplicitFlow();
+    // }
+
+    const profile = this.auth.getProfile();
+    this.profileUrl = profile['picture'];
+    this.profileName = profile['given_name'] + ' ' + profile['family_name'];
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    const profile = this.auth.getProfile();
+    this.profileName = profile['given_name'] + ' ' + profile['family_name'];
+    this.profileUrl = profile['picture'];
+  }
 }

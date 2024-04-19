@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { bgBlack, bgBlue } from "ansi-colors";
 import { ApiService} from "../../api.service";
+import {AuthGoogleService} from "../../auth-google.service";
 
 export interface Project {
   id: string;
@@ -137,7 +138,7 @@ export interface Project {
 export class MainPageComponent implements OnInit {
   response: any;
 
-  constructor(protected api: ApiService, private route: ActivatedRoute) { }
+  constructor(protected api: ApiService, private route: ActivatedRoute, private auth: AuthGoogleService) { }
 
   currentView: string = "table"; // Default view
   selectedIcon: string = "table";
@@ -148,6 +149,7 @@ export class MainPageComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.auth.getProfile());
     this.route.params.subscribe((params) => {
       this.api.get(`projects/${params["id"]}/`).subscribe((response) => {
         this.response = response;

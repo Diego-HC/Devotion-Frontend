@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { OAuthModule } from "angular-oauth2-oidc";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -39,7 +40,7 @@ import { CalendarIconComponent } from './shared/icons/calendar-icon/calendar-ico
 import { RoadmapIconComponent } from './shared/icons/roadmap-icon/roadmap-icon.component';
 import { DevotionIsoComponent } from './shared/icons/devotion-iso/devotion-iso.component';
 import { LoadingComponent } from './shared/loading/loading.component';
-import { OAuthModule } from "angular-oauth2-oidc";
+import {NgOptimizedImage} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -79,7 +80,7 @@ import { OAuthModule } from "angular-oauth2-oidc";
   imports: [BrowserModule,
     AppRoutingModule,
     OAuthModule.forRoot(),
-    FormsModule, HttpClientModule,],
+    FormsModule, HttpClientModule, NgOptimizedImage,],
   providers: [],
   bootstrap: [AppComponent],
 })

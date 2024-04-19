@@ -26,15 +26,15 @@ import { Component } from '@angular/core';
         <p>¿Tienes cuenta institucional?</p>
       </div>
       <div class="flex justify-center items-center gap-1.5">
-        
+
           <button (click)="login()" class="mbutton" class="bg-blue-800 text-white border-none rounded px-5 py-2.5 cursor-pointer flex items-center gap-1.5 fill=#2A4365">
             <img src="https://imagepng.org/wp-content/uploads/2019/08/google-icon.png" alt="Microsoft Logo" class="h-5 w-auto">
             Ingresar con Google
-            
+
           </button>
-        
+
       </div>
-      <p class="text-xs text-justify absolute bottom-5 left-5 right-5">DEVOTION (el "Software") es un proyecto sin fines de lucro. Propiedad intelectual, y mantenido por, Society of Academic Labor and Application Development (SALAD). 
+      <p class="text-xs text-justify absolute bottom-5 left-5 right-5">DEVOTION (el "Software") es un proyecto sin fines de lucro. Propiedad intelectual, y mantenido por, Society of Academic Labor and Application Development (SALAD).
         Hermenegildo Pérez Galaz es un nombre registrado, delegado para su uso en ejemplos y demostraciones por Mango Technologies, Inc., (antes BALLAD). DEVOTION,
         y su acrónimo “Development Environment for Visualization of Organizational Tasks Inspired Obviously by Notion”, son marcas pendientes de registrar.</p>
       <div class="absolute bottom-0 left-0 right-0 text-xs ml-5">
@@ -46,10 +46,9 @@ import { Component } from '@angular/core';
   styleUrls: []
 })
 export class LoginComponent {
-  constructor(private AuthGoogleService: AuthGoogleService) {
+  constructor(private auth: AuthGoogleService) { }
 
-   }
   login(){
-    this.AuthGoogleService.login();
+    this.auth.login();
   }
 }

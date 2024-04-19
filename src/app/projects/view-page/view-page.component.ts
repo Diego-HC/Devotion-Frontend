@@ -1,8 +1,7 @@
 import { Component } from "@angular/core";
-import {HttpClient} from '@angular/common/http';
-import {ApiService} from "../../api.service";
-import { HttpHeaders } from '@angular/common/http';
+import { ApiService } from "../../api.service";
 import { OnInit} from '@angular/core';
+import { AuthGoogleService } from "../../auth-google.service";
 
 @Component({
   selector: "app-view-page",
@@ -36,18 +35,19 @@ import { OnInit} from '@angular/core';
   `,
 })
 export class ViewPageComponent implements OnInit{
-  constructor(private api: ApiService, private http: HttpClient) {}
+  constructor(private api: ApiService, private auth: AuthGoogleService) {}
 
   projectResponse: any;
   projects : any[] = [];
 
   ngOnInit(): void {
-    const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0NzU4NTMzLCJpYXQiOjE3MTM0NjI1MzMsImp0aSI6IjZhMjBjYTMyNDljODQ0M2ZiMzliZjYyY2Q2ZDRhNDM4IiwidXNlcl9pZCI6ImU3MjlhODBkLTAwMzMtNGUwZS04ODkxLTIwMDg1MjEyYjQ0NSJ9.ZYl_b3dC99PAhPsGzeYwmc9wInv2iS4TylqRa4kdv-o"
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${authToken}`
-    })
-    const url = 'https://api.umm-actually.com/me/projects/';
-    this.http.get<any[]>(url, {headers}).subscribe((projects: any[]) => {
+    // this.auth.oAuthService.setupAutomaticSilentRefresh();
+    // if (!this.auth.oAuthService.hasValidAccessToken()) {
+    //   this.auth.oAuthService.initImplicitFlow();
+    // }
+
+    const url = 'me/projects/';
+    this.api.get(url, this.auth.oAuthService.getIdToken()).subscribe((projects) => {
       this.projects = projects;
       console.log(this.projects);
     });
