@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { Router } from "@angular/router";
 import { ApiService } from '../../api.service';
 
 export interface Project {
@@ -18,7 +18,7 @@ export interface Project {
       <div class="px-12 lg:w-1/2 py-10">
         <h1 class=" text-l font-roboto font-extrabold">Nuevo Proyecto</h1>
           <div class = "flex flex-row flex-grow items-center justify-center">
-            <input type="text" class="input input-bordered flex-grow mr-4 shadow-md font-helvetica font-bold text-3xl" 
+            <input type="text" class="input input-bordered flex-grow mr-4 shadow-md font-helvetica font-bold text-3xl"
             [(ngModel)]="projectData.name" (ngModelChange)="projectData.name = $event"/>
             <div class = "flex flex-col items-center">
               <button (click)="onSubmit()" class = "btn-circle items-center justify-center mt-4" style = "background-color: #2A4365">+</button>
@@ -42,10 +42,10 @@ export interface Project {
   `
 })
 export class CreateEditPageComponent implements OnInit {
-  constructor (private api: ApiService) {}
+  constructor (private api: ApiService, private router: Router) {}
 
   // @Input() projectMembers: any[] = [];
-  
+
   projectResponse: any;
 
   projectData: Project = {
@@ -71,15 +71,19 @@ export class CreateEditPageComponent implements OnInit {
   }
 
   onSubmit() {
-
-    this.projectData.leaders = this.projectData.leaders.join(',');
-    this.projectData.members = this.projectData.members.join(',');
+    console.log(this.projectData);
+    this.projectData.leaders = this.projectData.leaders.map((x: any) => x.id).join(',');
+    console.log(this.projectData.leaders);
+    this.projectData.members = this.projectData.members.map((x: any) => x.id).join(',');
+    console.log(this.projectData.members);
 
     console.log(this.projectData);
 
     this.api.post('projects/', this.projectData, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0NTg2NzgzLCJpYXQiOjE3MTMyOTA3ODMsImp0aSI6IjA4YjM4MWE4N2M3ODQ1ZGNiOTMxMmUyOWRmYTkxMmU4IiwidXNlcl9pZCI6IjJmNTMwNWMwLTdiMDMtNDcwNy1hNzM2LTM4MWY1OGFkMDI5OSJ9.lAuebpqOQ-VYBmnto-Dtk1oxWgoCVfCcuDFKyAIyQIc")
     .subscribe((response) => {
       this.projectResponse = response;
+      // navigate to project page
+      this.router.navigateByUrl(`/project/${this.projectResponse.id}`)
     })
   }
 }

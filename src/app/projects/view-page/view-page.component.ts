@@ -42,7 +42,7 @@ export class ViewPageComponent implements OnInit{
   projects : any[] = [];
 
   ngOnInit(): void {
-    const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0NTg2NzgzLCJpYXQiOjE3MTMyOTA3ODMsImp0aSI6IjA4YjM4MWE4N2M3ODQ1ZGNiOTMxMmUyOWRmYTkxMmU4IiwidXNlcl9pZCI6IjJmNTMwNWMwLTdiMDMtNDcwNy1hNzM2LTM4MWY1OGFkMDI5OSJ9.lAuebpqOQ-VYBmnto-Dtk1oxWgoCVfCcuDFKyAIyQIc"
+    const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0NzU4NTMzLCJpYXQiOjE3MTM0NjI1MzMsImp0aSI6IjZhMjBjYTMyNDljODQ0M2ZiMzliZjYyY2Q2ZDRhNDM4IiwidXNlcl9pZCI6ImU3MjlhODBkLTAwMzMtNGUwZS04ODkxLTIwMDg1MjEyYjQ0NSJ9.ZYl_b3dC99PAhPsGzeYwmc9wInv2iS4TylqRa4kdv-o"
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${authToken}`
     })

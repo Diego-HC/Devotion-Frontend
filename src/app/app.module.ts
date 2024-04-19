@@ -38,8 +38,8 @@ import { KanbanIconComponent } from './shared/icons/kanban-icon/kanban-icon.comp
 import { CalendarIconComponent } from './shared/icons/calendar-icon/calendar-icon.component';
 import { RoadmapIconComponent } from './shared/icons/roadmap-icon/roadmap-icon.component';
 import { DevotionIsoComponent } from './shared/icons/devotion-iso/devotion-iso.component';
+import { LoadingComponent } from './shared/loading/loading.component';
 import { OAuthModule } from "angular-oauth2-oidc";
-
 
 @NgModule({
   declarations: [
@@ -74,6 +74,7 @@ import { OAuthModule } from "angular-oauth2-oidc";
     CalendarIconComponent,
     RoadmapIconComponent,
     DevotionIsoComponent,
+    LoadingComponent,
   ],
   imports: [BrowserModule,
     AppRoutingModule,
