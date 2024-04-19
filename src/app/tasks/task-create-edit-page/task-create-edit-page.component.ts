@@ -63,7 +63,7 @@ export interface Task {
         </textarea>
         <div class="w-1/2">
           <h2 class="font-roboto font-bold mt-4">Asignado</h2>
-          <app-search-select (selectedMembersOutput)="onMembersSelected($event)" ></app-search-select>
+          <app-search-select [projectId]="projectId" [singleSelectedMode]="true" (selectedMembersOutput)="onMembersSelected($event)" ></app-search-select>
         </div>
       </div>
     </div>
@@ -88,7 +88,7 @@ export class TaskCreateEditPageComponent implements OnInit {
   projectId: string = '';
 
   onMembersSelected(members: string[]) {
-    this.taskData.asignee = members;
+    this.taskData.asignee = members[0];
   }
 
   ngOnInit() {
@@ -117,8 +117,7 @@ export class TaskCreateEditPageComponent implements OnInit {
       default:
         priorityValue = -1; // Default value if priority is not recognized
     }
-
-    this.taskData.asignee = this.taskData.asignee.map((x: any) => x.id).join(',');
+    //this.taskData.asignee = this.taskData.asignee.map((x: any) => x.id).join(',');
     this.taskData.priority = priorityValue;
     this.taskData.parent_project = this.projectId;
 
