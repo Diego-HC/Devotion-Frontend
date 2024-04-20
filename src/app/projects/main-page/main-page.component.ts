@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { bgBlack, bgBlue } from "ansi-colors";
 import { ApiService} from "../../api.service";
+import {AuthGoogleService} from "../../auth-google.service";
 
 export interface Project {
   id: string;
@@ -16,6 +17,7 @@ export interface Project {
 @Component({
   selector: "app-main-page",
   template: `
+    <app-loading *ngIf="response === undefined" />
     <app-breadcrumbs
       *ngIf="response !== undefined"
       [breadcrumbs]="response.breadcrumbs"
@@ -136,7 +138,7 @@ export interface Project {
 export class MainPageComponent implements OnInit {
   response: any;
 
-  constructor(private api: ApiService, private route: ActivatedRoute) { }
+  constructor(protected api: ApiService, private route: ActivatedRoute, private auth: AuthGoogleService) { }
 
   currentView: string = "table"; // Default view
   selectedIcon: string = "table";

@@ -1,33 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../api.service';
+import { Router } from '@angular/router';
+import { AuthGoogleService } from '../auth-google.service';
 
 @Component({
   selector: 'app-landing-page',
   template: `
-    <a href="/login" class="ml-20">
-      <button class="my-button">Go to Login</button>
-    </a>
-    <p class="ml-20">{{ response?.message ?? "Loading..." }}</p>
-  `,
-  styles: [`
-    .my-button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-    }
-  `]
+    <app-loading tips="false" />
+  `
 })
 export class LandingPageComponent implements OnInit {
-  constructor(private api: ApiService) { }
-
-  response: any;
+  constructor(private router: Router, private auth: AuthGoogleService) { }
 
   ngOnInit() {
-    this.api.get('test/').subscribe((response) => {
-      console.log(response);
-      this.response = response;
-    });
+    // wait a while before redirecting to home
+    // ES UNA MEXICANADA PERO FUNCIONA
+    setTimeout(() => {
+      if (this.auth.oAuthService.hasValidAccessToken()) {
+        this.router.navigate(['/home']);
+      } else {
+        this.router.navigate(['/login']);
+      }
+    }, 500);
   }
 }

@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { OAuthModule } from "angular-oauth2-oidc";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -38,6 +39,8 @@ import { KanbanIconComponent } from './shared/icons/kanban-icon/kanban-icon.comp
 import { CalendarIconComponent } from './shared/icons/calendar-icon/calendar-icon.component';
 import { RoadmapIconComponent } from './shared/icons/roadmap-icon/roadmap-icon.component';
 import { DevotionIsoComponent } from './shared/icons/devotion-iso/devotion-iso.component';
+import { LoadingComponent } from './shared/loading/loading.component';
+import {NgOptimizedImage} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -72,8 +75,12 @@ import { DevotionIsoComponent } from './shared/icons/devotion-iso/devotion-iso.c
     CalendarIconComponent,
     RoadmapIconComponent,
     DevotionIsoComponent,
+    LoadingComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
+  imports: [BrowserModule,
+    AppRoutingModule,
+    OAuthModule.forRoot(),
+    FormsModule, HttpClientModule, NgOptimizedImage,],
   providers: [],
   bootstrap: [AppComponent],
 })
