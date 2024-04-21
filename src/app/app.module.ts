@@ -41,6 +41,7 @@ import { RoadmapIconComponent } from './shared/icons/roadmap-icon/roadmap-icon.c
 import { DevotionIsoComponent } from './shared/icons/devotion-iso/devotion-iso.component';
 import { LoadingComponent } from './shared/loading/loading.component';
 import {NgOptimizedImage} from "@angular/common";
+import { AlertComponent } from './shared/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -76,6 +77,7 @@ import {NgOptimizedImage} from "@angular/common";
     RoadmapIconComponent,
     DevotionIsoComponent,
     LoadingComponent,
+    AlertComponent,
   ],
   imports: [BrowserModule,
     AppRoutingModule,

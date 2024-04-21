@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
-import { ActivatedRoute} from "@angular/router";
 
 export interface Task {
   name: string;
@@ -64,12 +63,12 @@ export interface Task {
           <h2 class="font-roboto font-bold mt-4">Asignado</h2>
           <app-search-select [projectId]="projectId" [singleSelectedMode]="true" (selectedMembersOutput)="onMembersSelected($event)" ></app-search-select>
         </div>
+        <app-alert *ngIf="!tasksResponse" [showWarning]="showWarning" [message]="warningMessage"></app-alert>
       </div>
     </div>
   `
 })
 export class TaskCreateEditPageComponent implements OnInit {
-
   constructor(private api: ApiService, private route: ActivatedRoute, private router: Router) { }
 
   tasksResponse: any;
@@ -84,6 +83,8 @@ export class TaskCreateEditPageComponent implements OnInit {
   };
 
   projectId: string = '';
+  showWarning: boolean = false;
+  warningMessage: string = '';
 
   onMembersSelected(members: string[]) {
     this.taskData.asignee = members[0];
@@ -118,7 +119,12 @@ export class TaskCreateEditPageComponent implements OnInit {
     this.api.post('tasks/', this.taskData).subscribe((response) => {
         this.tasksResponse = response;
         this.router.navigateByUrl(`/task/${this.tasksResponse.id}`)
-    });
+    },
+      (error) => {
+        this.showWarning = true;
+        this.warningMessage = "Error al crear la tarea. Por favor, inténtelo de nuevo. \n Procura que todos los campos estén completos.";
+      }
+    );
   }
 
   selectedPriority: string = 'Baja';
