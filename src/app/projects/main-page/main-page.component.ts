@@ -73,7 +73,7 @@ export interface Project {
               {
               <app-subproject-card [subproject]="subproject" />
               }
-              <a href="/new/project" class="place-self-center w-[15.5rem]" (click)="sendDatatoNewProject(response.id)">
+              <a href="/new/project?Parent={{ response.id }}" class="place-self-center w-[15.5rem]" (click)="sendDataToNewProject(response.id)">
                 <div class="flex flex-col place-items-center justify-center">
                   <div class="grid grid-cols-1 grid-rows-1 place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow">
                     <app-plus-icon
@@ -170,7 +170,8 @@ export class MainPageComponent implements OnInit {
     });
   }
 
-  sendDatatoNewProject(parentProjectId: string) {
+  sendDataToNewProject(parentProjectId: string) {
+
     this.parentProject.emit(parentProjectId);
   }
 

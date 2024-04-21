@@ -47,18 +47,19 @@ export class CreateEditPageComponent implements OnInit {
   constructor (private api: ApiService, private router: Router) {}
 
 
-  @Input('parentProjectId') projectId! : string;
+  @Input() projectId! : string;
   projectResponse: any;
 
   projectData: Project = {
     name: '',
     description: '',
+    parent: '',
     leaders: [],
     members: [],
   };
 
   ngOnInit() {
-    // Retrieve the parent project id 
+    // Retrieve the parent project id
     this.projectData.parent = this.projectId;
     console.log('parent: ' + this.projectData.parent);
   }
@@ -78,6 +79,10 @@ export class CreateEditPageComponent implements OnInit {
   onSubmit() {
     this.projectData.leaders = this.projectData.leaders.join(',');
     this.projectData.members = this.projectData.members.join(',');
+
+    if(this.projectId) {
+      this.projectData.parent = this.projectId;
+    }
 
     this.api.post('projects/', this.projectData)
     .subscribe((response) => {
