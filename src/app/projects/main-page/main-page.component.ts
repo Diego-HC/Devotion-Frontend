@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit,EventEmitter, Output } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { bgBlack, bgBlue } from "ansi-colors";
 import { ApiService} from "../../api.service";
@@ -73,6 +73,18 @@ export interface Project {
               {
               <app-subproject-card [subproject]="subproject" />
               }
+              <a href="/new/project?Parent={{ response.id }}" class="place-self-center w-[15.5rem]" (click)="sendDataToNewProject(response.id)">
+                <div class="flex flex-col place-items-center justify-center">
+                  <div class="grid grid-cols-1 grid-rows-1 place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow">
+                    <app-plus-icon
+                      fill="#2A4365"
+                      [width]="'15'"
+                      [height]="'15'"
+                    ></app-plus-icon>
+                  </div>
+                  <span class="font-robotoCondensed text-sm">Nuevo Subproyecto</span>
+                </div>
+              </a>
             </div>
           </div>
         </div>
@@ -142,6 +154,8 @@ export class MainPageComponent implements OnInit {
 
   currentView: string = "table"; // Default view
   selectedIcon: string = "table";
+  // To send the parentId to the new project page
+  @Output() parentProject= new EventEmitter<string>();
 
   onTabClick(selected: string) {
     this.currentView = selected;
@@ -154,6 +168,11 @@ export class MainPageComponent implements OnInit {
         this.response = response;
       });
     });
+  }
+
+  sendDataToNewProject(parentProjectId: string) {
+
+    this.parentProject.emit(parentProjectId);
   }
 
   protected readonly bgBlack = bgBlack;
