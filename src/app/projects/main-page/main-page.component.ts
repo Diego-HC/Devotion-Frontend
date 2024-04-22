@@ -25,7 +25,7 @@ export interface Project {
     <div class="overflow-x-auto mx-20 mt-4" *ngIf="response !== undefined">
       <div class="bg-white py-6 rounded-lg">
         <div class="flex flex-row justify-between gap-20">
-          <div class="flex flex-col mb-7 gap-2">
+          <div class="flex flex-col mb-7">
             <div class="flex flex-row gap-6">
               <h1 class="text-4xl font-helvetica">
                 {{ response.name }}

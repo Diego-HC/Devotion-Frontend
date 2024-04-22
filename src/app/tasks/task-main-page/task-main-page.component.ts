@@ -63,6 +63,9 @@ import { ApiService } from '../../api.service';
             >
           </a>
         </div>
+        <div class="md:mt-3">
+            <app-alert *ngIf="showWarning" [showWarning]="showWarning" [message]="warningMessage"></app-alert>
+        </div>
         <p
           class="font-robotoCondensed text-lg my-4 max-w-3xl text-[#5E6377] font-normal"
         >
@@ -130,6 +133,9 @@ import { ApiService } from '../../api.service';
 export class TaskMainPageComponent implements OnInit {
   response: any;
 
+  showWarning: boolean = false;
+  warningMessage: string = '';
+
   constructor(private api: ApiService, private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -164,7 +170,11 @@ export class TaskMainPageComponent implements OnInit {
     ).subscribe(() => {
       this.response.status = status;
       this.dropdownOpen = false;
-    });
+    },
+      error => {
+        this.showWarning = true;
+        this.warningMessage = error.error.message;
+      });
   }
 
   currentView: string = "table"; // Default view
