@@ -5,10 +5,11 @@ import { Project } from "../main-page/main-page.component";
   selector: "app-subproject-card",
   template: `
     <div class="flex flex-row h-24">
-      <span class="bg-slate-500 w-1.5 rounded-l-md"></span>
+      <span class="w-1.5 rounded-l-md" [ngClass]="this.colors.normal"></span>
       <a href="/project/{{ this.id }}">
         <div
-          class="flex flex-row items-center px-3 gap-2 card card-compact rounded-l-none rounded-md bg-slate-300 w-48 h-full"
+          [ngClass]="this.colors.light"
+          class="flex flex-row items-center px-3 gap-2 card card-compact rounded-l-none rounded-md w-48 h-full"
         >
           <div class="flex flex-col justify-around h-full">
             <h2 class="text-sm font-bold">{{ this.shortName }}</h2>
@@ -35,6 +36,7 @@ export class SubprojectCardComponent {
     description: "",
     progress: 0,
   };
+  @Input() colors!: { light: string; normal: string };
 
   id: string = "";
   name: string = "";

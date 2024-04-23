@@ -1,6 +1,7 @@
+import { cardColors } from "./../../shared/cardColors";
 import { Component } from "@angular/core";
 import { ApiService } from "../../api.service";
-import { OnInit } from '@angular/core';
+import { OnInit } from "@angular/core";
 
 @Component({
   selector: "app-view-page",
@@ -15,6 +16,7 @@ import { OnInit } from '@angular/core';
         [id]="project.id"
         [name]="project.name"
         [description]="project.description"
+        [colors]="cardColors[$index % cardColors.length]"
       />
       }
 
@@ -35,13 +37,14 @@ import { OnInit } from '@angular/core';
     </div>
   `,
 })
-export class ViewPageComponent implements OnInit{
-  constructor(private api: ApiService) { }
+export class ViewPageComponent implements OnInit {
+  constructor(private api: ApiService) {}
 
   projects: any;
+  cardColors = cardColors;
 
   ngOnInit(): void {
-    this.api.get('me/projects/').subscribe((projects) => {
+    this.api.get("me/projects/").subscribe((projects) => {
       this.projects = projects;
     });
   }

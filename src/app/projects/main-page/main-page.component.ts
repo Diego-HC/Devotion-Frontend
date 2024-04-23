@@ -3,6 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { bgBlack, bgBlue } from "ansi-colors";
 import { ApiService } from "../../api.service";
 import { AuthGoogleService } from "../../auth-google.service";
+import { cardColors } from "../../shared/cardColors";
 
 export interface Project {
   id: string;
@@ -69,9 +70,11 @@ export interface Project {
             <div
               class="flex flex-col flex-wrap content-start gap-4 ml-2 mt-2 h-60 overflow-x-scroll"
             >
-              @for (subproject of this.response?.projects; track subproject.id)
-              {
-              <app-subproject-card [subproject]="subproject" />
+              @for (subproject of this.response?.projects; track $index) {
+              <app-subproject-card
+                [subproject]="subproject"
+                [colors]="cardColors[$index % cardColors.length]"
+              />
               }
               <a
                 href="/new/project?Parent={{ response.id }}"
@@ -171,6 +174,7 @@ export interface Project {
 })
 export class MainPageComponent implements OnInit {
   response: any;
+  cardColors = cardColors;
 
   constructor(
     protected api: ApiService,
