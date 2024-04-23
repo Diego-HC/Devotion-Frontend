@@ -4,10 +4,11 @@ import { Component, Input, OnInit } from "@angular/core";
   selector: "app-project-card",
   template: `
     <div class="flex flex-row gap-0 h-40">
-      <span class="bg-slate-500 w-2 rounded-l-md"></span>
+      <span class="w-2 rounded-l-md" [ngClass]="this.colors.normal"></span>
       <a href="/project/{{ this.id }}">
         <div
-          class="card card-normal rounded-l-none rounded-md bg-slate-300 w-60 flex flex-col justify-between h-40"
+          class="card card-normal rounded-l-none rounded-md w-60 flex flex-col justify-between h-40"
+          [ngClass]="this.colors.light"
         >
           <h2 class="card-title mx-6 my-4">{{ this.shortName }}</h2>
           <p class="break-words text-xs mx-5 my-3">
@@ -22,6 +23,7 @@ export class ProjectCardComponent implements OnInit {
   @Input() id!: string;
   @Input() name!: string;
   @Input() description!: string;
+  @Input() colors!: { light: string; normal: string };
 
   shortName!: string;
   shortDescription!: string;
