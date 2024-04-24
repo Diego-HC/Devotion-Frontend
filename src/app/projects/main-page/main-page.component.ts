@@ -5,16 +5,6 @@ import { ApiService } from "../../api.service";
 import { AuthGoogleService } from "../../auth-google.service";
 import { cardColors } from "../../shared/cardColors";
 
-export interface Project {
-  id: string;
-  name: string;
-  description: string;
-  progress: number;
-
-  subprojects?: Project[];
-  tasks?: any[];
-}
-
 @Component({
   selector: "app-main-page",
   template: `
@@ -70,7 +60,7 @@ export interface Project {
             <div
               class="flex flex-col flex-wrap content-start gap-4 ml-2 mt-2 h-60 overflow-x-scroll"
             >
-              @for (subproject of this.response?.projects; track $index) {
+              @for (subproject of this.response.projects; track $index) {
               <app-subproject-card
                 [subproject]="subproject"
                 [colors]="cardColors[$index % cardColors.length]"
@@ -165,7 +155,7 @@ export interface Project {
         </div>
       </div>
 
-      <app-table *ngIf="currentView === 'table'" [tasks]="response?.tasks" />
+      <app-table *ngIf="currentView === 'table'" [tasks]="response.tasks" />
       <app-kanban *ngIf="currentView === 'kanban'" />
       <app-calendar *ngIf="currentView === 'calendar'" />
       <app-roadmap *ngIf="currentView === 'roadmap'" />
@@ -173,7 +163,7 @@ export interface Project {
   `,
 })
 export class MainPageComponent implements OnInit {
-  response: any;
+  response: MainPageProject | undefined;
   cardColors = cardColors;
 
   constructor(
@@ -195,6 +185,7 @@ export class MainPageComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe((params) => {
       this.api.get(`projects/${params["id"]}/`).subscribe((response) => {
+        console.log(response);
         this.response = response;
       });
     });
