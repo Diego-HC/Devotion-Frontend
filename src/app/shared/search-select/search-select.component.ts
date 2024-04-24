@@ -28,14 +28,14 @@ import { ApiService } from "../../api.service";
           />
           @if (suggestions.length > 0 && inputTag) {
           <dialog
-            class="absolute top-16 left-0 z-10 w-48 h-fit max-h-72 overflow-y-scroll p-4 bg-white shadow-lg rounded-md"
+            class="absolute top-16 left-0 z-10 w-10/12 h-fit max-h-72 overflow-y-scroll p-4 bg-white shadow-lg rounded-md"
             open
           >
-            <ul class="list-none">
+            <ul class="list-none flex flex-wrap gap-2">
               @for (suggestion of suggestions; track $index) {
               <li class="">
                 <button
-                  class="btn btn-xs w-full py-1 h-fit"
+                  class="btn btn-xs w-full py-2 h-fit"
                   (click)="selectMembers(suggestion)"
                 >
                   {{ suggestion.firstNames }} {{ suggestion.lastNames }}
