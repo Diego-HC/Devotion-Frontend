@@ -2,14 +2,6 @@ import { Component, OnInit, Input } from "@angular/core";
 import { Router } from "@angular/router";
 import { ApiService } from "../../api.service";
 
-export interface Project {
-  name: string;
-  description: string;
-  parent?: string;
-  leaders: any;
-  members: any;
-}
-
 @Component({
   selector: "app-create-edit-page",
   template: `
@@ -67,18 +59,22 @@ export class CreateEditPageComponent implements OnInit {
   constructor(private api: ApiService, private router: Router) {}
 
   @Input() projectId!: string;
-  projectResponse: any;
+  projectResponse: Project | undefined;
 
-  projectData: Project = {
+  projectData: ProjectData = {
+    id: "",
     name: "",
     description: "",
     parent: "",
-    leaders: [],
-    members: [],
+    leaders: "",
+    members: "",
   };
 
-  showWarning: boolean = false;
-  warningMessage: string = "";
+  leaderList: string[] = [];
+  memberList: string[] = [];
+
+  showWarning = false;
+  warningMessage = "";
 
   ngOnInit() {
     // Retrieve the parent project id
@@ -86,37 +82,32 @@ export class CreateEditPageComponent implements OnInit {
     console.log("parent: " + this.projectData.parent);
   }
 
-  onMembersSelected(members: string[]) {
-    this.projectData.members = members;
-  }
+  onMembersSelected = (members: string[]) => (this.memberList = members);
 
-  onLeadersSelected(leaders: string[]) {
-    this.projectData.leaders = leaders;
-  }
-
-  receiveMessage($event: any) {
-    this.projectId = $event;
-  }
+  onLeadersSelected = (leaders: string[]) => (this.leaderList = leaders);
 
   onSubmit() {
-    this.projectData.leaders = this.projectData.leaders.join(",");
-    this.projectData.members = this.projectData.members.join(",");
+    this.projectData.leaders = this.leaderList.join(",");
+    this.projectData.members = this.memberList.join(",");
 
     if (this.projectId) {
       this.projectData.parent = this.projectId;
     }
 
-    this.api.post("projects/", this.projectData).subscribe(
-      (response) => {
+    console.log(this.projectData);
+
+    this.api.post("projects/", this.projectData).subscribe({
+      next: (response: Project) => {
+        console.log(response);
         this.projectResponse = response;
         // navigate to project page
         this.router.navigateByUrl(`/project/${this.projectResponse.id}`);
       },
-      (error) => {
-        this.showWarning = true;
+      error: (error) => {
         this.warningMessage =
           "Error al crear el proyecto. Por favor, inténtelo de nuevo. \n Procura que todos los campos estén completos.";
-      }
-    );
+        this.showWarning = true;
+      },
+    });
   }
 }
