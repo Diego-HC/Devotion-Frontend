@@ -13,12 +13,17 @@ declare global {
     startDate: string;
     dueDate: string;
     asignee: string;
-    priority: string;
-    status: string;
+    priority: number;
+    status: number;
+  }
+
+  interface TaskData extends Task {
+    tasks: Task[];
+    breadcrumbs: (string | boolean)[][];
   }
 
   interface MainPageProject extends Project {
-    breadcrumbs: string[][];
+    breadcrumbs: (string | boolean)[][];
     projects: Project[];
     tasks: Task[];
   }
