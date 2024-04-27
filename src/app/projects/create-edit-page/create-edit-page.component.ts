@@ -8,12 +8,15 @@ import { ApiService } from "../../api.service";
     <div class="px-16">
       <div class="flex justify-center items-center">
         <div class="px-12 lg:w-1/2 py-10">
-          <h1 class=" text-l font-roboto font-extrabold">Nuevo Proyecto</h1>
+          <h1 class=" text-l font-roboto font-extrabold">Nuevo Proyecto *</h1>
           <div class="flex flex-row flex-grow items-center justify-center">
             <input
               type="text"
               class="input input-bordered flex-grow mr-4 shadow-md font-helvetica font-bold text-3xl"
               [(ngModel)]="projectData.name"
+              #name="ngModel"
+              name="name"
+              required
               (ngModelChange)="projectData.name = $event"
             />
             <div class="flex flex-col items-center">
@@ -27,20 +30,44 @@ import { ApiService } from "../../api.service";
               <p class="text-xs font-robotoCondensed">Publicar</p>
             </div>
           </div>
+          <div
+            *ngIf="name.invalid && name.touched"
+            class="text-red-500 text-xs -mt-3"
+          >
+            * El nombre del proyecto es obligatorio.
+          </div>
 
           <div class="flex flex-col flex-grow justify-center">
-            <h1 class=" text-l font-roboto font-extrabold mb-3">Descripción</h1>
+            <h1 class=" text-l font-roboto font-extrabold mb-3">
+              Descripción *
+            </h1>
             <textarea
               rows="4"
               class="textarea textarea-bordered mr-4 shadow-md font-robotoCondensed text-s w-full min-h-10"
               [(ngModel)]="projectData.description"
               (ngModelChange)="projectData.description = $event"
+              #descripcion="ngModel"
+              descripcion="descripcion"
+              required
             ></textarea>
           </div>
-          <h1 class=" text-l font-roboto font-extrabold mb-3 mt-3">Líderes</h1>
+          <div
+            *ngIf="descripcion.invalid && descripcion.touched"
+            class="text-red-500 text-xs mt-1"
+          >
+            * La descripción del proyecto es obligatorio.
+          </div>
+          <h1 class=" text-l font-roboto font-extrabold mb-3 mt-3">
+            Líderes *
+          </h1>
           <app-search-select
             (selectedLeadersOutput)="onLeadersSelected($event)"
           ></app-search-select>
+          <p class="text-xs font-robotoCondensed text-[#5E6377] -mt-3">
+            La persona líder será quien valide las tareas de este subproyecto.
+            También podrá validar tareas de todos los subproyectos
+            descendientes.
+          </p>
           <h1 class=" text-l font-roboto font-extrabold mb-3 mt-3">Miembros</h1>
           <app-search-select
             (selectedMembersOutput)="onMembersSelected($event)"
@@ -83,10 +110,19 @@ export class CreateEditPageComponent implements OnInit {
   }
 
   onMembersSelected = (members: string[]) => (this.memberList = members);
-
   onLeadersSelected = (leaders: string[]) => (this.leaderList = leaders);
 
   onSubmit() {
+    if (!this.projectData.name || !this.projectData.description) {
+      this.showWarning = true;
+      this.warningMessage = "Por favor, completa todos los campos requeridos.";
+      return;
+    }
+    if (this.projectData.leaders.length == 0) {
+      this.showWarning = true;
+      this.warningMessage = "Por favor, selecciona al menos un lider.";
+      return;
+    }
     this.projectData.leaders = this.leaderList.join(",");
     this.projectData.members = this.memberList.join(",");
 
@@ -105,7 +141,7 @@ export class CreateEditPageComponent implements OnInit {
       },
       error: (error) => {
         this.warningMessage =
-          "Error al crear el proyecto. Por favor, inténtelo de nuevo. \n Procura que todos los campos estén completos.";
+          "Error al crear el proyecto. Por favor, inténtelo de nuevo.";
         this.showWarning = true;
       },
     });
