@@ -113,6 +113,8 @@ export class CreateEditPageComponent implements OnInit {
   onLeadersSelected = (leaders: string[]) => (this.leaderList = leaders);
 
   onSubmit() {
+    this.projectData.leaders = this.leaderList.join(",");
+    this.projectData.members = this.memberList.join(",");
     if (!this.projectData.name || !this.projectData.description) {
       this.showWarning = true;
       this.warningMessage = "Por favor, completa todos los campos requeridos.";
@@ -123,8 +125,6 @@ export class CreateEditPageComponent implements OnInit {
       this.warningMessage = "Por favor, selecciona al menos un lider.";
       return;
     }
-    this.projectData.leaders = this.leaderList.join(",");
-    this.projectData.members = this.memberList.join(",");
 
     if (this.projectId) {
       this.projectData.parent = this.projectId;
