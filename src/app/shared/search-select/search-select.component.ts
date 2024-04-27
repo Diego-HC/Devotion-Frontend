@@ -77,32 +77,29 @@ import { ApiService } from "../../api.service";
 })
 export class SearchSelectComponent implements OnInit {
   tags: string[] = [];
-  inputTag: string = "";
-  projectMembers: any[] = [];
+  inputTag = "";
+  projectMembers: User[] = [];
 
-  selectedMembers: any[] = [];
-  selectedMembersId: any[] = [];
-  selectedLeaders: any[] = [];
-  selectedLeadersId: any[] = [];
+  selectedMembers: User[] = [];
+  selectedMembersId: string[] = [];
+  selectedLeaders: User[] = [];
+  selectedLeadersId: string[] = [];
 
-  suggestions: any[] = [];
-  showUsers: boolean = false;
+  suggestions: User[] = [];
+  showUsers = false;
 
   @Input() projectId: string = "";
   @Input() singleSelectedMode: boolean = false;
 
-  @Output() selectedMembersOutput = new EventEmitter<any[]>(); // Event emitter for selected members
-  @Output() selectedLeadersOutput = new EventEmitter<any[]>();
+  @Output() selectedMembersOutput = new EventEmitter<string[]>(); // Event emitter for selected members
+  @Output() selectedLeadersOutput = new EventEmitter<string[]>();
   constructor(private api: ApiService) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.fetchMembers();
   }
 
-  changeShowUsers(showUsers: boolean) {
-    this.showUsers = showUsers;
-    console.log(this.showUsers);
-  }
+  changeShowUsers = (showUsers: boolean) => (this.showUsers = showUsers);
 
   fetchMembers() {
     this.api
@@ -111,13 +108,10 @@ export class SearchSelectComponent implements OnInit {
           ? `projects/${this.projectId}/members`
           : "users/"
       )
-      .subscribe((members: any[]) => {
-        this.projectMembers = members;
-      });
+      .subscribe((members: User[]) => (this.projectMembers = members));
   }
 
   updateSuggestions() {
-    console.log(this.inputTag);
     if (!this.inputTag) {
       this.suggestions = [];
       return;
@@ -134,7 +128,7 @@ export class SearchSelectComponent implements OnInit {
     console.log(this.inputTag, this.suggestions);
   }
 
-  selectMembers(member: any) {
+  selectMembers(member: User) {
     if (this.singleSelectedMode) {
       this.selectedMembers = [member];
       this.selectedMembersId = [member.id];
@@ -154,21 +148,27 @@ export class SearchSelectComponent implements OnInit {
     this.inputTag = "";
   }
 
-  deselectMembers(member: any) {
+  deselectMembers(member: User) {
     this.selectedMembers = this.selectedMembers.filter(
       (m) => m.id !== member.id
     );
     this.selectedLeaders = this.selectedLeaders.filter(
       (m) => m.id !== member.id
     );
-    this.selectedMembersOutput.emit(this.selectedMembers);
-    this.selectedLeadersOutput.emit(this.selectedLeaders);
+    this.selectedMembersId = this.selectedMembersId.filter(
+      (id) => id !== member.id
+    );
+    this.selectedLeadersId = this.selectedLeadersId.filter(
+      (id) => id !== member.id
+    );
+    this.selectedMembersOutput.emit(this.selectedMembersId);
+    this.selectedLeadersOutput.emit(this.selectedLeadersId);
 
     // Remove the tag associated with the deselected member
     this.removeTag(member.firstNames);
   }
 
-  isSelected(member: any): boolean {
+  isSelected(member: User): boolean {
     return this.selectedMembers.includes(member);
   }
 

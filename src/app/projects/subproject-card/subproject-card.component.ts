@@ -1,5 +1,4 @@
 import { Component, Input } from "@angular/core";
-import { Project } from "../main-page/main-page.component";
 
 @Component({
   selector: "app-subproject-card",
@@ -30,7 +29,7 @@ import { Project } from "../main-page/main-page.component";
   `,
 })
 export class SubprojectCardComponent {
-  @Input() subproject: Project = {
+  @Input() subproject: any = {
     id: "",
     name: "",
     description: "",

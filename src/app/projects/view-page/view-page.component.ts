@@ -40,7 +40,7 @@ import { OnInit } from "@angular/core";
 export class ViewPageComponent implements OnInit {
   constructor(private api: ApiService) {}
 
-  projects: any;
+  projects: Project[] | undefined;
   cardColors = cardColors;
 
   ngOnInit(): void {
