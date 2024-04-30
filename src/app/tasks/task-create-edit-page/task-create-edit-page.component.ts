@@ -9,6 +9,7 @@ export interface Task {
   start_date?: string;
   due_date: string;
   parent_project: string;
+  parent_task?: any;
   asignee: any;
 }
 
@@ -61,7 +62,8 @@ export interface Task {
         </textarea>
         <div class="w-1/2">
           <h2 class="font-roboto font-bold mt-4">Asignado</h2>
-          <app-search-select [projectId]="projectId" [singleSelectedMode]="true" (selectedMembersOutput)="onMembersSelected($event)" ></app-search-select>
+          <app-search-select [projectId]="parentProject" [singleSelectedMode]="true"
+                             (selectedMembersOutput)="onMembersSelected($event)"></app-search-select>
         </div>
         <app-alert *ngIf="!tasksResponse" [showWarning]="showWarning" [message]="warningMessage"></app-alert>
       </div>
@@ -79,22 +81,41 @@ export class TaskCreateEditPageComponent implements OnInit {
     start_date: '',
     due_date: '',
     parent_project: '',
+    parent_task: null,
     asignee: ''
   };
 
-  projectId: string = '';
+  parentProject: string = '';
   showWarning: boolean = false;
   warningMessage: string = '';
+  isSubtask: boolean = false;
+
+  parentTaskIdInfo: string = '';
 
   onMembersSelected(members: string[]) {
     this.taskData.asignee = members[0];
   }
 
-  ngOnInit() {
-    // Retrieve project ID from route parameters
+  taskInfo() {
     this.route.queryParams.subscribe(params => {
-      this.projectId = params['Parent'];
+      this.parentTaskIdInfo = params['Parent'];
     });
+    this.api.get(`tasks/${this.parentTaskIdInfo}`).subscribe((response) => {
+      if (response.parent_task == null) {
+        this.isSubtask = true;
+        this.parentProject = response.parentProject;
+        this.taskData.parent_task = response.id;
+      }
+      else if (response.parentTask) {
+        this.isSubtask = true;
+        this.parentProject = response.parentProject;
+        this.taskData.parent_task = response.parentTask;
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.taskInfo();
   }
 
   onSubmit() {
@@ -114,7 +135,8 @@ export class TaskCreateEditPageComponent implements OnInit {
     }
 
     this.taskData.priority = priorityValue;
-    this.taskData.parent_project = this.projectId;
+    this.taskData.parent_project = this.parentProject;
+    console.log(this.taskData);
 
     this.api.post('tasks/', this.taskData).subscribe((response) => {
         this.tasksResponse = response;
@@ -123,6 +145,7 @@ export class TaskCreateEditPageComponent implements OnInit {
       (error) => {
         this.showWarning = true;
         this.warningMessage = "Error al crear la tarea. Por favor, inténtelo de nuevo. \n Procura que todos los campos estén completos.";
+        console.log(error);
       }
     );
   }

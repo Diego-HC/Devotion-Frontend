@@ -1,21 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { ApiService } from '../../api.service';
 
 @Component({
   selector: 'app-task-main-page',
   template: `
-    <app-loading *ngIf="response === undefined" />
+    <app-loading *ngIf="taskResponse === undefined"/>
     <app-breadcrumbs
-      *ngIf="response !== undefined"
-      [breadcrumbs]="response.breadcrumbs"
+      *ngIf="taskResponse !== undefined"
+      [breadcrumbs]="taskResponse.breadcrumbs"
     />
-    <div class="overflow-x-auto mx-20 mt-4" *ngIf="response !== undefined">
+    <div class="overflow-x-auto mx-20 mt-4" *ngIf="taskResponse !== undefined">
       <div class="bg-white py-6 rounded-lg">
         <div class="flex flex-row justify-between gap-12">
           <div class="flex flex-row gap-6">
             <h1 class="text-4xl font-helvetica">
-              {{ response.name }}
+              {{ taskResponse.name }}
             </h1>
             <img
               src="../assets/coconut.webp"
@@ -31,21 +31,21 @@ import { ApiService } from '../../api.service';
           <div class="flex flex-row gap-24">
             <div class="flex flex-col">
               <h2 class="font-roboto font-bold">Asignado</h2>
-              <p class="font-robotoCondensed font-normal">{{ response.asignee }}</p>
+              <p class="font-robotoCondensed font-normal">{{ taskResponse.asignee }}</p>
             </div>
             <div class="flex flex-col">
               <h2 class="font-roboto font-bold">Fecha Inicio</h2>
-              <p class="font-robotoCondensed font-normal">{{ response.startDate }}</p>
+              <p class="font-robotoCondensed font-normal">{{ taskResponse.startDate }}</p>
             </div>
             <div class="flex flex-col">
               <h2 class="font-roboto font-bold">Fecha Fin</h2>
-              <p class="font-robotoCondensed font-normal">{{ response.dueDate }}</p>
+              <p class="font-robotoCondensed font-normal">{{ taskResponse.dueDate }}</p>
             </div>
           </div>
         </div>
         <div class="flex flex-row items-center gap-4">
           <div class="dropdown dropdown-bottom">
-            <app-badge [status]="statusName(response.status)" tabindex="0" role="button"></app-badge>
+            <app-badge [status]="statusName(taskResponse.status)" tabindex="0" role="button"></app-badge>
             <ul tabindex="0" class="dropdown-content z-[1] menu p-2 bg-base-100 rounded-box w-52">
               <li><a (click)="updateStatus(0)">No iniciado</a></li>
               <li><a (click)="updateStatus(1)">En proceso</a></li>
@@ -54,7 +54,7 @@ import { ApiService } from '../../api.service';
             </ul>
           </div>
           <a
-            href="/edit/project/{{ response.id }}"
+            href="/edit/project/{{ taskResponse.id }}"
             class="flex flex-row items-center gap-2"
           >
             <span
@@ -64,12 +64,12 @@ import { ApiService } from '../../api.service';
           </a>
         </div>
         <div class="md:mt-3">
-            <app-alert *ngIf="showWarning" [showWarning]="showWarning" [message]="warningMessage"></app-alert>
+          <app-alert *ngIf="showWarning" [showWarning]="showWarning" [message]="warningMessage"></app-alert>
         </div>
         <p
           class="font-robotoCondensed text-lg my-4 max-w-3xl text-[#5E6377] font-normal"
         >
-          {{ response.description }}
+          {{ taskResponse.description }}
         </p>
 
         <div class="flex flex-col justify-between">
@@ -80,31 +80,35 @@ import { ApiService } from '../../api.service';
               [selectedIcon]="selectedIcon"
               (selectedIconChange)="onTabClick($event)"
             >
-              <app-table-icon class="col-start-1 row-start-1" [fill]="selectedIcon === 'table' ? '#FFFFFF' : '#2A4365'"></app-table-icon>
+              <app-table-icon class="col-start-1 row-start-1"
+                              [fill]="selectedIcon === 'table' ? '#FFFFFF' : '#2A4365'"></app-table-icon>
             </app-icon>
             <app-icon
               [iconType]="'kanban'"
               [selectedIcon]="selectedIcon"
               (selectedIconChange)="onTabClick($event)"
             >
-              <app-kanban-icon class="col-start-1 row-start-1" [fill]="selectedIcon === 'kanban' ? '#FFFFFF' : '#2A4365'"></app-kanban-icon>
+              <app-kanban-icon class="col-start-1 row-start-1"
+                               [fill]="selectedIcon === 'kanban' ? '#FFFFFF' : '#2A4365'"></app-kanban-icon>
             </app-icon>
             <app-icon
               [iconType]="'calendar'"
               [selectedIcon]="selectedIcon"
               (selectedIconChange)="onTabClick($event)"
             >
-              <app-calendar-icon class="col-start-1 row-start-1" [fill]="selectedIcon === 'calendar' ? '#FFFFFF' : '#2A4365'"></app-calendar-icon>
+              <app-calendar-icon class="col-start-1 row-start-1"
+                                 [fill]="selectedIcon === 'calendar' ? '#FFFFFF' : '#2A4365'"></app-calendar-icon>
             </app-icon>
             <app-icon
               [iconType]="'roadmap'"
               [selectedIcon]="selectedIcon"
               (selectedIconChange)="onTabClick($event)"
             >
-              <app-roadmap-icon class="col-start-1 row-start-1" [fill]="selectedIcon === 'roadmap' ? '#FFFFFF' : '#2A4365'"></app-roadmap-icon>
+              <app-roadmap-icon class="col-start-1 row-start-1"
+                                [fill]="selectedIcon === 'roadmap' ? '#FFFFFF' : '#2A4365'"></app-roadmap-icon>
             </app-icon>
             <a
-              href="/new/task?Parent={{ response.id }}&Type=[Task]"
+              href="/new/task?Parent={{ taskResponse.id }}&Type=[Task]"
               (click)="onTabClick('newTask')"
             >
               <div class="flex flex-col place-items-center justify-center">
@@ -121,27 +125,29 @@ import { ApiService } from '../../api.service';
               </div>
             </a>
           </div>
-          <app-table *ngIf="currentView === 'table'" />
-          <app-kanban *ngIf="currentView === 'kanban'" />
-          <app-calendar *ngIf="currentView === 'calendar'" />
-          <app-roadmap *ngIf="currentView === 'roadmap'" />
+          <app-table *ngIf="currentView === 'table'" [tasks]="taskResponse?.tasks" />
+          <app-kanban *ngIf="currentView === 'kanban'"/>
+          <app-calendar *ngIf="currentView === 'calendar'"/>
+          <app-roadmap *ngIf="currentView === 'roadmap'"/>
         </div>
       </div>
     </div>
   `
 })
 export class TaskMainPageComponent implements OnInit {
-  response: any;
+  taskResponse: any;
 
   showWarning: boolean = false;
   warningMessage: string = '';
+
+  @Output() taskData: any;
 
   constructor(private api: ApiService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.api.get(`tasks/${params["id"]}/`).subscribe((response) => {
-        this.response = response;
+        this.taskResponse = response;
       });
     });
   }
@@ -165,10 +171,10 @@ export class TaskMainPageComponent implements OnInit {
 
   updateStatus(status: number) {
     this.api.put(
-      `tasks/${this.response.id}/status/`,
+      `tasks/${this.taskResponse.id}/status/`,
       { status: status },
     ).subscribe(() => {
-      this.response.status = status;
+      this.taskResponse.status = status;
       this.dropdownOpen = false;
     },
       error => {
