@@ -96,17 +96,20 @@ export class TaskCreateEditPageComponent implements OnInit {
     this.taskData.asignee = members[0];
   }
 
+  // Get the parent task info if the task is a subtask of another task
   taskInfo() {
+    // Get the parent task id from the URL
     this.route.queryParams.subscribe(params => {
       this.parentTaskIdInfo = params['Parent'];
     });
+    // If the task is a subtask, get the parent task info
     this.api.get(`tasks/${this.parentTaskIdInfo}`).subscribe((response) => {
-      if (response.parent_task == null) {
+      if (response.parent_task == null) { // if the parent_task is null, the task is a subtask of a PROJECT
         this.isSubtask = true;
         this.parentProject = response.parentProject;
         this.taskData.parent_task = response.id;
       }
-      else if (response.parentTask) {
+      else if (response.parentTask) { // if the parentTask is not null, the task is a subtask of another TASK
         this.isSubtask = true;
         this.parentProject = response.parentProject;
         this.taskData.parent_task = response.parentTask;
@@ -114,6 +117,7 @@ export class TaskCreateEditPageComponent implements OnInit {
     });
   }
 
+  // Call the function when the component is initialized
   ngOnInit() {
     this.taskInfo();
   }
@@ -136,7 +140,6 @@ export class TaskCreateEditPageComponent implements OnInit {
 
     this.taskData.priority = priorityValue;
     this.taskData.parent_project = this.parentProject;
-    console.log(this.taskData);
 
     this.api.post('tasks/', this.taskData).subscribe((response) => {
         this.tasksResponse = response;
