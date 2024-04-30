@@ -168,7 +168,7 @@ export interface Project {
       <app-table *ngIf="currentView === 'table'" [tasks]="response?.tasks" />
       <app-kanban *ngIf="currentView === 'kanban'" />
       <app-calendar *ngIf="currentView === 'calendar'" />
-      <app-roadmap *ngIf="currentView === 'roadmap'" />
+      <app-roadmap *ngIf="currentView === 'roadmap'" [tasks]="response?.tasks" />
     </div>
   `,
 })
