@@ -54,7 +54,7 @@ import { ApiService } from '../../api.service';
             </ul>
           </div>
           <a
-            href="/edit/project/{{ taskResponse.id }}"
+            href="/edit/task/{{ taskResponse.id }}"
             class="flex flex-row items-center gap-2"
           >
             <span
