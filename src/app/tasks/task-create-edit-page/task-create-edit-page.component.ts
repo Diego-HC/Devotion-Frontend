@@ -18,12 +18,12 @@ export interface Task {
   template: `
     <div class="overflow-x-auto mx-32">
       <div class="bg-white py-8 rounded-lg">
-        <h2 class="font-roboto font-bold">
+        <h2 class="font-roboto font-bold md:m-0.5">
           Nueva Tarea
         </h2>
         <div class="flex flex-row items-center mt-2 gap-4">
           <input type="text"
-                 class="input-md input-bordered input-['#5CCEFF'] md:w-5/12 text-3xl font-helvetica rounded-box font-bold shadow-md"
+                 class="input-md input-bordered input-['#5CCEFF'] md:w-5/12 md:m-0.5 text-3xl font-helvetica rounded-box font-bold shadow-md"
                  [(ngModel)]="taskData.name" (ngModelChange)="taskData.name = $event"/>
           <div class="flex flex-col items-center">
             <button (click)="onSubmit()" class="btn-circle items-center justify-center"
@@ -55,17 +55,17 @@ export interface Task {
             </div>
           </div>
         </div>
-        <h2 class="font-roboto font-bold mt-4">Descripción</h2>
-        <textarea class="textarea-md text-['#5CCEFF'] textarea-bordered w-1/2 h-40 rounded-box shadow-md"
+        <h2 class="font-roboto font-bold mt-4 md:m-0.5">Descripción</h2>
+        <textarea class="textarea-md text-['#5CCEFF'] textarea-bordered w-1/2 h-40 md:m-0.5 rounded-box shadow-md"
                   [(ngModel)]="taskData.description"
                   (ngModelChange)="taskData.description = $event">
         </textarea>
-        <div class="w-1/2">
-          <h2 class="font-roboto font-bold mt-4">Asignado</h2>
+        <div class="w-1/2 md:m-1">
+          <h2 class="font-roboto font-bold mt-4 md:m-0.5">Asignado</h2>
           <app-search-select [projectId]="parentProject" [singleSelectedMode]="true"
                              (selectedMembersOutput)="onMembersSelected($event)"></app-search-select>
         </div>
-        <app-alert *ngIf="!tasksResponse" [showWarning]="showWarning" [message]="warningMessage"></app-alert>
+        <app-alert *ngIf="!taskResponse" [showWarning]="showWarning" [message]="warningMessage"></app-alert>
       </div>
     </div>
   `
@@ -73,7 +73,7 @@ export interface Task {
 export class TaskCreateEditPageComponent implements OnInit {
   constructor(private api: ApiService, private route: ActivatedRoute, private router: Router) { }
 
-  tasksResponse: any;
+  taskResponse: any;
   taskData: Task = {
     name: '',
     description: '',
@@ -142,8 +142,8 @@ export class TaskCreateEditPageComponent implements OnInit {
     this.taskData.parent_project = this.parentProject;
 
     this.api.post('tasks/', this.taskData).subscribe((response) => {
-        this.tasksResponse = response;
-        this.router.navigateByUrl(`/task/${this.tasksResponse.id}`)
+        this.taskResponse = response;
+        this.router.navigateByUrl(`/task/${this.taskResponse.id}`)
     },
       (error) => {
         this.showWarning = true;

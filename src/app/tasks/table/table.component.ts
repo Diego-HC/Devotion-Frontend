@@ -49,7 +49,6 @@ import {Router} from '@angular/router';
 export class TableComponent {
 
   @Input() tasks?: any[];
-  @Input() taskId: string = '';
 
   constructor(private router: Router) { }
 
