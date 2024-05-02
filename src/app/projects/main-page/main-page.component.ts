@@ -2,7 +2,6 @@ import { Component, OnInit, EventEmitter, Output } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { bgBlack, bgBlue } from "ansi-colors";
 import { ApiService } from "../../api.service";
-import { AuthGoogleService } from "../../auth-google.service";
 import { cardColors } from "../../shared/cardColors";
 
 @Component({
@@ -22,7 +21,7 @@ import { cardColors } from "../../shared/cardColors";
                 {{ response.name }}
               </h1>
               <div
-                class="radial-progress bg-[#E1EFFF] text-[#2A4365]"
+                class="radial-progress bg-devotionSecondary text-devotionPrimary"
                 style="--value:70; --size:2rem; --thickness: 0.5rem;"
                 role="progressbar"
               ></div>
@@ -34,7 +33,7 @@ import { cardColors } from "../../shared/cardColors";
                   width="25"
                   height="25"
                 ></app-dashboard-icon>
-                <span class="font-bold hover:underline text-base text-[#5CCEFF]"
+                <span class="font-bold hover:underline text-base text-devotionAccent"
                   >Ir a dashboard</span
                 >
               </a>
@@ -43,7 +42,7 @@ import { cardColors } from "../../shared/cardColors";
                 class="flex flex-row items-center gap-2"
               >
                 <span
-                  class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]"
+                  class="text-lg cursor-pointer badge badge-outline text-devotionAccent"
                   >•••</span
                 >
               </a>
@@ -60,7 +59,7 @@ import { cardColors } from "../../shared/cardColors";
             <div
               class="flex flex-col flex-wrap content-start gap-4 ml-2 mt-2 h-60 overflow-x-scroll"
             >
-              @for (subproject of this.response.projects; track $index) {
+              @for (subproject of response.projects; track $index) {
               <app-subproject-card
                 [subproject]="subproject"
                 [colors]="cardColors[$index % cardColors.length]"
@@ -157,19 +156,19 @@ import { cardColors } from "../../shared/cardColors";
 
       <app-table *ngIf="currentView === 'table'" [tasks]="response.tasks" />
       <app-kanban *ngIf="currentView === 'kanban'" />
-      <app-calendar *ngIf="currentView === 'calendar'" />
+      <app-calendar *ngIf="currentView === 'calendar'" [projectOrTaskId]="response.id" [isTask]="false" />
       <app-roadmap *ngIf="currentView === 'roadmap'" />
     </div>
   `,
 })
 export class MainPageComponent implements OnInit {
-  response: MainPageProject | undefined;
+  // response: MainPageProject | undefined = JSON.parse('{"id":"4bfca576-83d2-447a-9b79-cdc778417c84","name":"FSAE 2024","description":"Ser la mejor escudería en al competencia SAE Formula Student con un vehículo monoplaza reconocido por nuestra excelencia en el diseño y construcción. Aspiramos a inspirar a las generaciones futuras demostrando que con pasión, determinación y trabajo en equipo podemos alcanzar nuestros objetivos en el mundo del automovilismo","breadcrumbs":[["4bfca576-83d2-447a-9b79-cdc778417c84","FSAE 2024",false]],"tasks":[{"id":"184e3f2b-ad30-434f-b2ec-84a1c5b982f2","name":"Junta de sprints","description":"No sé porqué se complicaron con el operador =, agregando == no solicitado, y la coma (,) utilizando un delimitador. Como consecuencia la entrada = # lo marca como error, cuando el = debió haberlo aceptado, y == lo marca como operador relacional en lugar de 2 operadores =. También, equivocadamente acepta mayúsculas en los identificadores.","status":3,"priority":1,"startDate":"2024-04-18","dueDate":"2024-04-20","asignee":"Daniel Ricciardo","parentProject":"4bfca576-83d2-447a-9b79-cdc778417c84","parentTask":null},{"id":"c90d363f-5221-45ec-86a5-ffbe335fb054","name":"Junta Marketing","description":"Revisar nuevos logos","status":1,"priority":1,"startDate":"2024-04-19","dueDate":"2024-04-19","asignee":"Esteban Ocon","parentProject":"4bfca576-83d2-447a-9b79-cdc778417c84","parentTask":null},{"id":"cb7430cd-3dc1-4019-8f9b-a516a03aa855","name":"Junta proveedor","description":"Junta con perficient","status":1,"priority":2,"startDate":"2024-04-19","dueDate":"2024-04-19","asignee":"Robert Kubica","parentProject":"4bfca576-83d2-447a-9b79-cdc778417c84","parentTask":null}],"projects":[{"id":"5f6f6cd3-90eb-4c58-8700-c8fd102d4c17","name":"Suspensión","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin volutpat tortor eget lacus ultricies, nec ullamcorper risus viverra. Pellentesque non ultrices nibh."},{"id":"590d2b66-8aa4-437c-9e28-50a699736f19","name":"Finanzas","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin volutpat tortor eget lacus ultricies, nec ullamcorper risus viverra. Pellentesque non ultrices nibh."},{"id":"e2ad13c0-d81a-4177-b0b1-d89aa350584e","name":"Marketing","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin volutpat tortor eget lacus ultricies, nec ullamcorper risus viverra. Pellentesque non ultrices nibh."},{"id":"11331d71-0296-45f8-a90d-516c014c3276","name":"Motor","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin volutpat tortor eget lacus ultricies, nec ullamcorper risus viverra. Pellentesque non ultrices nibh."},{"id":"887ebfdd-bd39-417c-9b42-90396c2b8e59","name":"Chasis","description":"Ser la mejor escudería en al competencia SAE Formula Student con un vehículo monoplaza reconocido por nuestra excelencia en el diseño y construcción. Aspiramos a inspirar a las generaciones futuras demostrando que con pasión, determinación y trabajo en equipo podemos alcanzar nuestros objetivos en el mundo del automovilismo"},{"id":"8be332b4-135e-440b-8045-68e773a55c3c","name":"Electrónica","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin volutpat tortor eget lacus ultricies, nec ullamcorper risus viverra. Pellentesque non ultrices nibh."}],"progress":33.33333333333333}');
+  response?: MainPageProject;
   cardColors = cardColors;
 
   constructor(
     protected api: ApiService,
-    private route: ActivatedRoute,
-    private auth: AuthGoogleService
+    private route: ActivatedRoute
   ) {}
 
   currentView: string = "table"; // Default view
@@ -182,10 +181,11 @@ export class MainPageComponent implements OnInit {
     this.selectedIcon = selected;
   }
 
+  // ngOnInit() { }
+
   ngOnInit() {
     this.route.params.subscribe((params) => {
       this.api.get(`projects/${params["id"]}/`).subscribe((response) => {
-        console.log(response);
         this.response = response;
       });
     });

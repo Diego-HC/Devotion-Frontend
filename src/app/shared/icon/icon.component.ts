@@ -9,7 +9,7 @@ import { Input, Output, EventEmitter } from "@angular/core";
         <span class="col-start-1 row-start-1"></span>
         <div class="flex flex-col place-items-center justify-center">
           <div class="grid grid-cols-1 grid-rows-1 place-items-center h-12">
-                    <span class="col-start-1 row-start-1 bg-[#2A4365] rounded-full p-6"
+                    <span class="col-start-1 row-start-1 bg-devotionPrimary rounded-full p-6"
                           [ngClass]="{'hidden':selectedIcon !== iconType}"></span>
             <ng-content></ng-content>
           </div>
