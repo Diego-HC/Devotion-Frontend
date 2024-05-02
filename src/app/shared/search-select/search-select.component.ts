@@ -58,12 +58,12 @@ import { ApiService } from "../../api.service";
             class="box-content bg-gray-200 p-0 font-robotoCondensed font-bold"
             *ngFor="let member of projectMembers"
             [class.text-white]="isSelected(member)"
-            [class.bg-[#5CCEFF]]="isSelected(member)"
+            [class.bg-devotionAccent]="isSelected(member)"
           >
             <button
               class="btn btn-xs px-1 w-full h-full rounded-none bg-gray-200 border-gray-200 "
               (click)="selectMembers(member)"
-              [class.bg-[#5CCEFF]]="isSelected(member)"
+              [class.bg-devotionAccent]="isSelected(member)"
               [class.text-white]="isSelected(member)"
             >
               {{ member.firstNames }} {{ member.lastNames }}

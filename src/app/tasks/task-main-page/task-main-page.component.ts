@@ -23,7 +23,7 @@ import { ApiService } from '../../api.service';
               class="h-8 w-8 rounded-full col-start-1 row-start-1"
             />
             <div
-              class="radial-progress bg-[#E1EFFF] text-[#2A4365]"
+              class="radial-progress bg-devotionSecondary text-devotionPrimary"
               style="--value:70; --size:2rem; --thickness: 0.5rem;"
               role="progressbar"
             ></div>
@@ -58,7 +58,7 @@ import { ApiService } from '../../api.service';
             class="flex flex-row items-center gap-2"
           >
             <span
-              class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]"
+              class="text-lg cursor-pointer badge badge-outline text-devotionAccent"
             >•••</span
             >
           </a>
@@ -127,7 +127,7 @@ import { ApiService } from '../../api.service';
           </div>
           <app-table *ngIf="currentView === 'table'" [tasks]="taskResponse?.tasks" />
           <app-kanban *ngIf="currentView === 'kanban'"/>
-          <app-calendar *ngIf="currentView === 'calendar'"/>
+          <app-calendar *ngIf="currentView === 'calendar'" [projectOrTaskId]="taskResponse.id" [isTask]="true" />
           <app-roadmap *ngIf="currentView === 'roadmap'"/>
         </div>
       </div>

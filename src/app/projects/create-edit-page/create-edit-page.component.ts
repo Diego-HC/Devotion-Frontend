@@ -22,8 +22,7 @@ import { ApiService } from "../../api.service";
             <div class="flex flex-col items-center">
               <button
                 (click)="onSubmit()"
-                class="btn-circle items-center justify-center mt-4 text-white font-bold font-helvetica text-3xl w-12 h-12"
-                style="background-color: #2A4365"
+                class="bg-devotionPrimary btn-circle items-center justify-center mt-4 text-white font-bold font-helvetica text-3xl w-12 h-12"
               >
                 +
               </button>
