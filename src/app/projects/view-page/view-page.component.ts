@@ -17,6 +17,7 @@ import { OnInit } from "@angular/core";
         [name]="project.name"
         [description]="project.description"
         [colors]="cardColors[$index % cardColors.length]"
+        [isLeader]="project.isLeader"
       />
       }
 
@@ -40,7 +41,7 @@ import { OnInit } from "@angular/core";
 export class ViewPageComponent implements OnInit {
   constructor(private api: ApiService) {}
 
-  projects: Project[] | undefined;
+  projects: ProjectView[] | undefined;
   cardColors = cardColors;
 
   ngOnInit(): void {
