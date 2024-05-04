@@ -5,6 +5,10 @@ declare global {
     description: string;
   }
 
+  interface ProjectView extends Project {
+    isLeader: boolean;
+  }
+
   interface ProjectData extends Project {
     parent: string;
     members: MinimalUser[];

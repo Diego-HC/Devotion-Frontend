@@ -18,6 +18,7 @@ import { StoreService } from "../../store.service";
           [name]="project.name"
           [description]="project.description"
           [colors]="cardColors[$index % cardColors.length]"
+          [isLeader]="project.isLeader"
         />
       }
 
@@ -41,7 +42,7 @@ import { StoreService } from "../../store.service";
 export class ViewPageComponent implements OnInit {
   constructor(private router: Router, private api: ApiService, private store: StoreService) {}
 
-  projects: Project[] | undefined;
+  projects: ProjectView[] | undefined;
   cardColors = cardColors;
 
   ngOnInit(): void {
