@@ -1,8 +1,7 @@
-import { Component, OnInit, EventEmitter, Output } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { bgBlack, bgBlue } from "ansi-colors";
+import { Component, OnInit } from "@angular/core";
+import { Router, ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
-import { AuthGoogleService } from "../../auth-google.service";
+import { StoreService } from "../../store.service";
 import { cardColors } from "../../shared/cardColors";
 
 @Component({
@@ -39,7 +38,7 @@ import { cardColors } from "../../shared/cardColors";
                 >
               </a>
               <a
-                href="/edit/project/{{ response.id }}"
+                routerLink="/edit/project"
                 class="flex flex-row items-center gap-2"
               >
                 <span
@@ -60,16 +59,15 @@ import { cardColors } from "../../shared/cardColors";
             <div
               class="flex flex-col flex-wrap content-start gap-4 ml-2 mt-2 h-60 overflow-x-scroll"
             >
-              @for (subproject of this.response.projects; track $index) {
-              <app-subproject-card
-                [subproject]="subproject"
-                [colors]="cardColors[$index % cardColors.length]"
-              />
+              @for (subproject of response.projects; track $index) {
+                <app-subproject-card
+                  [subproject]="subproject"
+                  [colors]="cardColors[$index % cardColors.length]"
+                />
               }
-              <a
-                href="/new/project?Parent={{ response.id }}"
+              <button
+                (click)="newSubproject()"
                 class="place-self-center w-[12.375rem] h-24"
-                (click)="sendDataToNewProject(response.id)"
               >
                 <div
                   class="flex flex-col place-items-center justify-center h-full"
@@ -79,15 +77,15 @@ import { cardColors } from "../../shared/cardColors";
                   >
                     <app-plus-icon
                       fill="#2A4365"
-                      [width]="'15'"
-                      [height]="'15'"
+                      width="15"
+                      height="15"
                     ></app-plus-icon>
                   </div>
-                  <span class="font-robotoCondensed text-sm"
-                    >Nuevo Subproyecto</span
-                  >
+                  <span
+                    class="font-robotoCondensed text-sm"
+                  >Nuevo Subproyecto</span>
                 </div>
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -96,48 +94,45 @@ import { cardColors } from "../../shared/cardColors";
           <div class="flex flex-row items-center gap-5">
             <app-icon
               iconType="table"
-              [selectedIcon]="selectedIcon"
+              [selectedIcon]="currentView"
               (selectedIconChange)="onTabClick($event)"
             >
               <app-table-icon
                 class="col-start-1 row-start-1"
-                [fill]="selectedIcon === 'table' ? '#FFFFFF' : '#2A4365'"
+                [fill]="currentView === 'table' ? '#FFFFFF' : '#2A4365'"
               ></app-table-icon>
             </app-icon>
             <app-icon
               iconType="kanban"
-              [selectedIcon]="selectedIcon"
+              [selectedIcon]="currentView"
               (selectedIconChange)="onTabClick($event)"
             >
               <app-kanban-icon
                 class="col-start-1 row-start-1"
-                [fill]="selectedIcon === 'kanban' ? '#FFFFFF' : '#2A4365'"
+                [fill]="currentView === 'kanban' ? '#FFFFFF' : '#2A4365'"
               ></app-kanban-icon>
             </app-icon>
             <app-icon
               iconType="calendar"
-              [selectedIcon]="selectedIcon"
+              [selectedIcon]="currentView"
               (selectedIconChange)="onTabClick($event)"
             >
               <app-calendar-icon
                 class="col-start-1 row-start-1"
-                [fill]="selectedIcon === 'calendar' ? '#FFFFFF' : '#2A4365'"
+                [fill]="currentView === 'calendar' ? '#FFFFFF' : '#2A4365'"
               ></app-calendar-icon>
             </app-icon>
             <app-icon
               iconType="roadmap"
-              [selectedIcon]="selectedIcon"
+              [selectedIcon]="currentView"
               (selectedIconChange)="onTabClick($event)"
             >
               <app-roadmap-icon
                 class="col-start-1 row-start-1"
-                [fill]="selectedIcon === 'roadmap' ? '#FFFFFF' : '#2A4365'"
-              ></app-roadmap-icon>
+                [fill]="currentView === 'roadmap' ? '#FFFFFF' : '#2A4365'"
+              />
             </app-icon>
-            <a
-              href="/new/task?Parent={{ response.id }}&Type=[Task]"
-              (click)="onTabClick('newTask')"
-            >
+            <button (click)="newTask()">
               <div class="flex flex-col place-items-center justify-center">
                 <div
                   class="grid grid-cols-1 grid-rows-1 place-items-center border-2 border-gray-200 rounded-full p-2.5 box-shadow"
@@ -146,11 +141,11 @@ import { cardColors } from "../../shared/cardColors";
                     fill="#2A4365"
                     [width]="'25'"
                     [height]="'25'"
-                  ></app-plus-icon>
+                  />
                 </div>
                 <span class="font-robotoCondensed">Nueva tarea</span>
               </div>
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -163,38 +158,37 @@ import { cardColors } from "../../shared/cardColors";
   `,
 })
 export class MainPageComponent implements OnInit {
-  response: MainPageProject | undefined;
-  cardColors = cardColors;
-
   constructor(
     protected api: ApiService,
     private route: ActivatedRoute,
-    private auth: AuthGoogleService
+    private router: Router,
+    private store: StoreService
   ) {}
 
-  currentView: string = "table"; // Default view
-  selectedIcon: string = "table";
-  // To send the parentId to the new project page
-  @Output() parentProject = new EventEmitter<string>();
-
-  onTabClick(selected: string) {
-    this.currentView = selected;
-    this.selectedIcon = selected;
-  }
+  response: MainPageProject | undefined;
+  cardColors = cardColors;
+  currentView: string = "table";
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
       this.api.get(`projects/${params["id"]}/`).subscribe((response) => {
-        console.log(response);
+        this.store.updateProjectFromResponse(response);
         this.response = response;
       });
     });
   }
 
-  sendDataToNewProject(parentProjectId: string) {
-    this.parentProject.emit(parentProjectId);
+  onTabClick(selected: string) {
+    this.currentView = selected;
   }
 
-  protected readonly bgBlack = bgBlack;
-  protected readonly bgBlue = bgBlue;
+  newTask() {
+    this.store.clearTask(this.store.project.id);
+    void this.router.navigateByUrl("/new/task");
+  }
+
+  newSubproject() {
+    this.store.clearProject(this.store.project.id);
+    void this.router.navigateByUrl("/new/project");
+  }
 }

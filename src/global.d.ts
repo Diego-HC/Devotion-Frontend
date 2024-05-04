@@ -5,16 +5,36 @@ declare global {
     description: string;
   }
 
+  interface ProjectData extends Project {
+    parent: string;
+    members: MinimalUser[];
+    leaders: MinimalUser[];
+  }
+
+  interface TaskPostBody {
+    id: string;
+    name: string;
+    description?: string;
+    start_date: string;
+    due_date: string;
+    assignee: string;
+    priority: number;
+    status: number;
+    parent_project: string;
+    parent_task?: string;
+  }
+
   interface Task {
     id: string;
     name: string;
     description: string;
-
     startDate: string;
     dueDate: string;
-    asignee: string;
+    assignee: MinimalUser;
     priority: number;
     status: number;
+    parentProject: string;
+    parentTask?: string;
   }
 
   interface TaskData extends Task {
@@ -22,14 +42,14 @@ declare global {
     breadcrumbs: (string | boolean)[][];
   }
 
-  interface MainPageProject extends Project {
+  interface MainPageProject extends ProjectData {
     breadcrumbs: (string | boolean)[][];
     projects: Project[];
     tasks: Task[];
   }
 
-  interface ProjectData extends Project {
-    parent: string;
+  interface ProjectPostBody extends Project {
+    parent?: string;
     leaders: string;
     members: string;
   }
@@ -39,6 +59,11 @@ declare global {
     email: string;
     firstNames: string;
     lastNames: string;
+  }
+
+  interface MinimalUser {
+    id: string;
+    name: string;
   }
 }
 

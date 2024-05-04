@@ -1,6 +1,7 @@
-import { Component, OnInit, Output } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
+import { StoreService } from "../../store.service";
 import { switchMap } from "rxjs";
 
 @Component({
@@ -33,7 +34,7 @@ import { switchMap } from "rxjs";
             <div class="flex flex-col">
               <h2 class="font-roboto font-bold">Asignado</h2>
               <p class="font-robotoCondensed font-normal">
-                {{ taskResponse.asignee }}
+                {{ taskResponse.assignee.name }}
               </p>
             </div>
             <div class="flex flex-col">
@@ -68,19 +69,15 @@ import { switchMap } from "rxjs";
             </ul>
           </div>
           <a
-            href="/edit/task/{{ taskResponse.id }}"
+            routerLink="/edit/task"
             class="flex flex-row items-center gap-2"
           >
-            <span
-              class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]"
-              >•••</span
-            >
+            <span class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••</span>
           </a>
         </div>
         <div class="md:mt-3">
           <app-alert
             *ngIf="showWarning"
-            [showWarning]="showWarning"
             [message]="warningMessage"
           ></app-alert>
         </div>
@@ -95,48 +92,45 @@ import { switchMap } from "rxjs";
           <div class="flex flex-row items-center gap-5">
             <app-icon
               iconType="table"
-              [selectedIcon]="selectedIcon"
+              [selectedIcon]="currentView"
               (selectedIconChange)="onTabClick($event)"
             >
               <app-table-icon
                 class="col-start-1 row-start-1"
-                [fill]="selectedIcon === 'table' ? '#FFFFFF' : '#2A4365'"
+                [fill]="currentView === 'table' ? '#FFFFFF' : '#2A4365'"
               ></app-table-icon>
             </app-icon>
             <app-icon
               [iconType]="'kanban'"
-              [selectedIcon]="selectedIcon"
+              [selectedIcon]="currentView"
               (selectedIconChange)="onTabClick($event)"
             >
               <app-kanban-icon
                 class="col-start-1 row-start-1"
-                [fill]="selectedIcon === 'kanban' ? '#FFFFFF' : '#2A4365'"
+                [fill]="currentView === 'kanban' ? '#FFFFFF' : '#2A4365'"
               ></app-kanban-icon>
             </app-icon>
             <app-icon
               [iconType]="'calendar'"
-              [selectedIcon]="selectedIcon"
+              [selectedIcon]="currentView"
               (selectedIconChange)="onTabClick($event)"
             >
               <app-calendar-icon
                 class="col-start-1 row-start-1"
-                [fill]="selectedIcon === 'calendar' ? '#FFFFFF' : '#2A4365'"
+                [fill]="currentView === 'calendar' ? '#FFFFFF' : '#2A4365'"
               ></app-calendar-icon>
             </app-icon>
             <app-icon
               [iconType]="'roadmap'"
-              [selectedIcon]="selectedIcon"
+              [selectedIcon]="currentView"
               (selectedIconChange)="onTabClick($event)"
             >
               <app-roadmap-icon
                 class="col-start-1 row-start-1"
-                [fill]="selectedIcon === 'roadmap' ? '#FFFFFF' : '#2A4365'"
+                [fill]="currentView === 'roadmap' ? '#FFFFFF' : '#2A4365'"
               ></app-roadmap-icon>
             </app-icon>
-            <a
-              href="/new/task?Parent={{ taskResponse.id }}&Type=[Task]"
-              (click)="onTabClick('newTask')"
-            >
+            <button (click)="newTask()">
               <div class="flex flex-col place-items-center justify-center">
                 <div
                   class="grid grid-cols-1 grid-rows-1 place-items-center border-2 border-gray-200 rounded-full p-2.5 box-shadow"
@@ -149,11 +143,11 @@ import { switchMap } from "rxjs";
                 </div>
                 <span class="font-robotoCondensed">Nueva tarea</span>
               </div>
-            </a>
+            </button>
           </div>
           <app-table
             *ngIf="currentView === 'table'"
-            [tasks]="taskResponse?.tasks"
+            [tasks]="taskResponse!.tasks"
           />
           <app-kanban *ngIf="currentView === 'kanban'" />
           <app-calendar *ngIf="currentView === 'calendar'" />
@@ -164,14 +158,13 @@ import { switchMap } from "rxjs";
   `,
 })
 export class TaskMainPageComponent implements OnInit {
-  taskResponse: any;
+  constructor(private api: ApiService, private store: StoreService, private route: ActivatedRoute) {}
 
-  showWarning: boolean = false;
-  warningMessage: string = "";
-
-  @Output() taskData: any;
-
-  constructor(private api: ApiService, private route: ActivatedRoute) {}
+  taskResponse?: TaskData;
+  currentView = "table";
+  dropdownOpen = false;
+  showWarning = false;
+  warningMessage = "";
 
   ngOnInit() {
     this.route.params
@@ -182,11 +175,10 @@ export class TaskMainPageComponent implements OnInit {
         })
       )
       .subscribe((response) => {
+        this.store.updateTaskFromResponse(response)
         this.taskResponse = response;
       });
   }
-
-  dropdownOpen = false;
 
   statusName(status: number) {
     switch (status) {
@@ -205,10 +197,10 @@ export class TaskMainPageComponent implements OnInit {
 
   updateStatus(status: number) {
     this.api
-      .put(`tasks/${this.taskResponse.id}/status/`, { status: status })
+      .put(`tasks/${this.taskResponse!.id}/status/`, { status: status })
       .subscribe(
         () => {
-          this.taskResponse.status = status;
+          this.taskResponse!.status = status;
           this.dropdownOpen = false;
         },
         (error) => {
@@ -218,11 +210,11 @@ export class TaskMainPageComponent implements OnInit {
       );
   }
 
-  currentView: string = "table"; // Default view
-  selectedIcon: string = "table";
-
   onTabClick(selected: string) {
     this.currentView = selected;
-    this.selectedIcon = selected;
+  }
+
+  newTask() {
+    this.store.clearTask(this.store.task.parentProject, this.store.task.id);
   }
 }

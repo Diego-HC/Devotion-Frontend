@@ -9,12 +9,17 @@ import { ApiService } from '../../api.service';
         <source src="/assets/animation.mp4" type="video/mp4" />
         Video not supported
       </video>
-      <p *ngIf="tips === 'true'" class="text-center text-[#5E6377] font-robotoCondensed w-72">{{ this.api.randomTip() }}</p>
+      <p
+        *ngIf="message !== 'none'"
+        class="text-center text-[#5E6377] font-robotoCondensed w-72"
+      >
+        {{ message === 'tips' ? this.api.randomTip() : message }}
+      </p>
     </div>
   `
 })
 export class LoadingComponent {
   constructor(protected api: ApiService) { }
 
-  @Input() tips: string = "true"
+  @Input() message: string = "tips"
 }
