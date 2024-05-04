@@ -23,13 +23,13 @@ export class BadgeComponent {
   get badgeClass(): string {
     switch (this.status) {
       case "En revisión":
-        return "bg-[#0094D3]";
+        return "bg-inReview";
       case "Completado":
-        return "bg-[#00D387]";
+        return "bg-done";
       case "En proceso":
-        return "bg-[#FFC700]";
+        return "bg-inProgress";
       case "No iniciado":
-        return "bg-[#363636]";
+        return "bg-notStarted";
       default:
         return "";
     }

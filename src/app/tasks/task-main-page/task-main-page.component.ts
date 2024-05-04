@@ -25,7 +25,7 @@ import { switchMap } from "rxjs";
               class="h-8 w-8 rounded-full col-start-1 row-start-1"
             />
             <div
-              class="radial-progress bg-[#E1EFFF] text-[#2A4365]"
+              class="radial-progress bg-devotionSecondary text-devotionPrimary"
               style="--value:70; --size:2rem; --thickness: 0.5rem;"
               role="progressbar"
             ></div>
@@ -150,12 +150,12 @@ import { switchMap } from "rxjs";
             [tasks]="taskResponse!.tasks"
           />
           <app-kanban *ngIf="currentView === 'kanban'" />
-          <app-calendar *ngIf="currentView === 'calendar'" />
+          <app-calendar *ngIf="currentView === 'calendar'" [projectOrTaskId]="taskResponse.id" [isTask]="true"/>
           <app-roadmap *ngIf="currentView === 'roadmap'" />
         </div>
       </div>
     </div>
-  `,
+  `
 })
 export class TaskMainPageComponent implements OnInit {
   constructor(private api: ApiService, private store: StoreService, private route: ActivatedRoute) {}

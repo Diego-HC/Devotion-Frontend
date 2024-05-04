@@ -54,6 +54,21 @@ declare global {
     members: string;
   }
 
+  interface RawCalendarCellData {
+    date: number[];
+    tasks: Task[];
+  }
+
+  interface CalendarCellData {
+    date?: Date;
+    tasks: Task[];
+  }
+
+  interface MainPageProjectCalendarView {
+    tasks: RawCalendarCellData[];
+    today: number[];
+  }
+
   interface User {
     id: string;
     email: string;

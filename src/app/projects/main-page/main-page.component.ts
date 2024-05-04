@@ -21,7 +21,7 @@ import { cardColors } from "../../shared/cardColors";
                 {{ response.name }}
               </h1>
               <div
-                class="radial-progress bg-[#E1EFFF] text-[#2A4365]"
+                class="radial-progress bg-devotionSecondary text-devotionPrimary"
                 style="--value:70; --size:2rem; --thickness: 0.5rem;"
                 role="progressbar"
               ></div>
@@ -33,7 +33,7 @@ import { cardColors } from "../../shared/cardColors";
                   width="25"
                   height="25"
                 ></app-dashboard-icon>
-                <span class="font-bold hover:underline text-base text-[#5CCEFF]"
+                <span class="font-bold hover:underline text-base text-devotionAccent"
                   >Ir a dashboard</span
                 >
               </a>
@@ -42,7 +42,7 @@ import { cardColors } from "../../shared/cardColors";
                 class="flex flex-row items-center gap-2"
               >
                 <span
-                  class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]"
+                  class="text-lg cursor-pointer badge badge-outline text-devotionAccent"
                   >•••</span
                 >
               </a>
@@ -139,8 +139,8 @@ import { cardColors } from "../../shared/cardColors";
                 >
                   <app-plus-icon
                     fill="#2A4365"
-                    [width]="'25'"
-                    [height]="'25'"
+                    width="25"
+                    height="25"
                   />
                 </div>
                 <span class="font-robotoCondensed">Nueva tarea</span>
@@ -152,7 +152,7 @@ import { cardColors } from "../../shared/cardColors";
 
       <app-table *ngIf="currentView === 'table'" [tasks]="response.tasks" />
       <app-kanban *ngIf="currentView === 'kanban'" />
-      <app-calendar *ngIf="currentView === 'calendar'" />
+      <app-calendar *ngIf="currentView === 'calendar'" [projectOrTaskId]="response.id" [isTask]="false" />
       <app-roadmap *ngIf="currentView === 'roadmap'" />
     </div>
   `,

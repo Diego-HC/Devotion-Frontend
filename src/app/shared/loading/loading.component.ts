@@ -1,25 +1,32 @@
-import { Component, Input } from '@angular/core';
-import { ApiService } from '../../api.service';
+import { Component, Input, OnInit } from "@angular/core";
+import { ApiService } from "../../api.service";
 
 @Component({
-  selector: 'app-loading',
+  selector: "app-loading",
   template: `
-    <div class="flex flex-col justify-center items-center w-[100vw] h-[100vh] mt-[-64px] gap-6">
+    <div
+      class="flex flex-col justify-center items-center w-[100vw] h-[100vh] mt-[-64px] gap-6"
+    >
       <video autoplay loop muted class="w-20">
         <source src="/assets/animation.mp4" type="video/mp4" />
         Video not supported
       </video>
-      <p
-        *ngIf="message !== 'none'"
-        class="text-center text-[#5E6377] font-robotoCondensed w-72"
-      >
-        {{ message === 'tips' ? this.api.randomTip() : message }}
-      </p>
+      @if (message !== 'none') {
+        <p class="text-center text-[#5E6377] font-robotoCondensed w-72">
+          {{ tipOrMessage }}
+        </p>
+      }
     </div>
-  `
+  `,
 })
-export class LoadingComponent {
-  constructor(protected api: ApiService) { }
+export class LoadingComponent implements OnInit {
+  tipOrMessage = "";
 
-  @Input() message: string = "tips"
+  constructor(private api: ApiService) {}
+
+  ngOnInit(): void {
+    this.tipOrMessage = this.message === 'tips' ? this.api.randomTip() : this.message
+  }
+
+  @Input() message: string = "tips";
 }

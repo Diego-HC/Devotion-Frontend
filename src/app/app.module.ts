@@ -42,6 +42,9 @@ import { DevotionIsoComponent } from './shared/icons/devotion-iso/devotion-iso.c
 import { LoadingComponent } from './shared/loading/loading.component';
 import {NgOptimizedImage} from "@angular/common";
 import { AlertComponent } from './shared/alert/alert.component';
+import { CalendarCellComponent } from './tasks/calendar-cell/calendar-cell.component';
+import { CalendarTaskComponent } from './tasks/calendar-task/calendar-task.component';
+import { TasksLoadingComponent } from './tasks/tasks-loading/tasks-loading.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +81,9 @@ import { AlertComponent } from './shared/alert/alert.component';
     DevotionIsoComponent,
     LoadingComponent,
     AlertComponent,
+    CalendarCellComponent,
+    CalendarTaskComponent,
+    TasksLoadingComponent,
   ],
   imports: [BrowserModule,
     AppRoutingModule,
