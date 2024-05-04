@@ -36,11 +36,11 @@ const routes: Routes = [
     component: TaskCreateEditPageComponent,
   },
   {
-    path: "edit/project/:id",
+    path: "edit/project",
     component: CreateEditPageComponent,
   },
   {
-    path: "edit/task/:id",
+    path: "edit/task",
     component: TaskCreateEditPageComponent,
   },
   {

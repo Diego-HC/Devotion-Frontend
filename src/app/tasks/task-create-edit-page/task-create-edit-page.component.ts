@@ -1,30 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router } from "@angular/router";
 import { ApiService } from "../../api.service";
-
-export interface Task {
-  name: string;
-  description?: string;
-  priority?: number;
-  start_date?: string;
-  due_date: string;
-  parent_project: string;
-  parent_task?: any;
-  asignee: any;
-}
+import { StoreService } from "../../store.service";
 
 @Component({
   selector: 'app-task-create-edit-page',
   template: `
-    <div class="overflow-x-auto mx-32">
+    <app-loading *ngIf="showLoading" [message]="loadingMessage" />
+    <div class="overflow-x-auto mx-32" *ngIf="!showLoading && (store.membersPool.length > 0)">
       <div class="bg-white py-8 rounded-lg">
-        <h2 class="font-roboto font-bold">
-          Nueva Tarea
+        <h2 class="font-roboto font-bold md:m-0.5">
+          {{ store.task.id ? 'Editar Tarea' : 'Nueva Tarea' }}
         </h2>
         <div class="flex flex-row items-center mt-2 gap-4">
           <input type="text"
-                 class="input-md input-bordered input-['#5CCEFF'] md:w-5/12 text-3xl font-helvetica rounded-box font-bold shadow-md"
-                 [(ngModel)]="taskData.name" (ngModelChange)="taskData.name = $event"/>
+                 class="input-md input-bordered input-['#5CCEFF'] md:w-5/12 md:m-0.5 text-3xl font-helvetica rounded-box font-bold shadow-md"
+                 [(ngModel)]="store.task.name" (ngModelChange)="store.task.name = $event"/>
           <div class="flex flex-col items-center">
             <button (click)="onSubmit()" class="btn-circle items-center justify-center"
                     style="background-color: #2A4365">+
@@ -36,12 +27,12 @@ export interface Task {
           <div class="flex flex-col items-center">
             <h2 class="font-roboto font-bold">Fecha Inicio</h2>
             <input type="date" class="input-md input-bordered input-['#5CCEFF'] md:w-40 font-helvetica font-bold"
-                   [(ngModel)]="taskData.start_date" (ngModelChange)="taskData.start_date = $event"/>
+                   [(ngModel)]="store.task.startDate" (ngModelChange)="store.task.startDate = $event"/>
           </div>
           <div class="flex flex-col items-center">
             <h2 class="font-roboto font-bold">Fecha Fin</h2>
             <input type="date" class="input-md input-bordered input-['#5CCEFF'] md:w-40 font-helvetica font-bold"
-                   [(ngModel)]="taskData.due_date" (ngModelChange)="taskData.due_date = $event"/>
+                   [(ngModel)]="store.task.dueDate" (ngModelChange)="store.task.dueDate = $event"/>
           </div>
           <div class="flex flex-col items-center">
             <h2 class="font-roboto font-bold">Prioridad</h2>
@@ -55,107 +46,84 @@ export interface Task {
             </div>
           </div>
         </div>
-        <h2 class="font-roboto font-bold mt-4">Descripción</h2>
-        <textarea class="textarea-md text-['#5CCEFF'] textarea-bordered w-1/2 h-40 rounded-box shadow-md"
-                  [(ngModel)]="taskData.description"
-                  (ngModelChange)="taskData.description = $event">
+        <h2 class="font-roboto font-bold mt-4 md:m-0.5">Descripción</h2>
+        <textarea class="textarea-md text-['#5CCEFF'] textarea-bordered w-1/2 h-40 md:m-0.5 rounded-box shadow-md"
+                  [(ngModel)]="store.task.description"
+                  (ngModelChange)="store.task.description = $event">
         </textarea>
-        <div class="w-1/2">
-          <h2 class="font-roboto font-bold mt-4">Asignado</h2>
-          <app-search-select [projectId]="parentProject" [singleSelectedMode]="true"
-                             (selectedMembersOutput)="onMembersSelected($event)"></app-search-select>
+        <div class="w-1/2 md:m-1">
+          <h2 class="font-roboto font-bold mt-4 md:m-0.5">Asignado</h2>
+          <app-search-select selecting="assignee" />
         </div>
-        <app-alert *ngIf="!tasksResponse" [showWarning]="showWarning" [message]="warningMessage"></app-alert>
+        <app-alert *ngIf="showWarning" [message]="warningMessage"/>
       </div>
+      <br/><br/><br/><br/><br/><br/><br/>ㅤ
     </div>
   `
 })
 export class TaskCreateEditPageComponent implements OnInit {
-  constructor(private api: ApiService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private api: ApiService, private router: Router, protected store: StoreService) { }
 
-  tasksResponse: any;
-  taskData: Task = {
-    name: '',
-    description: '',
-    priority: 0,
-    start_date: '',
-    due_date: '',
-    parent_project: '',
-    parent_task: null,
-    asignee: ''
-  };
+  showWarning = false;
+  warningMessage = '';
+  showLoading = false;
+  loadingMessage = '';
+  selectedPriority = 'Baja';
 
-  parentProject: string = '';
-  showWarning: boolean = false;
-  warningMessage: string = '';
-  isSubtask: boolean = false;
-
-  parentTaskIdInfo: string = '';
-
-  onMembersSelected(members: string[]) {
-    this.taskData.asignee = members[0];
-  }
-
-  // Get the parent task info if the task is a subtask of another task
-  taskInfo() {
-    // Get the parent task id from the URL
-    this.route.queryParams.subscribe(params => {
-      this.parentTaskIdInfo = params['Parent'];
-    });
-    // If the task is a subtask, get the parent task info
-    this.api.get(`tasks/${this.parentTaskIdInfo}`).subscribe((response) => {
-      if (response.parent_task == null) { // if the parent_task is null, the task is a subtask of a PROJECT
-        this.isSubtask = true;
-        this.parentProject = response.parentProject;
-        this.taskData.parent_task = response.id;
-      }
-      else if (response.parentTask) { // if the parentTask is not null, the task is a subtask of another TASK
-        this.isSubtask = true;
-        this.parentProject = response.parentProject;
-        this.taskData.parent_task = response.parentTask;
-      }
-    });
-  }
-
-  // Call the function when the component is initialized
   ngOnInit() {
-    this.taskInfo();
+    if (this.store.pageWasReloaded) {
+      void this.router.navigateByUrl("/home");
+      return;
+    }
+    if (this.store.membersPool.length == 0) {
+      this.api.get(
+        `projects/${this.store.task.parentProject}/members/`
+      ).subscribe((members) => {
+        this.store.membersPool = members;
+      });
+    }
   }
 
   onSubmit() {
-    let priorityValue: number;
-    switch (this.selectedPriority) {
-      case 'Baja':
-        priorityValue = 0;
-        break;
-      case 'Media':
-        priorityValue = 1;
-        break;
-      case 'Alta':
-        priorityValue = 2;
-        break;
-      default:
-        priorityValue = -1; // Default value if priority is not recognized
-    }
+    const onResponse = (response: Task) => {
+      void this.router.navigateByUrl(`/task/${response.id}`);
+    };
 
-    this.taskData.priority = priorityValue;
-    this.taskData.parent_project = this.parentProject;
+    if (!this.store.task.id) {
+      this.loadingMessage = "Creando tarea...";
+      this.showLoading = true;
 
-    this.api.post('tasks/', this.taskData).subscribe((response) => {
-        this.tasksResponse = response;
-        this.router.navigateByUrl(`/task/${this.tasksResponse.id}`)
-    },
-      (error) => {
-        this.showWarning = true;
+      this.api.post('tasks/', this.store.taskPostBody()).subscribe(onResponse,(error) => {
         this.warningMessage = "Error al crear la tarea. Por favor, inténtelo de nuevo. \n Procura que todos los campos estén completos.";
-        console.log(error);
-      }
-    );
-  }
+        this.showWarning = true;
+        this.showLoading = false;
+      });
+    } else {
+      this.loadingMessage = "Actualizando datos...";
+      this.showLoading = true;
 
-  selectedPriority: string = 'Baja';
+      this.api.put(`tasks/${this.store.task.id}/`, this.store.taskPostBody()).subscribe(onResponse,(error) => {
+        this.warningMessage = "Error al actualizar la tarea. Por favor, inténtelo de nuevo. \n Procura que todos los campos estén completos.";
+        this.showWarning = true;
+        this.showLoading = false;
+      });
+    }
+  }
 
   updatePriority(priority: string) {
     this.selectedPriority = priority;
+    switch (this.selectedPriority) {
+      case 'Baja':
+        this.store.task.priority = 0;
+        break;
+      case 'Media':
+        this.store.task.priority = 1;
+        break;
+      case 'Alta':
+        this.store.task.priority = 2;
+        break;
+      default:
+        this.store.task.priority = 0;
+    }
   }
 }

@@ -39,7 +39,7 @@ import {Router} from '@angular/router';
           </td>
           <td class="text-left px-4 py-2 text-[#5E6377]">{{ task.startDate }}</td>
           <td class="text-left px-4 py-2 text-[#5E6377]">{{ task.dueDate }}</td>
-          <td class="text-left px-4 py-2 text-[#5E6377]">{{ task.asignee }}</td>
+          <td class="text-left px-4 py-2 text-[#5E6377]">{{ task.assignee }}</td>
         </tr>
         </tbody>
       </table>
@@ -49,7 +49,6 @@ import {Router} from '@angular/router';
 export class TableComponent {
 
   @Input() tasks?: any[];
-  @Input() taskId: string = '';
 
   constructor(private router: Router) { }
 
