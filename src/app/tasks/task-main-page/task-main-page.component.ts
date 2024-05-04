@@ -68,12 +68,12 @@ import { switchMap } from "rxjs";
               <li><a (click)="updateStatus(3)">Completado</a></li>
             </ul>
           </div>
-          <a
-            routerLink="/edit/task"
-            class="flex flex-row items-center gap-2"
-          >
-            <span class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••</span>
-          </a>
+          <div class="dropdown dropdown-right">
+            <div tabindex="0" role="button" class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••</div>
+            <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+              <li><a routerLink="/edit/task">Editar</a></li>
+            </ul>
+          </div>
         </div>
         <div class="md:mt-3">
           <app-alert
