@@ -1,5 +1,6 @@
 import { cardColors } from "../../shared/cardColors";
 import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
 
@@ -20,7 +21,7 @@ import { StoreService } from "../../store.service";
         />
       }
 
-      <a routerLink="/new/project" class="place-self-center w-[15.5rem]">
+      <button (click)="newProject()" class="place-self-center w-[15.5rem]">
         <div class="flex flex-col place-items-center justify-center">
           <div
             class="grid grid-cols-1 grid-rows-1 place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow"
@@ -33,12 +34,12 @@ import { StoreService } from "../../store.service";
           </div>
           <span class="font-robotoCondensed">Nuevo proyecto</span>
         </div>
-      </a>
+      </button>
     </div>
   `,
 })
 export class ViewPageComponent implements OnInit {
-  constructor(private api: ApiService, private store: StoreService) {}
+  constructor(private router: Router, private api: ApiService, private store: StoreService) {}
 
   projects: Project[] | undefined;
   cardColors = cardColors;
@@ -48,5 +49,10 @@ export class ViewPageComponent implements OnInit {
     this.api.get("me/projects/").subscribe((projects) => {
       this.projects = projects;
     });
+  }
+
+  newProject() {
+    this.store.clearProject();
+    void this.router.navigateByUrl("/new/project");
   }
 }

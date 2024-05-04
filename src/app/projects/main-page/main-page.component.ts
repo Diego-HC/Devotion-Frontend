@@ -37,15 +37,12 @@ import { cardColors } from "../../shared/cardColors";
                   >Ir a dashboard</span
                 >
               </a>
-              <a
-                routerLink="/edit/project"
-                class="flex flex-row items-center gap-2"
-              >
-                <span
-                  class="text-lg cursor-pointer badge badge-outline text-devotionAccent"
-                  >•••</span
-                >
-              </a>
+              <div class="dropdown dropdown-right">
+                <div tabindex="0" role="button" class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••</div>
+                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                  <li><a routerLink="/edit/project">Editar</a></li>
+                </ul>
+              </div>
             </div>
             <p
               class="font-robotoCondensed text-lg my-4 max-w-3xl text-[#5E6377] font-normal"

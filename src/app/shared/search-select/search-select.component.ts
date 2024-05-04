@@ -22,7 +22,7 @@ type SelectionType = 'leaders' | 'members' | 'assignee';
             class="flex-grow h-full"
             type="search"
             [(ngModel)]="searchInput"
-            (keyup)="updateSuggestions()"
+            (keyup)="updateSuggestions($event)"
             (focusin)="showSuggestions = true"
             (focusout)="showSuggestions = false"
           />
@@ -101,19 +101,31 @@ export class SearchSelectComponent {
 
   deselectMember(member: MinimalUser) {
     if (this.selecting === 'assignee') {
-      this.store.task.assignee = {
-        id: "",
-        name: ""
-      };
+      this.store.task.assignee = { id: "", name: "" };
       return;
     }
-
     this.store.project[this.selecting] = this.store.project[this.selecting].filter(
       (m) => m.id !== member.id
     );
   }
 
-  updateSuggestions() {
+  deselectLastMember() {
+    if (this.selection().length === 0) {
+      return;
+    }
+    if (this.selecting === 'assignee') {
+      this.store.task.assignee = { id: "", name: "" };
+      return;
+    }
+    this.store.project[this.selecting] = this.store.project[this.selecting].slice(0, -1);
+  }
+
+  updateSuggestions(event: KeyboardEvent) {
+    if (!this.searchInput && event.key === "Backspace") {
+      this.deselectLastMember();
+      return;
+    }
+
     this.suggestions = this.store.membersPool.filter((member) => {
       return !this.selection().includes(member) &&
         member.name.toLowerCase().includes(this.searchInput.toLowerCase());

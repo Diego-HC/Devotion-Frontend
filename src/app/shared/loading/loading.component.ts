@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, OnChanges } from "@angular/core";
 import { ApiService } from "../../api.service";
 
 @Component({
@@ -19,14 +19,18 @@ import { ApiService } from "../../api.service";
     </div>
   `,
 })
-export class LoadingComponent implements OnInit {
+export class LoadingComponent implements OnInit, OnChanges {
   tipOrMessage = "";
 
   constructor(private api: ApiService) {}
+
+  @Input() message: string = "tips";
 
   ngOnInit(): void {
     this.tipOrMessage = this.message === 'tips' ? this.api.randomTip() : this.message
   }
 
-  @Input() message: string = "tips";
+  ngOnChanges(): void {
+    this.tipOrMessage = this.message === 'tips' ? this.api.randomTip() : this.message
+  }
 }

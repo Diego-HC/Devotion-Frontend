@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
 import { switchMap } from "rxjs";
@@ -158,7 +158,7 @@ import { switchMap } from "rxjs";
   `
 })
 export class TaskMainPageComponent implements OnInit {
-  constructor(private api: ApiService, private store: StoreService, private route: ActivatedRoute) {}
+  constructor(private api: ApiService, private store: StoreService, private route: ActivatedRoute, private router: Router) {}
 
   taskResponse?: TaskData;
   currentView = "table";
@@ -216,5 +216,6 @@ export class TaskMainPageComponent implements OnInit {
 
   newTask() {
     this.store.clearTask(this.store.task.parentProject, this.store.task.id);
+    this.router.navigateByUrl("/new/task");
   }
 }

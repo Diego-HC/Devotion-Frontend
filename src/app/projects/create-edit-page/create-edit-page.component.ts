@@ -124,7 +124,7 @@ export class CreateEditPageComponent implements OnInit {
         this.loadingMessage = "Creando proyecto...";
         setTimeout(() => {
           this.loadingMessage = "Creando un calendario de Google para el proyecto. ¡Revisa tu correo para agregarlo a tus calendarios!";
-        }, 2750);
+        }, 2500);
       }
       this.showLoading = true;
 

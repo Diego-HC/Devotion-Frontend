@@ -6,7 +6,8 @@ import { StoreService } from "../../store.service";
 @Component({
   selector: 'app-task-create-edit-page',
   template: `
-    <div class="overflow-x-auto mx-32">
+    <app-loading *ngIf="showLoading" [message]="loadingMessage" />
+    <div class="overflow-x-auto mx-32" *ngIf="!showLoading && (store.membersPool.length > 0)">
       <div class="bg-white py-8 rounded-lg">
         <h2 class="font-roboto font-bold md:m-0.5">
           {{ store.task.id ? 'Editar Tarea' : 'Nueva Tarea' }}
@@ -52,15 +53,11 @@ import { StoreService } from "../../store.service";
         </textarea>
         <div class="w-1/2 md:m-1">
           <h2 class="font-roboto font-bold mt-4 md:m-0.5">Asignado</h2>
-<!--          <ng-container *ngIf="!editMode">-->
-<!--            <app-search-select selecting="assignee" />-->
-<!--          </ng-container>-->
-<!--          <ng-template [ngIf]="editMode">-->
-            <app-search-select selecting="assignee" />
-<!--          </ng-template>-->
+          <app-search-select selecting="assignee" />
         </div>
         <app-alert *ngIf="showWarning" [message]="warningMessage"/>
       </div>
+      <br/><br/><br/><br/><br/><br/><br/>ㅤ
     </div>
   `
 })
@@ -77,6 +74,13 @@ export class TaskCreateEditPageComponent implements OnInit {
     if (this.store.pageWasReloaded) {
       void this.router.navigateByUrl("/home");
       return;
+    }
+    if (this.store.membersPool.length == 0) {
+      this.api.get(
+        `projects/${this.store.task.parentProject}/members/`
+      ).subscribe((members) => {
+        this.store.membersPool = members;
+      });
     }
   }
 
