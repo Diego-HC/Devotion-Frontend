@@ -5,6 +5,10 @@ declare global {
     description: string;
   }
 
+  interface ProjectView extends Project {
+    isLeader: boolean;
+  }
+
   interface Task {
     id: string;
     name: string;
