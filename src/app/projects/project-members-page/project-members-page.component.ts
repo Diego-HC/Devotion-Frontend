@@ -26,7 +26,7 @@ import { AuthGoogleService } from "../../auth-google.service";
             </div>
             <input
               type="search" [(ngModel)]="searchQuery"
-              (keyup)="onSearchChange()"
+              (ngModelChange)="onSearchQueryChange($event.target.value)"
               class="md:ml-4 md:mt-1 w-64 h-12 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
               placeholder="Buscar miembro"/>
           </div>
@@ -77,7 +77,7 @@ export class ProjectMembersPageComponent implements OnInit{
   membersResponse: UserWithRole[] = [];
   filteredMembers: UserWithRole[] = [];
   selectedRole : string = "Todos los roles";
-  searchQuery: string = '';
+  searchQuery: string = "";
 
 
   ngOnInit(): void {
@@ -101,43 +101,32 @@ export class ProjectMembersPageComponent implements OnInit{
   // Method triggered when the role is updated
   updateSelectedRole(role: string) {
     this.selectedRole = role;
-    console.log(this.selectedRole);
     this.onRoleChange();
   }
 
-  // Method triggered when the selection changes
-  onRoleChange() {
-    // Update the filtered members based on the selected role and search query
-    if (this.selectedRole === "Todos los roles") {
-      this.filteredMembers = this.membersResponse.filter(member =>
-        member.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    } else if (this.selectedRole === "Líderes") {
-      this.filteredMembers = this.membersResponse.filter(member =>
-        member.isLeader && member.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    } else {
-      this.filteredMembers = this.membersResponse.filter(member =>
-        !member.isLeader && member.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    }
+  onSearchQueryChange(value: string) {
+    console.log(value); // This should log the updated value
+    this.searchQuery = value;
+    this.onRoleChange();
   }
 
-  onSearchChange() {
+  onRoleChange() {
     const lowerCaseSearchQuery = this.searchQuery.toLowerCase();
+    console.log(this.searchQuery);
 
     if (this.selectedRole === "Todos los roles") {
-      this.filteredMembers = this.membersResponse.filter(member =>
+      this.filteredMembers = [...this.membersResponse.filter(member =>
         member.name.toLowerCase().includes(lowerCaseSearchQuery)
-      );
+      )];
+      console.log(this.filteredMembers);
     } else if (this.selectedRole === "Líderes") {
-      this.filteredMembers = this.membersResponse.filter(member =>
+      this.filteredMembers = [...this.membersResponse.filter(member =>
         member.isLeader && member.name.toLowerCase().includes(lowerCaseSearchQuery)
-      );
+      )];
     } else {
-      this.filteredMembers = this.membersResponse.filter(member =>
+      this.filteredMembers = [...this.membersResponse.filter(member =>
         !member.isLeader && member.name.toLowerCase().includes(lowerCaseSearchQuery)
-      );
+      )];
     }
   }
 
