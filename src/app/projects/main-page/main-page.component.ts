@@ -27,13 +27,17 @@ import { cardColors } from "../../shared/cardColors";
               ></div>
             </div>
             <div class="flex flex-row items-center gap-4">
-              <a href="/dashboard" class="flex flex-row items-center gap-2">
+              <a
+                href="{{ '/dashboard/' + response.id }}"
+                class="flex flex-row items-center gap-2"
+              >
                 <app-dashboard-icon
                   fill="#5CCEFF"
                   width="25"
                   height="25"
                 ></app-dashboard-icon>
-                <span class="font-bold hover:underline text-base text-devotionAccent"
+                <span
+                  class="font-bold hover:underline text-base text-devotionAccent"
                   >Ir a dashboard</span
                 >
               </a>
@@ -156,7 +160,11 @@ import { cardColors } from "../../shared/cardColors";
 
       <app-table *ngIf="currentView === 'table'" [tasks]="response.tasks" />
       <app-kanban *ngIf="currentView === 'kanban'" />
-      <app-calendar *ngIf="currentView === 'calendar'" [projectOrTaskId]="response.id" [isTask]="false" />
+      <app-calendar
+        *ngIf="currentView === 'calendar'"
+        [projectOrTaskId]="response.id"
+        [isTask]="false"
+      />
       <app-roadmap *ngIf="currentView === 'roadmap'" />
     </div>
   `,
@@ -166,10 +174,7 @@ export class MainPageComponent implements OnInit {
   response?: MainPageProject;
   cardColors = cardColors;
 
-  constructor(
-    protected api: ApiService,
-    private route: ActivatedRoute
-  ) {}
+  constructor(protected api: ApiService, private route: ActivatedRoute) {}
 
   currentView: string = "table"; // Default view
   selectedIcon: string = "table";
