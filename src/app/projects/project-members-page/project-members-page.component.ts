@@ -25,8 +25,10 @@ import { AuthGoogleService } from "../../auth-google.service";
               </ul>
             </div>
             <input
-              type="search" [(ngModel)]="searchQuery"
-              (ngModelChange)="onSearchQueryChange($event.target.value)"
+              type="search"
+              name="search"
+              [(ngModel)]="searchQuery"
+              (keyup)="onRoleChange()"
               class="md:ml-4 md:mt-1 w-64 h-12 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
               placeholder="Buscar miembro"/>
           </div>
@@ -101,12 +103,6 @@ export class ProjectMembersPageComponent implements OnInit{
   // Method triggered when the role is updated
   updateSelectedRole(role: string) {
     this.selectedRole = role;
-    this.onRoleChange();
-  }
-
-  onSearchQueryChange(value: string) {
-    console.log(value); // This should log the updated value
-    this.searchQuery = value;
     this.onRoleChange();
   }
 
