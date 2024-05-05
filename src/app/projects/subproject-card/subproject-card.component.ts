@@ -18,9 +18,7 @@ import { Component, Input } from "@angular/core";
           </div>
           <div
             class="radial-progress bg-devotionSecondary text-devotionPrimary min-w-8"
-            style="--value:{{
-              this.progress
-            }}; --size:2rem; --thickness: 0.5rem;"
+            [style]="{'--value':this.progress, '--size':'2rem', '--thickness': '0.5rem'}"
             role="progressbar"
           ></div>
         </div>
@@ -40,7 +38,7 @@ export class SubprojectCardComponent {
   id: string = "";
   name: string = "";
   description: string = "";
-  progress: number = 23;
+  progress: number = 0;
 
   shortName!: string;
   shortDescription!: string;

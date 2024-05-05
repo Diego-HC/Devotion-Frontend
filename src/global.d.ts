@@ -24,6 +24,7 @@ declare global {
 
   interface MainPageProject extends Project {
     breadcrumbs: (string | boolean)[][];
+    progress: number;
     projects: Project[];
     tasks: Task[];
   }
@@ -54,6 +55,12 @@ declare global {
     email: string;
     firstNames: string;
     lastNames: string;
+  }
+
+  interface UserWithRole {
+    email: string;
+    name: string;
+    isLeader: boolean;
   }
 }
 

@@ -7,7 +7,7 @@ import { cardColors } from "../../shared/cardColors";
 @Component({
   selector: "app-main-page",
   template: `
-    <app-loading *ngIf="response === undefined" />
+    <app-loading *ngIf="response === undefined"/>
     <app-breadcrumbs
       *ngIf="response !== undefined"
       [breadcrumbs]="response.breadcrumbs"
@@ -22,7 +22,7 @@ import { cardColors } from "../../shared/cardColors";
               </h1>
               <div
                 class="radial-progress bg-devotionSecondary text-devotionPrimary"
-                style="--value:70; --size:2rem; --thickness: 0.5rem;"
+                [style]="{'--value':response.progress, '--size':'2rem', '--thickness': '0.5rem'}"
                 role="progressbar"
               ></div>
             </div>
@@ -34,18 +34,21 @@ import { cardColors } from "../../shared/cardColors";
                   height="25"
                 ></app-dashboard-icon>
                 <span class="font-bold hover:underline text-base text-devotionAccent"
-                  >Ir a dashboard</span
+                >Ir a dashboard</span
                 >
               </a>
-              <a
-                href="/edit/project/{{ response.id }}"
-                class="flex flex-row items-center gap-2"
-              >
-                <span
-                  class="text-lg cursor-pointer badge badge-outline text-devotionAccent"
-                  >•••</span
-                >
+              <a href="/members/project/{{ response.id }}">
+                <span class="font-bold hover:underline text-base text-devotionAccent">Ver miembros</span>
               </a>
+              <div class="dropdown dropdown-right">
+                <div tabindex="0" role="button" class="text-lg cursor-pointer badge badge-outline text-devotionAccent">
+                  •••
+                </div>
+                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                  <li><a href="/edit/project/{{ response.id }}">Editar</a></li>
+                  <li><a>Borrar</a></li>
+                </ul>
+              </div>
             </div>
             <p
               class="font-robotoCondensed text-lg my-4 max-w-3xl text-[#5E6377] font-normal"
@@ -60,10 +63,10 @@ import { cardColors } from "../../shared/cardColors";
               class="flex flex-col flex-wrap content-start gap-4 ml-2 mt-2 h-60 overflow-x-scroll"
             >
               @for (subproject of response.projects; track $index) {
-              <app-subproject-card
-                [subproject]="subproject"
-                [colors]="cardColors[$index % cardColors.length]"
-              />
+                <app-subproject-card
+                  [subproject]="subproject"
+                  [colors]="cardColors[$index % cardColors.length]"
+                />
               }
               <a
                 href="/new/project?Parent={{ response.id }}"
@@ -83,7 +86,7 @@ import { cardColors } from "../../shared/cardColors";
                     ></app-plus-icon>
                   </div>
                   <span class="font-robotoCondensed text-sm"
-                    >Nuevo Subproyecto</span
+                  >Nuevo Subproyecto</span
                   >
                 </div>
               </a>
@@ -154,10 +157,10 @@ import { cardColors } from "../../shared/cardColors";
         </div>
       </div>
 
-      <app-table *ngIf="currentView === 'table'" [tasks]="response.tasks" />
-      <app-kanban *ngIf="currentView === 'kanban'" />
-      <app-calendar *ngIf="currentView === 'calendar'" [projectOrTaskId]="response.id" [isTask]="false" />
-      <app-roadmap *ngIf="currentView === 'roadmap'" />
+      <app-table *ngIf="currentView === 'table'" [tasks]="response.tasks"/>
+      <app-kanban *ngIf="currentView === 'kanban'"/>
+      <app-calendar *ngIf="currentView === 'calendar'" [projectOrTaskId]="response.id" [isTask]="false"/>
+      <app-roadmap *ngIf="currentView === 'roadmap'"/>
     </div>
   `,
 })
