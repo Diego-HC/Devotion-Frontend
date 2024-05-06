@@ -50,6 +50,8 @@ import {
   DashboardTaskListComponent,
   DashboardTaskComponent,
 } from "./dashboards/dashboard-task-list/dashboard-task-list.component";
+import { WidgetComponent } from "./dashboards/widgets/widget/widget.component";
+import { WidgetNumberComponent } from "./dashboards/widgets/widget-number/widget-number.component";
 
 @NgModule({
   declarations: [
@@ -92,6 +94,8 @@ import {
     DashboardMainPageComponent,
     DashboardTaskListComponent,
     DashboardTaskComponent,
+    WidgetComponent,
+    WidgetNumberComponent,
   ],
   imports: [
     BrowserModule,
