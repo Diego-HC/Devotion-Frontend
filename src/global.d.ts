@@ -1,3 +1,5 @@
+import { WidgetDisplayType } from "./app/dashboards/widgets/widget-display-type";
+
 declare global {
   interface Project {
     id: string;
@@ -58,6 +60,28 @@ declare global {
     email: string;
     firstNames: string;
     lastNames: string;
+  }
+
+  // Dashboard types
+  type TaskDashboard = Omit<Task, "startDate" | "asignee" | "status"> & {
+    parentProject: string;
+  };
+
+  interface Widget {
+    id: string;
+    name: string;
+    displayType: WidgetDisplayType;
+    mqttTopic: string;
+    position: number;
+    unit: string;
+  }
+
+  interface Dashboard {
+    projectName: string;
+    tasksToDo: TaskDashboard[];
+    tasksToVerify: TaskDashboard[];
+
+    widgets: Widget[];
   }
 }
 
