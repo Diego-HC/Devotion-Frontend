@@ -1,18 +1,23 @@
 import { Component, Input } from "@angular/core";
-import { TaskDashboard } from "../dashboard-main-page/dashboard-main-page.component";
 
 @Component({
   selector: "app-dashboard-task",
   template: `
     <a href="{{ '/task/' + task.id }}">
-      <div class="flex justify-between shadow-sm px-2 py-1">
-        <div class="flex flex-col justify-between">
-          <h3 class="font-bold">{{ task.name }}</h3>
-          <p class="text-xs break-words">{{ task.description }}</p>
+      <div class="flex shadow-sm px-2 py-1 h-16">
+        <div class="w-10 flex-grow flex flex-col justify-between">
+          <h3 class="font-bold truncate">{{ task.name }}</h3>
+          <p class="text-xs line-clamp-2 break-words">
+            {{ task.description }}
+          </p>
         </div>
-        <div class="flex flex-col justify-between items-end min-w-fit">
-          <p class="text-xs">{{ task.subproject }}</p>
-          <p class="text-xs">FECHA LÍMITE: {{ task.dueDate }}</p>
+        <div
+          class="ml-1 w-fit flex flex-shrink flex-col justify-between items-end max-w-48"
+        >
+          <p class="text-xs line-clamp-2 break-words max-w-36">
+            {{ task.parentProject }}
+          </p>
+          <p class="text-xs">Fecha Límite: {{ task.dueDate }}</p>
         </div>
       </div>
     </a>
@@ -25,7 +30,7 @@ export class DashboardTaskComponent {
 @Component({
   selector: "app-dashboard-task-list",
   template: `
-    <div class="h-full rounded-sm shadow-md overflow-y-auto">
+    <div class="w-full flex-grow max-h-56 rounded-sm shadow-md overflow-y-auto">
       @for(task of tasks; track $index) {
       <app-dashboard-task [task]="task" />
       }
