@@ -12,7 +12,7 @@ import { cardColors } from "../../shared/cardColors";
       *ngIf="response !== undefined"
       [breadcrumbs]="response.breadcrumbs"
     />
-    <div class="overflow-x-auto mx-20 mt-4" *ngIf="response !== undefined">
+    <div class="overflow-x-auto mx-20 mt-4 mb-4" *ngIf="response !== undefined">
       <div class="bg-white py-6 rounded-lg">
         <div class="flex flex-row justify-between gap-20">
           <div class="flex flex-col mb-7">
