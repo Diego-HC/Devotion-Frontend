@@ -1,23 +1,24 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ApiService } from "../../api.service";
+import { StoreService } from "../../store.service";
 
 @Component({
   selector: "app-create-edit-page",
   template: `
-    <div class="px-16">
+    <app-loading *ngIf="showLoading" [message]="loadingMessage" />
+    <div class="px-16" *ngIf="!showLoading && (store.membersPool.length > 0)">
       <div class="flex justify-center items-center">
         <div class="px-12 lg:w-1/2 py-10">
-          <h1 class=" text-l font-roboto font-extrabold">Nuevo Proyecto *</h1>
+          <h1 class=" text-l font-roboto font-extrabold">{{ store.project.id ? 'Editar Proyecto' : 'Nuevo Proyecto *' }}</h1>
           <div class="flex flex-row flex-grow items-center justify-center">
             <input
               type="text"
               class="input input-bordered flex-grow mr-4 shadow-md font-helvetica font-bold text-3xl"
-              [(ngModel)]="projectData.name"
+              [(ngModel)]="store.project.name"
               #name="ngModel"
               name="name"
               required
-              (ngModelChange)="projectData.name = $event"
             />
             <div class="flex flex-col items-center">
               <button
@@ -43,25 +44,24 @@ import { ApiService } from "../../api.service";
             <textarea
               rows="4"
               class="textarea textarea-bordered mr-4 shadow-md font-robotoCondensed text-s w-full min-h-10"
-              [(ngModel)]="projectData.description"
-              (ngModelChange)="projectData.description = $event"
-              #descripcion="ngModel"
-              descripcion="descripcion"
+              [(ngModel)]="store.project.description"
+              #desc="ngModel"
+              desc="desc"
               required
             ></textarea>
           </div>
           <div
-            *ngIf="descripcion.invalid && descripcion.touched"
+            *ngIf="desc.invalid && desc.touched"
             class="text-red-500 text-xs mt-1"
           >
-            * La descripción del proyecto es obligatorio.
+            * La descripción del proyecto es obligatoria.
           </div>
-          <h1 class=" text-l font-roboto font-extrabold mb-3 mt-3">
-            Líderes *
+          <h1 class="text-l font-roboto font-extrabold mb-3 mt-3">
+            Líderes
           </h1>
           <app-search-select
-            (selectedLeadersOutput)="onLeadersSelected($event)"
-          ></app-search-select>
+            selecting="leaders"
+          />
           <p class="text-xs font-robotoCondensed text-[#5E6377] -mt-3">
             La persona líder será quien valide las tareas de este subproyecto.
             También podrá validar tareas de todos los subproyectos
@@ -69,80 +69,94 @@ import { ApiService } from "../../api.service";
           </p>
           <h1 class=" text-l font-roboto font-extrabold mb-3 mt-3">Miembros</h1>
           <app-search-select
-            (selectedMembersOutput)="onMembersSelected($event)"
-          ></app-search-select>
+            selecting="members"
+          />
+          <hr>
+          <button
+            *ngIf="store.project.id"
+            (click)="store.showConfirmDeletion = true"
+            class="text-cardRed border border-cardRed bg-white text-sm font-roboto font-bold py-2 px-4 rounded-lg mt-4"
+          >
+            Eliminar Proyecto
+          </button>
+          <app-confirm-deletion
+            *ngIf="store.showConfirmDeletion"
+          />
           <app-alert
-            *ngIf="!projectResponse"
-            [showWarning]="showWarning"
+            *ngIf="showWarning"
             [message]="warningMessage"
-          ></app-alert>
+          />
         </div>
       </div>
     </div>
   `,
 })
 export class CreateEditPageComponent implements OnInit {
-  constructor(private api: ApiService, private router: Router) {}
-
-  @Input() projectId!: string;
-  projectResponse: Project | undefined;
-
-  projectData: ProjectData = {
-    id: "",
-    name: "",
-    description: "",
-    parent: "",
-    leaders: "",
-    members: "",
-  };
-
-  leaderList: string[] = [];
-  memberList: string[] = [];
+  constructor(private api: ApiService, protected store: StoreService, private router: Router) {}
 
   showWarning = false;
   warningMessage = "";
+  showLoading = false;
+  loadingMessage = "";
 
   ngOnInit() {
-    // Retrieve the parent project id
-    this.projectData.parent = this.projectId;
-    console.log("parent: " + this.projectData.parent);
+    if (this.store.pageWasReloaded) {
+      void this.router.navigateByUrl("/home");
+      return;
+    }
+    if (this.store.membersPool.length == 0) {
+      this.api.get("users/").subscribe((users) => {
+        this.store.membersPool = users;
+      });
+    }
   }
 
-  onMembersSelected = (members: string[]) => (this.memberList = members);
-  onLeadersSelected = (leaders: string[]) => (this.leaderList = leaders);
-
   onSubmit() {
-    this.projectData.leaders = this.leaderList.join(",");
-    this.projectData.members = this.memberList.join(",");
-    if (!this.projectData.name || !this.projectData.description) {
+    if (!this.store.project.name || !this.store.project.description) {
       this.showWarning = true;
       this.warningMessage = "Por favor, completa todos los campos requeridos.";
       return;
     }
-    if (this.projectData.leaders.length == 0) {
+    if (this.store.project.leaders.length == 0) {
       this.showWarning = true;
       this.warningMessage = "Por favor, selecciona al menos un lider.";
       return;
     }
 
-    if (this.projectId) {
-      this.projectData.parent = this.projectId;
-    }
+    const onResponse = (response: Project) => {
+      void this.router.navigateByUrl(`/project/${response.id}`);
+    };
 
-    console.log(this.projectData);
+    // Crear proyecto
+    if (!this.store.project.id) {
+      if (this.store.project.parent) {
+        this.loadingMessage = "Creando subproyecto...";
+      } else {
+        this.loadingMessage = "Creando proyecto...";
+        setTimeout(() => {
+          this.loadingMessage = "Creando un calendario de Google para el proyecto. ¡Revisa tu correo para agregarlo a tus calendarios!";
+        }, 2500);
+      }
+      this.showLoading = true;
 
-    this.api.post("projects/", this.projectData).subscribe({
-      next: (response: Project) => {
-        console.log(response);
-        this.projectResponse = response;
-        // navigate to project page
-        this.router.navigateByUrl(`/project/${this.projectResponse.id}`);
-      },
-      error: (error) => {
+      this.api.post("projects/", this.store.projectPostBody()).subscribe(onResponse, (_) => {
         this.warningMessage =
           "Error al crear el proyecto. Por favor, inténtelo de nuevo.";
         this.showWarning = true;
-      },
-    });
+        this.showLoading = false;
+      });
+
+    // Editar proyecto
+    } else {
+      this.loadingMessage = "Actualizando datos...";
+      this.showLoading = true;
+
+      this.api.put(`projects/${this.store.project.id}/`, this.store.projectPostBody()).subscribe(onResponse, (_) => {
+        this.warningMessage =
+          "Error al editar el proyecto. Por favor, inténtelo de nuevo.";
+        this.showWarning = true;
+        this.showLoading = false;
+      });
+    }
   }
 }

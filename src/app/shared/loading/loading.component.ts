@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, OnChanges } from "@angular/core";
 import { ApiService } from "../../api.service";
 
 @Component({
@@ -11,22 +11,26 @@ import { ApiService } from "../../api.service";
         <source src="/assets/animation.mp4" type="video/mp4" />
         Video not supported
       </video>
-      @if (tips === 'true') {
-      <p class="text-center text-[#5E6377] font-robotoCondensed w-72">
-        {{ tip }}
-      </p>
+      @if (message !== 'none') {
+        <p class="text-center text-[#5E6377] font-robotoCondensed w-72">
+          {{ tipOrMessage }}
+        </p>
       }
     </div>
   `,
 })
-export class LoadingComponent implements OnInit {
-  tip = "";
+export class LoadingComponent implements OnInit, OnChanges {
+  tipOrMessage = "";
 
-  constructor(protected api: ApiService) {}
+  constructor(private api: ApiService) {}
+
+  @Input() message: string = "tips";
 
   ngOnInit(): void {
-    this.tip = this.api.randomTip();
+    this.tipOrMessage = this.message === 'tips' ? this.api.randomTip() : this.message
   }
 
-  @Input() tips: string = "true";
+  ngOnChanges(): void {
+    this.tipOrMessage = this.message === 'tips' ? this.api.randomTip() : this.message
+  }
 }

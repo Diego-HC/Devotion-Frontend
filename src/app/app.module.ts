@@ -45,6 +45,7 @@ import { AlertComponent } from './shared/alert/alert.component';
 import { CalendarCellComponent } from './tasks/calendar-cell/calendar-cell.component';
 import { CalendarTaskComponent } from './tasks/calendar-task/calendar-task.component';
 import { TasksLoadingComponent } from './tasks/tasks-loading/tasks-loading.component';
+import { ConfirmDeletionComponent } from './shared/confirm-deletion/confirm-deletion.component';
 import { KanbanCardComponent } from './shared/kanban-card/kanban-card.component';
 
 @NgModule({
@@ -85,6 +86,7 @@ import { KanbanCardComponent } from './shared/kanban-card/kanban-card.component'
     CalendarCellComponent,
     CalendarTaskComponent,
     TasksLoadingComponent,
+    ConfirmDeletionComponent,
     KanbanCardComponent,
   ],
   imports: [BrowserModule,
