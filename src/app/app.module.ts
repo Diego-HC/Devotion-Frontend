@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { OAuthModule } from "angular-oauth2-oidc";
 
@@ -52,6 +52,7 @@ import {
 } from "./dashboards/dashboard-task-list/dashboard-task-list.component";
 import { WidgetComponent } from "./dashboards/widgets/widget/widget.component";
 import { WidgetNumberComponent } from "./dashboards/widgets/widget-number/widget-number.component";
+import { CreateWidgetComponent } from "./dashboards/widgets/create-widget/create-widget.component";
 
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import { WidgetNumberComponent } from "./dashboards/widgets/widget-number/widget
     DashboardTaskComponent,
     WidgetComponent,
     WidgetNumberComponent,
+    CreateWidgetComponent,
   ],
   imports: [
     BrowserModule,
@@ -104,6 +106,7 @@ import { WidgetNumberComponent } from "./dashboards/widgets/widget-number/widget
     FormsModule,
     HttpClientModule,
     NgOptimizedImage,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

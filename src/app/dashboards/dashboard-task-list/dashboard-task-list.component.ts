@@ -30,7 +30,7 @@ export class DashboardTaskComponent {
 @Component({
   selector: "app-dashboard-task-list",
   template: `
-    <div class="w-full flex-grow max-h-56 rounded-sm shadow-md overflow-y-auto">
+    <div class="w-full flex-grow h-56 rounded-sm shadow-md overflow-y-auto">
       @for(task of tasks; track $index) {
       <app-dashboard-task [task]="task" />
       }

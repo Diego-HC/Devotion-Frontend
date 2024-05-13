@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, DoCheck, OnInit } from "@angular/core";
 import { SessionStorageService } from "../../session-storage.service";
 import { ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
@@ -9,11 +9,11 @@ import { WidgetDisplayType } from "../widgets/widget-display-type";
   template: `
     @if (tasksToDo && tasksToVerify && widgets) {
     <div class="ml-20 mr-10">
-      <div class="flex justify-between mb-1 items-center">
+      <div class="flex justify-between items-center">
         <h1 class="text-3xl font-semibold text-gray-800">
           {{ projectName }}
         </h1>
-        <button class="mr-6">
+        <button class="mr-6" (click)="startEdit()">
           <app-projects-icon fill="#000000" width="60" height="60" />
         </button>
       </div>
@@ -23,7 +23,7 @@ import { WidgetDisplayType } from "../widgets/widget-display-type";
           >Ir a proyecto</span
         >
       </a>
-      <div class="grid grid-cols-2 gap-4 w-full mt-4 mb-8 ">
+      <div class="grid grid-cols-2 gap-4 w-full mt-2 mb-6">
         <div class="">
           <h3 class="font-bold mb-1.5">Tus tareas por completar</h3>
           <app-dashboard-task-list [tasks]="tasksToDo" />
@@ -33,13 +33,14 @@ import { WidgetDisplayType } from "../widgets/widget-display-type";
           <app-dashboard-task-list [tasks]="tasksToVerify" />
         </div>
       </div>
-      <div class="flex flex-wrap gap-8">
+      <div class="flex flex-wrap gap-x-8 gap-y-6 mb-10">
         @for(widget of widgets; track $index) {
         <app-widget [widget]="widget" />
         }
-        <div class="w-52 h-52 grid" (click)="(addWidget)">
+        <div class="w-52 h-52 grid" [ngClass]="{ hidden: !isEditing }">
           <div
-            class="grid grid-cols-1 grid-rows-1 place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow place-self-center w-24 h-24"
+            class="grid place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow place-self-center w-24 h-24 hover:cursor-pointer"
+            (click)="modal?.showModal()"
           >
             <app-plus-icon
               fill="#2A4365"
@@ -49,18 +50,23 @@ import { WidgetDisplayType } from "../widgets/widget-display-type";
           </div>
         </div>
       </div>
+
+      <app-create-widget [modal]="modal" />
     </div>
     } @else {
     <app-loading />
     }
   `,
 })
-export class DashboardMainPageComponent implements OnInit {
+export class DashboardMainPageComponent implements OnInit, DoCheck {
   tasksToDo?: TaskDashboard[];
   tasksToVerify?: TaskDashboard[];
   widgets?: Widget[];
   id = "";
   projectName = "";
+  modal: HTMLDialogElement | null = null;
+
+  isEditing = false;
 
   constructor(
     protected storage: SessionStorageService,
@@ -73,11 +79,9 @@ export class DashboardMainPageComponent implements OnInit {
       this.id = params["id"];
       console.log(this.id);
 
-      // this.api
-      //   .get(`dashboards/${this.projectId}/`)
-      //   .subscribe((response: any) => {
-      //     console.log(response);
-      //   });
+      this.api.get(`dashboards/${this.id}/`).subscribe((response: any) => {
+        console.log(response);
+      });
       const response: Dashboard = {
         projectName: "ola",
         tasksToDo: [
@@ -221,54 +225,6 @@ export class DashboardMainPageComponent implements OnInit {
             position: 3,
             unit: "°C",
           },
-          {
-            id: "2b2e4d4e-3d8e-4c5f-8d0b-7a0f1f0f1f0f",
-            name: "Temperatura5",
-            displayType: WidgetDisplayType.Number,
-            mqttTopic: "a",
-            position: 5,
-            unit: "°C",
-          },
-          {
-            id: "2b2e4d4e-3d8e-4c5f-8d0b-7a0f1f0f1f0f",
-            name: "Temperatura3",
-            displayType: WidgetDisplayType.Number,
-            mqttTopic: "a",
-            position: 3,
-            unit: "°C",
-          },
-          {
-            id: "2b2e4d4e-3d8e-4c5f-8d0b-7a0f1f0f1f0f",
-            name: "Temperatura5",
-            displayType: WidgetDisplayType.Number,
-            mqttTopic: "a",
-            position: 5,
-            unit: "°C",
-          },
-          {
-            id: "2b2e4d4e-3d8e-4c5f-8d0b-7a0f1f0f1f0f",
-            name: "Temperatura3",
-            displayType: WidgetDisplayType.Number,
-            mqttTopic: "a",
-            position: 3,
-            unit: "°C",
-          },
-          {
-            id: "2b2e4d4e-3d8e-4c5f-8d0b-7a0f1f0f1f0f",
-            name: "Temperatura5",
-            displayType: WidgetDisplayType.Number,
-            mqttTopic: "a",
-            position: 5,
-            unit: "°C",
-          },
-          {
-            id: "2b2e4d4e-3d8e-4c5f-8d0b-7a0f1f0f1f0f",
-            name: "Temperatura3",
-            displayType: WidgetDisplayType.Number,
-            mqttTopic: "a",
-            position: 3,
-            unit: "°C",
-          },
         ],
       };
 
@@ -280,7 +236,15 @@ export class DashboardMainPageComponent implements OnInit {
     });
   }
 
+  ngDoCheck(): void {
+    this.modal = document.getElementById("modal") as HTMLDialogElement;
+  }
+
   addWidget() {
     console.log("Add widget");
   }
+
+  startEdit = () => {
+    this.isEditing = !this.isEditing;
+  };
 }
