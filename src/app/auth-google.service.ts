@@ -15,7 +15,7 @@ export class AuthGoogleService {
     const config: AuthConfig = {
       issuer: 'https://accounts.google.com',
       strictDiscoveryDocumentValidation: false,
-      clientId: '271570148987-s8tfl47p8336j8luc80dv8fr4k0gbt7u.apps.googleusercontent.com',
+      clientId: '1066354274178-a2lm6h63cikqvi6afnjqdarqbondphsm.apps.googleusercontent.com',
       redirectUri: window.location.origin,
       scope: 'openid profile email',
     }
@@ -37,10 +37,6 @@ export class AuthGoogleService {
 
   logout(){
     this.oAuthService.logOut();
-  }
-
-  getProfile(){
-    return this.oAuthService.getIdentityClaims();
   }
 
   setProfile() {

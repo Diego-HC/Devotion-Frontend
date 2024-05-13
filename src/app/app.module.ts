@@ -46,6 +46,8 @@ import { CalendarCellComponent } from './tasks/calendar-cell/calendar-cell.compo
 import { CalendarTaskComponent } from './tasks/calendar-task/calendar-task.component';
 import { TasksLoadingComponent } from './tasks/tasks-loading/tasks-loading.component';
 import { ProjectMembersPageComponent } from './projects/project-members-page/project-members-page.component';
+import { ConfirmDeletionComponent } from './shared/confirm-deletion/confirm-deletion.component';
+import { KanbanCardComponent } from './shared/kanban-card/kanban-card.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +88,8 @@ import { ProjectMembersPageComponent } from './projects/project-members-page/pro
     CalendarTaskComponent,
     TasksLoadingComponent,
     ProjectMembersPageComponent,
+    ConfirmDeletionComponent,
+    KanbanCardComponent,
   ],
   imports: [BrowserModule,
     AppRoutingModule,
