@@ -90,6 +90,7 @@ declare global {
     email: string;
     name: string;
     isLeader: boolean;
+    profilePicture?: string;
   }
 }
 

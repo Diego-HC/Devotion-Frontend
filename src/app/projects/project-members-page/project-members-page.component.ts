@@ -4,15 +4,16 @@ import { ApiService} from "../../api.service";
 import { SessionStorageService } from "../../session-storage.service";
 import { AuthGoogleService } from "../../auth-google.service";
 
+const defaultPicture = 'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png';
+
 @Component({
   selector: 'app-project-members-page',
   template: `
-    <!--    <app-loading *ngIf="response === undefined"/>-->
-    <!--    <app-breadcrumbs-->
-    <!--        *ngIf="response !== undefined"-->
-    <!--        [breadcrumbs]="response.breadcrumbs"-->
-    <!--    />-->
-    <div class="overflow-x-auto mx-20 mt-4">
+    <app-loading *ngIf="membersResponse === undefined"/>
+    <div
+      *ngIf="membersResponse !== undefined"
+      class="overflow-x-auto mx-20 mt-4"
+    >
       <div class="bg-white py-6 rounded-lg">
         <form class="overflow-x-auto md:mr-96 mt-4">
           <div class="flex flex-row">
@@ -55,15 +56,15 @@ import { AuthGoogleService } from "../../auth-google.service";
             <tr class="cursor-pointer hover:bg-gray-50 border-2 font-robotoCondensed"
                  *ngFor="let member of filteredMembers">
               <td class="text-left px-4 py-2 font-semibold">
-                <div class="flex flex-row">
-                  <img [src]="storage.getItem('profileUrl')" class="w-10 rounded-full mx-2"/>
+                <div class="flex flex-row items-center gap-2">
+                  <img [src]="member.profilePicture || '../../assets/dummy-avatar.jpg'" class="w-10 rounded-full mx-2"/>
                   {{ member.name }}
                 </div>
               </td>
-              <td class="text-left px-4 py-2 font-semibold">
+              <td class="text-left px-4 py-2">
                 {{ member.email }}
               </td>
-              <td class="text-left px-4 py-2 font-semibold">
+              <td class="text-left px-4 py-2">
                 {{ member.isLeader ? 'Líder' : 'Miembro'}}
               </td>
             </tbody>
@@ -76,7 +77,7 @@ import { AuthGoogleService } from "../../auth-google.service";
 export class ProjectMembersPageComponent implements OnInit{
   constructor(private route: ActivatedRoute, private api: ApiService, private zone: NgZone, protected storage: SessionStorageService, protected auth: AuthGoogleService) { }
 
-  membersResponse: UserWithRole[] = [];
+  membersResponse!: UserWithRole[];
   filteredMembers: UserWithRole[] = [];
   selectedRole : string = "Todos los roles";
   searchQuery: string = "";
@@ -93,7 +94,7 @@ export class ProjectMembersPageComponent implements OnInit{
     });
 
     this.route.params.subscribe(params => {
-      this.api.get(`projects/${params["id"]}/members`).subscribe((response: any) => {
+      this.api.get(`projects/${params["id"]}/members`).subscribe((response) => {
         this.membersResponse = response;
         this.onRoleChange();
       });
@@ -108,7 +109,6 @@ export class ProjectMembersPageComponent implements OnInit{
 
   onRoleChange() {
     const lowerCaseSearchQuery = this.searchQuery.toLowerCase();
-    console.log(this.searchQuery);
 
     if (this.selectedRole === "Todos los roles") {
       this.filteredMembers = [...this.membersResponse.filter(member =>
@@ -126,4 +126,5 @@ export class ProjectMembersPageComponent implements OnInit{
     }
   }
 
+  protected readonly defaultPicture = defaultPicture;
 }
