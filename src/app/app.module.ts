@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { OAuthModule } from "angular-oauth2-oidc";
 
@@ -94,7 +94,11 @@ import { KanbanCardComponent } from './shared/kanban-card/kanban-card.component'
   imports: [BrowserModule,
     AppRoutingModule,
     OAuthModule.forRoot(),
-    FormsModule, HttpClientModule, NgOptimizedImage,],
+    FormsModule,
+    HttpClientModule,
+    NgOptimizedImage,
+    ReactiveFormsModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

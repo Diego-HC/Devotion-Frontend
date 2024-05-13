@@ -1,61 +1,70 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
-import { FormBuilder, FormGroup, Validators} from "@angular/forms";
-import { ApiService } from "../../api.service";
-import { StoreService } from "../../store.service";
+import {Component, OnInit} from '@angular/core';
+import {Router} from "@angular/router";
+import {FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl} from "@angular/forms";
+import {ApiService} from "../../api.service";
+import {StoreService} from "../../store.service";
 
 @Component({
   selector: 'app-task-create-edit-page',
   template: `
-    <app-loading *ngIf="showLoading" [message]="loadingMessage" />
+    <app-loading *ngIf="showLoading" [message]="loadingMessage"/>
     <div class="overflow-x-auto mx-32" *ngIf="!showLoading && (store.membersPool.length > 0)">
       <div class="bg-white py-8 rounded-lg">
         <h2 class="font-roboto font-bold md:m-0.5">
           {{ store.task.id ? 'Editar Tarea *' : 'Nueva Tarea *' }}
         </h2>
-        <div class="flex flex-row items-center mt-2 gap-4">
-          <input type="text"
-                 class="input-md input-bordered input-['#5CCEFF'] md:w-5/12 md:m-0.5 text-3xl font-helvetica rounded-box font-bold shadow-md"
-                 [(ngModel)]="store.task.name" (ngModelChange)="store.task.name = $event"/>
-          <div class="flex flex-col items-center">
-            <button (click)="onSubmit()" class="btn-circle items-center justify-center"
-                    style="background-color: #2A4365">+
-            </button>
-            <p class="text-xs font-robotoCondensed">Publicar</p>
-          </div>
-        </div>
-        <div class="flex flex-row items-center mt-2 gap-8">
-          <div class="flex flex-col items-center">
-            <h2 class="font-roboto font-bold">Fecha Inicio</h2>
-            <input type="date" class="input-md input-bordered input-['#5CCEFF'] md:w-40 font-helvetica font-bold"
-                   [(ngModel)]="store.task.startDate" (ngModelChange)="store.task.startDate = $event"/>
-          </div>
-          <div class="flex flex-col items-center">
-            <h2 class="font-roboto font-bold">Fecha Fin</h2>
-            <input type="date" class="input-md input-bordered input-['#5CCEFF'] md:w-40 font-helvetica font-bold"
-                   [(ngModel)]="store.task.dueDate" (ngModelChange)="store.task.dueDate = $event"/>
-          </div>
-          <div class="flex flex-col items-center">
-            <h2 class="font-roboto font-bold">Prioridad</h2>
-            <div class="dropdown dropdown-right">
-              <div tabindex="0" role="button" class="btn m-1">{{ selectedPriority }}</div>
-              <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                <li><a (click)="updatePriority('Baja')">Baja</a></li>
-                <li><a (click)="updatePriority('Media')">Media</a></li>
-                <li><a (click)="updatePriority('Alta')">Alta</a></li>
-              </ul>
+        <form [formGroup]="taskForm" class="overflow-x-auto md:mr-96 mt-4">
+          <div class="flex flex-row items-center mt-2 gap-4">
+            <input type="text"
+                   formControlName="name"
+                   required
+                   class="input-md input-bordered input-['#5CCEFF'] md:w-5/12 md:m-0.5 text-3xl font-helvetica rounded-box font-bold shadow-md"
+            />
+            <div class="flex flex-col items-center">
+              <button (click)="onSubmit()" class="btn-circle items-center justify-center"
+                      style="background-color: #2A4365">+
+              </button>
+              <p class="text-xs font-robotoCondensed">Publicar</p>
             </div>
           </div>
-        </div>
-        <h2 class="font-roboto font-bold mt-4 md:m-0.5">Descripción</h2>
-        <textarea class="textarea-md text-['#5CCEFF'] textarea-bordered w-1/2 h-40 md:m-0.5 rounded-box shadow-md"
-                  [(ngModel)]="store.task.description"
-                  (ngModelChange)="store.task.description = $event">
+          <div class="flex flex-row items-center mt-2 gap-8">
+            <div class="flex flex-col items-center">
+              <h2 class="font-roboto font-bold">Fecha Inicio</h2>
+              <input type="date"
+                     formControlName="start_date"
+                     class="input-md input-bordered input-['#5CCEFF'] md:w-40 font-helvetica font-bold"
+              />
+            </div>
+            <div class="flex flex-col items-center">
+              <h2 class="font-roboto font-bold">Fecha Fin *</h2>
+              <input type="date"
+                     formControlName="due_date"
+                     class="input-md input-bordered input-['#5CCEFF'] md:w-40 font-helvetica font-bold"
+              />
+            </div>
+            <div class="flex flex-col items-center">
+              <h2 class="font-roboto font-bold">Prioridad *</h2>
+              <div class="dropdown dropdown-right">
+                <div tabindex="0" role="button" class="btn m-1">{{ selectedPriority }}</div>
+                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                  <li><a (click)="updatePriority('Baja')">Baja</a></li>
+                  <li><a (click)="updatePriority('Media')">Media</a></li>
+                  <li><a (click)="updatePriority('Alta')">Alta</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <h2 class="font-roboto font-bold mt-4 md:m-0.5">Descripción</h2>
+          <textarea
+            formControlName="description"
+            class="textarea-md text-['#5CCEFF'] textarea-bordered w-1/2 h-40 md:m-0.5 rounded-box shadow-md"
+          >
         </textarea>
-        <div class="w-1/2 md:m-1">
-          <h2 class="font-roboto font-bold mt-4 md:m-0.5">Asignado *</h2>
-          <app-search-select selecting="assignee" />
-        </div>
+          <div class="w-1/2 md:m-1">
+            <h2 class="font-roboto font-bold mt-4 md:m-0.5">Asignado *</h2>
+            <app-search-select selecting="assignee"/>
+          </div>
+        </form>
         <hr class="w-1/2 md:m-1">
         <button
           *ngIf="store.task.id"
@@ -75,7 +84,8 @@ import { StoreService } from "../../store.service";
   `
 })
 export class TaskCreateEditPageComponent implements OnInit {
-  constructor(private api: ApiService, private router: Router, protected store: StoreService, private formBuilder: FormBuilder) { }
+  constructor(private api: ApiService, private router: Router, protected store: StoreService, private formBuilder: FormBuilder) {
+  }
 
   showWarning = false;
   warningMessage = '';
@@ -106,9 +116,29 @@ export class TaskCreateEditPageComponent implements OnInit {
         this.store.membersPool = members;
       });
     }
+
+    // If editing existing task, populate form with existing task data
+    if (this.store.task.id) {
+      this.taskForm.patchValue({
+        name: this.store.task.name,
+        description: this.store.task.description,
+        priority: this.store.task.priority,
+        start_date: this.store.task.startDate,
+        due_date: this.store.task.dueDate,
+        parent_project: this.store.task.parentProject,
+        parent_task: this.store.task.parentTask,
+        assignee: this.store.task.assignee
+      });
+    }
+
   }
 
   onSubmit() {
+    if (this.taskForm.invalid) {
+      // Mark all fields as touched to trigger validation messages
+      this.taskForm.markAllAsTouched();
+      return;
+    }
     const onResponse = (response: Task) => {
       void this.router.navigateByUrl(`/task/${response.id}`);
     };
@@ -117,7 +147,7 @@ export class TaskCreateEditPageComponent implements OnInit {
       this.loadingMessage = "Creando tarea...";
       this.showLoading = true;
 
-      this.api.post('tasks/', this.store.taskPostBody()).subscribe(onResponse,(error) => {
+      this.api.post('tasks/', this.store.taskPostBody()).subscribe(onResponse, (error) => {
         this.warningMessage = "Error al crear la tarea. Por favor, inténtelo de nuevo. \n Procura que todos los campos estén completos.";
         this.showWarning = true;
         this.showLoading = false;
@@ -126,7 +156,7 @@ export class TaskCreateEditPageComponent implements OnInit {
       this.loadingMessage = "Actualizando datos...";
       this.showLoading = true;
 
-      this.api.put(`tasks/${this.store.task.id}/`, this.store.taskPostBody()).subscribe(onResponse,(error) => {
+      this.api.put(`tasks/${this.store.task.id}/`, this.store.taskPostBody()).subscribe(onResponse, (error) => {
         this.warningMessage = "Error al actualizar la tarea. Por favor, inténtelo de nuevo. \n Procura que todos los campos estén completos.";
         this.showWarning = true;
         this.showLoading = false;
