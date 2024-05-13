@@ -55,6 +55,18 @@ import { StoreService } from "../../store.service";
           <h2 class="font-roboto font-bold mt-4 md:m-0.5">Asignado</h2>
           <app-search-select selecting="assignee" />
         </div>
+        <hr class="w-1/2 md:m-1">
+        <button
+          *ngIf="store.task.id"
+          (click)="store.showConfirmDeletion = true"
+          class="text-cardRed border border-cardRed bg-white text-sm font-roboto font-bold py-2 px-4 rounded-lg mt-4"
+        >
+          Eliminar Tarea
+        </button>
+        <app-confirm-deletion
+          *ngIf="store.showConfirmDeletion"
+          [deletingTask]="true"
+        />
         <app-alert *ngIf="showWarning" [message]="warningMessage"/>
       </div>
       <br/><br/><br/><br/><br/><br/><br/>ㅤ

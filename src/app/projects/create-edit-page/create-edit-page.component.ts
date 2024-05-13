@@ -56,7 +56,7 @@ import { StoreService } from "../../store.service";
           >
             * La descripción del proyecto es obligatoria.
           </div>
-          <h1 class=" text-l font-roboto font-extrabold mb-3 mt-3">
+          <h1 class="text-l font-roboto font-extrabold mb-3 mt-3">
             Líderes
           </h1>
           <app-search-select
@@ -70,6 +70,17 @@ import { StoreService } from "../../store.service";
           <h1 class=" text-l font-roboto font-extrabold mb-3 mt-3">Miembros</h1>
           <app-search-select
             selecting="members"
+          />
+          <hr>
+          <button
+            *ngIf="store.project.id"
+            (click)="store.showConfirmDeletion = true"
+            class="text-cardRed border border-cardRed bg-white text-sm font-roboto font-bold py-2 px-4 rounded-lg mt-4"
+          >
+            Eliminar Proyecto
+          </button>
+          <app-confirm-deletion
+            *ngIf="store.showConfirmDeletion"
           />
           <app-alert
             *ngIf="showWarning"

@@ -12,6 +12,7 @@ export class StoreService {
   task!: Task;
   membersPool: MinimalUser[] = [];
   pageWasReloaded = true;
+  showConfirmDeletion = false;
 
   clearProject(parent = "") {
     this.project = {
