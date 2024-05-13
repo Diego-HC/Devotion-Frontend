@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
+import { FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { ApiService } from "../../api.service";
 
 export interface Task {
@@ -19,7 +20,7 @@ export interface Task {
     <div class="overflow-x-auto mx-32">
       <div class="bg-white py-8 rounded-lg">
         <h2 class="font-roboto font-bold">
-          Nueva Tarea
+          Nueva Tarea *
         </h2>
         <div class="flex flex-row items-center mt-2 gap-4">
           <input type="text"
@@ -61,7 +62,7 @@ export interface Task {
                   (ngModelChange)="taskData.description = $event">
         </textarea>
         <div class="w-1/2">
-          <h2 class="font-roboto font-bold mt-4">Asignado</h2>
+          <h2 class="font-roboto font-bold mt-4">Asignado *</h2>
           <app-search-select [projectId]="parentProject" [singleSelectedMode]="true"
                              (selectedMembersOutput)="onMembersSelected($event)"></app-search-select>
         </div>
@@ -71,7 +72,7 @@ export interface Task {
   `
 })
 export class TaskCreateEditPageComponent implements OnInit {
-  constructor(private api: ApiService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private api: ApiService, private route: ActivatedRoute, private router: Router, private formBuilder: FormBuilder) { }
 
   tasksResponse: any;
   taskData: Task = {
@@ -84,6 +85,17 @@ export class TaskCreateEditPageComponent implements OnInit {
     parent_task: null,
     asignee: ''
   };
+
+  taskForm: FormGroup = this.formBuilder.group({
+    name: ['', Validators.required],
+    description: [''],
+    priority: [0],
+    start_date: [''],
+    due_date: ['', Validators.required],
+    parent_project: [''],
+    parent_task: [null],
+    asignee: ['', Validators.required]
+  });
 
   parentProject: string = '';
   showWarning: boolean = false;
