@@ -27,6 +27,10 @@ import {StoreService} from "../../store.service";
               <p class="text-xs font-robotoCondensed">Publicar</p>
             </div>
           </div>
+          <div class="text-red-500"
+               *ngIf="taskForm.get('name')?.errors?.['required'] && taskForm.get('name')?.touched">
+            * El nombre de la tarea es obligatorio.
+          </div>
           <div class="flex flex-row items-center mt-2 gap-8">
             <div class="flex flex-col items-center">
               <h2 class="font-roboto font-bold">Fecha Inicio</h2>
@@ -39,6 +43,7 @@ import {StoreService} from "../../store.service";
               <h2 class="font-roboto font-bold">Fecha Fin *</h2>
               <input type="date"
                      formControlName="due_date"
+                     required
                      class="input-md input-bordered input-['#5CCEFF'] md:w-40 font-helvetica font-bold"
               />
             </div>
@@ -54,17 +59,31 @@ import {StoreService} from "../../store.service";
               </div>
             </div>
           </div>
+          <div class="flex gap-4">
+            <div class="text-red-500"
+                 *ngIf="taskForm.get('start_date')?.errors?.['required'] && taskForm.get('start_date')?.touched">
+              * La fecha de inicio es obligatoria.
+            </div>
+            <div class="text-red-500"
+                 *ngIf="taskForm.get('due_date')?.errors?.['required'] && taskForm.get('due_date')?.touched">
+              * La fecha de fin es obligatoria.
+            </div>
+          </div>
           <h2 class="font-roboto font-bold mt-4 md:m-0.5">Descripción</h2>
           <textarea
             formControlName="description"
             class="textarea-md text-['#5CCEFF'] textarea-bordered w-1/2 h-40 md:m-0.5 rounded-box shadow-md"
           >
         </textarea>
-          <div class="w-1/2 md:m-1">
-            <h2 class="font-roboto font-bold mt-4 md:m-0.5">Asignado *</h2>
-            <app-search-select selecting="assignee"/>
-          </div>
         </form>
+        <div class="w-1/2 md:m-1">
+          <h2 class="font-roboto font-bold mt-4 md:m-0.5">Asignado *</h2>
+          <app-search-select selecting="assignee"/>
+        </div>
+        <div class="text-red-500"
+             *ngIf="taskForm.get('assignee')?.errors?.['required'] && taskForm.get('assignee')?.touched">
+          * La tarea debe tener un asignado.
+        </div>
         <hr class="w-1/2 md:m-1">
         <button
           *ngIf="store.task.id"
@@ -92,12 +111,13 @@ export class TaskCreateEditPageComponent implements OnInit {
   showLoading = false;
   loadingMessage = '';
   selectedPriority = 'Baja';
+  today = new Date();
 
   taskForm: FormGroup = this.formBuilder.group({
     name: ['', Validators.required],
     description: [''],
     priority: [0],
-    start_date: [''],
+    start_date: [this.today.toISOString().split('T')[0], Validators.required],
     due_date: ['', Validators.required],
     parent_project: [''],
     parent_task: [null],
@@ -134,9 +154,11 @@ export class TaskCreateEditPageComponent implements OnInit {
   }
 
   onSubmit() {
+    Object.values(this.taskForm.controls).forEach(control => {
+      control.markAsTouched();
+    });
+
     if (this.taskForm.invalid) {
-      // Mark all fields as touched to trigger validation messages
-      this.taskForm.markAllAsTouched();
       return;
     }
     const onResponse = (response: Task) => {
