@@ -118,15 +118,27 @@ export class CreateEditPageComponent implements OnInit {
         this.store.membersPool = users;
       });
     }
+
+    // If editing existing project, populate form with existing project data
+    if(this.store.project.id) {
+      this.projectForm.patchValue({
+        name: this.store.project.name,
+        description: this.store.project.description,
+        leaders: this.store.project.leaders,
+        members: this.store.project.members,
+      });
+    }
   }
 
   onSubmit() {
-    // Update leaders and members form controls with the latest values from StoreService
+
     this.projectForm.patchValue({
-      leaders: this.store.project.leaders.map((leader) => leader.id).join(","), // Convert array of User objects to string of User IDs
-      members: this.store.project.members.map((member) => member.id).join(","), // Convert array of User objects to string of User IDs
+      leaders: this.store.project.leaders,
+      members: this.store.project.members,
     });
-    console.log(this.projectForm.value);
+
+    this.store.project.name = this.projectForm.value.name;
+    this.store.project.description = this.projectForm.value.description;
 
     Object.values(this.projectForm.controls).forEach(control => {
       control.markAsTouched();
@@ -138,16 +150,16 @@ export class CreateEditPageComponent implements OnInit {
       return;
     }
 
-    // if (!this.store.project.name || !this.store.project.description) {
-    //   this.showWarning = true;
-    //   this.warningMessage = "Por favor, completa todos los campos requeridos.";
-    //   return;
-    // }
-    // if (this.store.project.leaders.length == 0) {
-    //   this.showWarning = true;
-    //   this.warningMessage = "Por favor, selecciona al menos un lider.";
-    //   return;
-    // }
+    if (!this.store.project.name || !this.store.project.description) {
+      this.showWarning = true;
+      this.warningMessage = "Por favor, completa todos los campos requeridos.";
+      return;
+    }
+    if (this.store.project.leaders.length == 0) {
+      this.showWarning = true;
+      this.warningMessage = "Por favor, selecciona al menos un lider.";
+      return;
+    }
 
     const onResponse = (response: Project) => {
       void this.router.navigateByUrl(`/project/${response.id}`);

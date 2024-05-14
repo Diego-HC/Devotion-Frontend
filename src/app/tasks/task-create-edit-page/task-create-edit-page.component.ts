@@ -154,6 +154,14 @@ export class TaskCreateEditPageComponent implements OnInit {
   }
 
   onSubmit() {
+
+    this.taskForm.patchValue({
+      priority: this.store.task.priority,
+      parent_project: this.store.task.parentProject,
+      parent_task: this.store.task.parentTask,
+      assignee: this.store.task.assignee
+    });
+
     Object.values(this.taskForm.controls).forEach(control => {
       control.markAsTouched();
     });
