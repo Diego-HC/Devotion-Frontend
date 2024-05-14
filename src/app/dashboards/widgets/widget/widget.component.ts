@@ -6,7 +6,7 @@ import { Component, Input } from "@angular/core";
   template: `
     @if (widget.displayType === WidgetDisplayType.Number) {
     <app-widget-number [widget]="widget" />
-    } @else if (widget.displayType === WidgetDisplayType.LineChart) {
+    } @else if (widget.displayType === WidgetDisplayType.Line_chart) {
     <!-- <app-widget-line-chart [widget]="widget" /> -->
     } @else if (widget.displayType === WidgetDisplayType.Gauge) {
     <!-- <app-widget-gauge [widget]="widget" /> -->

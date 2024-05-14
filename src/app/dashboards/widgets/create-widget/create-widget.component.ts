@@ -1,5 +1,7 @@
-import { Component, Input } from "@angular/core";
+import { WidgetDisplayType } from "./../widget-display-type";
+import { Component, Input, OnInit } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
+import { ApiService } from "../../../api.service";
 
 interface DataSource {
   id: string;
@@ -42,13 +44,11 @@ interface DataSource {
                 formControlName="displayType"
                 class="border-2 rounded-md px-2 py-1 my-1 w-full bg-white"
               >
-                <option class="text-sm bg-slate-50" value="number">
-                  Number
+                @for (option of displayTypeOptions; track $index) {
+                <option class="text-sm bg-slate-50" [value]="$index">
+                  {{ option }}
                 </option>
-                <option class="text-sm bg-slate-50" value="graph">
-                  Line Graph
-                </option>
-                <option class="text-sm bg-slate-50" value="table">Table</option>
+                }
               </select>
 
               <label for="widget-data-source">Data Source: </label>
@@ -58,10 +58,16 @@ interface DataSource {
                 required
                 class="border-2 rounded-md px-2 py-1 my-1 w-full bg-white"
               >
-                <option class="text-sm bg-slate-50" value="1">
+                <option
+                  class="text-sm bg-slate-50"
+                  value="b85d5997-835f-4758-a62b-de07d61650d6"
+                >
                   Sensor Temperatura 1
                 </option>
-                <option class="text-sm bg-slate-50" value="2">
+                <option
+                  class="text-sm bg-slate-50"
+                  value="b85d5997-835f-4758-a62b-de07d61650d6"
+                >
                   Sensor Temperatura 2
                 </option>
               </select>
@@ -91,7 +97,7 @@ interface DataSource {
             </h4>
 
             <div class="flex place-items-center flex-grow">
-              @if (widgetForm.value.displayType === "number") {
+              @if (widgetForm.value.displayType === widgetDisplayType.Number) {
               <p class="text-9xl">10 °C</p>
               } @else {
               <app-projects-icon
@@ -109,19 +115,35 @@ interface DataSource {
     </dialog>
   `,
 })
-export class CreateWidgetComponent {
+export class CreateWidgetComponent implements OnInit {
   @Input() modal: HTMLDialogElement | null = null;
+  @Input() position = 0;
+  @Input() projectId = "";
 
-  constructor(private formBuilder: FormBuilder) {}
+  widgetDisplayType = WidgetDisplayType;
+
+  displayTypeOptions = Object.keys(this.widgetDisplayType)
+    .filter((option) => isNaN(Number(option)))
+    .map((option) => option.split("_").join(" "));
+
+  constructor(private formBuilder: FormBuilder, protected api: ApiService) {}
 
   widgetForm = this.formBuilder.group({
     name: ["", Validators.required],
-    displayType: ["number", Validators.required],
+    displayType: [this.widgetDisplayType.Number, Validators.required],
     dataSource: ["", Validators.required],
     unit: ["", Validators.required],
   });
 
   dataSources?: DataSource[];
+
+  ngOnInit(): void {
+    this.widgetForm.controls.displayType.valueChanges.subscribe((value) => {
+      if (typeof value === "string") {
+        this.widgetForm.patchValue({ displayType: Number(value) });
+      }
+    });
+  }
 
   onSubmit() {
     console.log(this.widgetForm.value);
@@ -130,6 +152,18 @@ export class CreateWidgetComponent {
       console.log("Invalid form");
       return;
     }
+
+    const widgetBody = {
+      ...this.widgetForm.value,
+      display_type: this.widgetForm.value.displayType,
+      data_source: this.widgetForm.value.dataSource,
+      position: this.position,
+      project: this.projectId,
+    };
+
+    this.api.post("widgets/", widgetBody).subscribe((response) => {
+      console.log(response);
+    });
 
     this.modal?.close();
   }
