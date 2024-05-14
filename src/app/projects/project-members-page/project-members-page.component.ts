@@ -8,9 +8,10 @@ import { StoreService } from "../../store.service";
     <div class="mx-20 mt-4">
       <a
         [routerLink]="backButtonLink"
-        class="text-devotionPrimary text-lg font-semibold"
+        class="flex flex-row items-center gap-3 text-devotionPrimary text-lg font-semibold"
       >
-        〈ㅤVolver
+        <app-left-chevron-icon />
+        Volver
       </a>
       <form class="md:mr-96 mt-4">
         <div class="flex flex-row">
