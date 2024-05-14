@@ -148,7 +148,7 @@ import { cardColors } from "../../shared/cardColors";
       </div>
 
       <app-table *ngIf="currentView === 'table'" [tasks]="response.tasks" />
-      <app-kanban *ngIf="currentView === 'kanban'" />
+      <app-kanban *ngIf="currentView === 'kanban'" [projectOrTaskId]="response.id" />
       <app-calendar *ngIf="currentView === 'calendar'" [projectOrTaskId]="response.id" [isTask]="false" />
       <app-roadmap *ngIf="currentView === 'roadmap'" />
     </div>

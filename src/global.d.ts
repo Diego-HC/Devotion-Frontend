@@ -84,6 +84,24 @@ declare global {
     id: string;
     name: string;
   }
-}
+  interface TaskKanban {
+    id: string;
+    name: string;
+    description: string;
+    priority: number;
+    assignee : MinimalUser;
+  }
 
+  interface Tasks {
+    notStarted : TaskKanban[];
+    inProgress : TaskKanban[];
+    inReview : TaskKanban[];
+    done : TaskKanban[];
+  }
+
+  interface KanbanView {
+    tasks : Tasks;
+  }
+}
+ 
 export {};

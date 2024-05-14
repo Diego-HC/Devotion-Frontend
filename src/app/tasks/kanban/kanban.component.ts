@@ -5,10 +5,10 @@ import { ApiService } from "../../api.service";
   selector: 'app-kanban',
   template: `
   <div class = "grid grid-cols-4">
-    <app-kanban-card />
-    <app-kanban-card />
-    <app-kanban-card />
-    <app-kanban-card />
+    <app-kanban-card [tasks]="response?.tasks?.notStarted ?? []" taskState="notStarted"/>
+    <app-kanban-card [tasks]="response?.tasks?.inProgress" taskState="inProgress"/>
+    <app-kanban-card [tasks]="response?.tasks?.inReview" taskState="inReview"/>
+    <app-kanban-card [tasks]="response?.tasks?.done" taskState="done"/>
   </div>
   `
 })
@@ -18,11 +18,17 @@ export class KanbanComponent implements OnInit{
   ) {}
 
   @Input() projectOrTaskId: string = '';
+  response? : KanbanView;
+  
 
   ngOnInit(): void {
-    // endpoint: /projects/<id>/?view=kanban&partial=true
-    const endpoint = `/projects/${this.projectOrTaskId}/?view=kanban&partial=true`
+    const endpoint = `projects/${this.projectOrTaskId}/?view=kanban&partial=true`
+    this.api.get(endpoint).subscribe((response : KanbanView) => {
+      this.response = response;
+    });
+  }
+
+  navigateToTask(taskId: string) {
     
-    this.api.get(endpoint).subscribe
   }
 }
