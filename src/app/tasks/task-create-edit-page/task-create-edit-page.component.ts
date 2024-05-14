@@ -8,12 +8,12 @@ import {StoreService} from "../../store.service";
   selector: 'app-task-create-edit-page',
   template: `
     <app-loading *ngIf="showLoading" [message]="loadingMessage"/>
-    <div class="overflow-x-auto mx-32" *ngIf="!showLoading && (store.membersPool.length > 0)">
-      <div class="bg-white py-8 rounded-lg">
-        <h2 class="font-roboto font-bold md:m-0.5">
+    <div class="mx-32" *ngIf="!showLoading && (store.membersPool.length > 0)">
+      <div>
+        <h2 class="font-roboto font-bold">
           {{ store.task.id ? 'Editar Tarea *' : 'Nueva Tarea *' }}
         </h2>
-        <form [formGroup]="taskForm" class="overflow-x-auto md:mr-96 mt-4">
+        <form [formGroup]="taskForm" class="mt-4">
           <div class="flex flex-row items-center mt-2 gap-4">
             <input type="text"
                    formControlName="name"
@@ -21,8 +21,11 @@ import {StoreService} from "../../store.service";
                    class="input-md input-bordered input-['#5CCEFF'] md:w-5/12 md:m-0.5 text-3xl font-helvetica rounded-box font-bold shadow-md"
             />
             <div class="flex flex-col items-center">
-              <button (click)="onSubmit()" class="btn-circle items-center justify-center"
-                      style="background-color: #2A4365">+
+              <button
+                (click)="onSubmit()"
+                class="bg-devotionPrimary btn-circle flex items-center justify-center mt-4 w-12 h-12"
+              >
+                <app-checkmark-icon />
               </button>
               <p class="text-xs font-robotoCondensed">Publicar</p>
             </div>
@@ -46,10 +49,28 @@ import {StoreService} from "../../store.service";
               <h2 class="font-roboto font-bold">Prioridad *</h2>
               <div class="dropdown dropdown-right">
                 <div tabindex="0" role="button" class="btn m-1">{{ selectedPriority }}</div>
-                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                  <li><a (click)="updatePriority('Baja')">Baja</a></li>
-                  <li><a (click)="updatePriority('Media')">Media</a></li>
-                  <li><a (click)="updatePriority('Alta')">Alta</a></li>
+                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box">
+                  <li><button (click)="updatePriority('Baja')">
+                    <app-priority-icon
+                      class="pr-6"
+                      [priority]="0"
+                      [animated]="false"
+                    />
+                  </button></li>
+                  <li><button (click)="updatePriority('Media')">
+                    <app-priority-icon
+                      class="pr-6"
+                      [priority]="1"
+                      [animated]="false"
+                    />
+                  </button></li>
+                  <li><button (click)="updatePriority('Alta')">
+                    <app-priority-icon
+                      class="pr-6"
+                      [priority]="2"
+                      [animated]="false"
+                    />
+                  </button></li>
                 </ul>
               </div>
             </div>
@@ -105,6 +126,7 @@ export class TaskCreateEditPageComponent implements OnInit {
   });
 
   ngOnInit() {
+    // return;
     if (this.store.pageWasReloaded) {
       void this.router.navigateByUrl("/home");
       return;
