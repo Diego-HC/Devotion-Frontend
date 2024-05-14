@@ -22,7 +22,7 @@ import { cardColors } from "../../shared/cardColors";
               </h1>
               <div
                 class="radial-progress bg-devotionSecondary text-devotionPrimary"
-                style="--value:70; --size:2rem; --thickness: 0.5rem;"
+                [style]="{'--value':response.progress, '--size':'2rem', '--thickness': '0.5rem'}"
                 role="progressbar"
               ></div>
             </div>
@@ -36,6 +36,9 @@ import { cardColors } from "../../shared/cardColors";
                 <span class="font-bold hover:underline text-base text-devotionAccent"
                   >Ir a dashboard</span
                 >
+              </a>
+              <a routerLink="/project/{{ response.id }}/members">
+                <span class="font-bold hover:underline text-base text-devotionAccent">Ver miembros</span>
               </a>
               <div class="dropdown dropdown-right">
                 <div tabindex="0" role="button" class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••</div>

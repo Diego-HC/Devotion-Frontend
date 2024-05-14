@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { OAuthModule } from "angular-oauth2-oidc";
 
@@ -45,6 +45,7 @@ import { AlertComponent } from './shared/alert/alert.component';
 import { CalendarCellComponent } from './tasks/calendar-cell/calendar-cell.component';
 import { CalendarTaskComponent } from './tasks/calendar-task/calendar-task.component';
 import { TasksLoadingComponent } from './tasks/tasks-loading/tasks-loading.component';
+import { ProjectMembersPageComponent } from './projects/project-members-page/project-members-page.component';
 import { ConfirmDeletionComponent } from './shared/confirm-deletion/confirm-deletion.component';
 import { KanbanCardComponent } from './shared/kanban-card/kanban-card.component';
 
@@ -86,13 +87,18 @@ import { KanbanCardComponent } from './shared/kanban-card/kanban-card.component'
     CalendarCellComponent,
     CalendarTaskComponent,
     TasksLoadingComponent,
+    ProjectMembersPageComponent,
     ConfirmDeletionComponent,
     KanbanCardComponent,
   ],
   imports: [BrowserModule,
     AppRoutingModule,
     OAuthModule.forRoot(),
-    FormsModule, HttpClientModule, NgOptimizedImage,],
+    FormsModule,
+    HttpClientModule,
+    NgOptimizedImage,
+    ReactiveFormsModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

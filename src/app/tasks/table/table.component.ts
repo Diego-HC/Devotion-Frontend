@@ -26,7 +26,8 @@ import {Router} from '@angular/router';
         </tr>
         </thead>
         <tbody>
-        <tr class="cursor-pointer hover:bg-gray-50 border-2 font-robotoCondensed" *ngFor="let task of tasks" (click)="navigateToTask(task.id)" >
+        <tr class="cursor-pointer hover:bg-gray-50 border-2 font-robotoCondensed" *ngFor="let task of tasks"
+            (click)="navigateToTask(task.id)">
           <td class="text-left px-4 py-2 font-semibold">
             {{ task.name | slice:0:35 }}
           </td>
