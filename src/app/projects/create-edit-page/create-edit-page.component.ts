@@ -2,75 +2,77 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: "app-create-edit-page",
   template: `
-    <app-loading *ngIf="showLoading" [message]="loadingMessage" />
+    <app-loading *ngIf="showLoading" [message]="loadingMessage"/>
     <div class="px-16" *ngIf="!showLoading && (store.membersPool.length > 0)">
       <div class="flex justify-center items-center">
         <div class="px-12 lg:w-1/2 py-10">
-          <h1 class=" text-l font-roboto font-extrabold">{{ store.project.id ? 'Editar Proyecto' : 'Nuevo Proyecto *' }}</h1>
-          <div class="flex flex-row flex-grow items-center justify-center">
-            <input
-              type="text"
-              class="input input-bordered flex-grow mr-4 shadow-md font-helvetica font-bold text-3xl"
-              [(ngModel)]="store.project.name"
-              #name="ngModel"
-              name="name"
-              required
-            />
-            <div class="flex flex-col items-center">
-              <button
-                (click)="onSubmit()"
-                class="bg-devotionPrimary btn-circle items-center justify-center mt-4 text-white font-bold font-helvetica text-3xl w-12 h-12"
-              >
-                +
-              </button>
-              <p class="text-xs font-robotoCondensed">Publicar</p>
+          <h1
+            class=" text-l font-roboto font-extrabold">{{ store.project.id ? 'Editar Proyecto' : 'Nuevo Proyecto *' }}</h1>
+          <form [formGroup]="projectForm">
+            <div class="flex flex-row flex-grow items-center justify-center">
+              <input
+                type="text"
+                formControlName="name"
+                required
+                class="input input-bordered flex-grow mr-4 shadow-md font-helvetica font-bold text-3xl"
+              />
+              <div class="flex flex-col items-center">
+                <button
+                  type="submit"
+                  (click)="onSubmit()"
+                  class="bg-devotionPrimary btn-circle items-center justify-center mt-4 text-white font-bold font-helvetica text-3xl w-12 h-12"
+                >
+                  +
+                </button>
+                <p class="text-xs font-robotoCondensed">Publicar</p>
+              </div>
             </div>
-          </div>
-          <div
-            *ngIf="name.invalid && name.touched"
-            class="text-red-500 text-xs -mt-3"
-          >
-            * El nombre del proyecto es obligatorio.
-          </div>
-
-          <div class="flex flex-col flex-grow justify-center">
-            <h1 class=" text-l font-roboto font-extrabold mb-3">
-              Descripción *
+            <div class="text-red-500 md:mb-1"
+                 *ngIf="projectForm.get('name')?.errors?.['required'] && projectForm.get('name')?.touched">
+              * El nombre del proyecto es obligatorio.
+            </div>
+            <div class="flex flex-col flex-grow justify-center">
+              <h1 class=" text-l font-roboto font-extrabold mb-3">
+                Descripción *
+              </h1>
+              <textarea
+                rows="4"
+                formControlName="description"
+                required
+                class="textarea textarea-bordered mr-4 shadow-md font-robotoCondensed text-s w-full min-h-10"
+              ></textarea>
+            </div>
+            <div class="text-red-500 md:mt-1"
+                 *ngIf="projectForm.get('description')?.errors?.['required'] && projectForm.get('description')?.touched">
+              * La descripción del proyecto es obligatoria.
+            </div>
+            <h1 class="text-l font-roboto font-extrabold mb-3 mt-3">
+              Líderes *
             </h1>
-            <textarea
-              rows="4"
-              class="textarea textarea-bordered mr-4 shadow-md font-robotoCondensed text-s w-full min-h-10"
-              [(ngModel)]="store.project.description"
-              #desc="ngModel"
-              desc="desc"
-              required
-            ></textarea>
-          </div>
-          <div
-            *ngIf="desc.invalid && desc.touched"
-            class="text-red-500 text-xs mt-1"
-          >
-            * La descripción del proyecto es obligatoria.
-          </div>
-          <h1 class="text-l font-roboto font-extrabold mb-3 mt-3">
-            Líderes
-          </h1>
-          <app-search-select
-            selecting="leaders"
-          />
-          <p class="text-xs font-robotoCondensed text-[#5E6377] -mt-3">
-            La persona líder será quien valide las tareas de este subproyecto.
-            También podrá validar tareas de todos los subproyectos
-            descendientes.
-          </p>
-          <h1 class=" text-l font-roboto font-extrabold mb-3 mt-3">Miembros</h1>
-          <app-search-select
-            selecting="members"
-          />
+            <app-search-select
+              selecting="leaders"
+            />
+            <p class="text-xs font-robotoCondensed text-[#5E6377] -mt-3">
+              La persona líder será quien valide las tareas de este subproyecto.
+              También podrá validar tareas de todos los subproyectos
+              descendientes.
+            </p>
+            <div class="text-red-500 md:mt-1"
+                 *ngIf="projectForm.get('leaders')?.errors?.['required'] && projectForm.get('leaders')?.touched">
+              * Agregar líderes es necesario para la creación del proyecto.
+            </div>
+            <h1 class=" text-l font-roboto font-extrabold mb-3 mt-3">
+              Miembros
+            </h1>
+            <app-search-select
+              selecting="members"
+            />
+          </form>
           <hr>
           <button
             *ngIf="store.project.id"
@@ -92,12 +94,19 @@ import { StoreService } from "../../store.service";
   `,
 })
 export class CreateEditPageComponent implements OnInit {
-  constructor(private api: ApiService, protected store: StoreService, private router: Router) {}
+  constructor(private api: ApiService, protected store: StoreService, private router: Router, private formBuilder: FormBuilder) {}
 
   showWarning = false;
   warningMessage = "";
   showLoading = false;
   loadingMessage = "";
+
+  projectForm: FormGroup = this.formBuilder.group({
+    name: ['', Validators.required],
+    description: ['', Validators.required],
+    leaders: ['', Validators.required],
+    members: [''],
+  });
 
   ngOnInit() {
     if (this.store.pageWasReloaded) {
@@ -112,16 +121,33 @@ export class CreateEditPageComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.store.project.name || !this.store.project.description) {
-      this.showWarning = true;
-      this.warningMessage = "Por favor, completa todos los campos requeridos.";
+    // Update leaders and members form controls with the latest values from StoreService
+    this.projectForm.patchValue({
+      leaders: this.store.project.leaders.map((leader) => leader.id).join(","), // Convert array of User objects to string of User IDs
+      members: this.store.project.members.map((member) => member.id).join(","), // Convert array of User objects to string of User IDs
+    });
+    console.log(this.projectForm.value);
+
+    Object.values(this.projectForm.controls).forEach(control => {
+      control.markAsTouched();
+    });
+
+
+    if (this.projectForm.invalid) {
+      console.log("Invalid form.");
       return;
     }
-    if (this.store.project.leaders.length == 0) {
-      this.showWarning = true;
-      this.warningMessage = "Por favor, selecciona al menos un lider.";
-      return;
-    }
+
+    // if (!this.store.project.name || !this.store.project.description) {
+    //   this.showWarning = true;
+    //   this.warningMessage = "Por favor, completa todos los campos requeridos.";
+    //   return;
+    // }
+    // if (this.store.project.leaders.length == 0) {
+    //   this.showWarning = true;
+    //   this.warningMessage = "Por favor, selecciona al menos un lider.";
+    //   return;
+    // }
 
     const onResponse = (response: Project) => {
       void this.router.navigateByUrl(`/project/${response.id}`);
