@@ -119,8 +119,6 @@ export class TaskCreateEditPageComponent implements OnInit {
     priority: [0],
     start_date: [this.today.toISOString().split('T')[0], Validators.required],
     due_date: ['', Validators.required],
-    parent_project: [''],
-    parent_task: [null],
     assignee: ['', Validators.required]
   });
 
@@ -145,8 +143,6 @@ export class TaskCreateEditPageComponent implements OnInit {
         priority: this.store.task.priority,
         start_date: this.store.task.startDate,
         due_date: this.store.task.dueDate,
-        parent_project: this.store.task.parentProject,
-        parent_task: this.store.task.parentTask,
         assignee: this.store.task.assignee
       });
     }
@@ -156,11 +152,16 @@ export class TaskCreateEditPageComponent implements OnInit {
   onSubmit() {
 
     this.taskForm.patchValue({
-      priority: this.store.task.priority,
-      parent_project: this.store.task.parentProject,
-      parent_task: this.store.task.parentTask,
       assignee: this.store.task.assignee
     });
+
+    this.store.task.name = this.taskForm.value.name;
+    this.store.task.description = this.taskForm.value.description;
+    this.store.task.priority = this.taskForm.value.priority;
+    this.store.task.startDate = this.taskForm.value.start_date;
+    this.store.task.dueDate = this.taskForm.value.due_date;
+
+
 
     Object.values(this.taskForm.controls).forEach(control => {
       control.markAsTouched();
@@ -170,7 +171,8 @@ export class TaskCreateEditPageComponent implements OnInit {
       return;
     }
     const onResponse = (response: Task) => {
-      void this.router.navigateByUrl(`/task/${response.id}`);
+      // void this.router.navigateByUrl(`/task/${response.id}`);
+      console.log(response);
     };
 
     if (!this.store.task.id) {
@@ -185,7 +187,7 @@ export class TaskCreateEditPageComponent implements OnInit {
     } else {
       this.loadingMessage = "Actualizando datos...";
       this.showLoading = true;
-
+      console.log(this.store.taskPostBody());
       this.api.put(`tasks/${this.store.task.id}/`, this.store.taskPostBody()).subscribe(onResponse, (error) => {
         this.warningMessage = "Error al actualizar la tarea. Por favor, inténtelo de nuevo. \n Procura que todos los campos estén completos.";
         this.showWarning = true;
