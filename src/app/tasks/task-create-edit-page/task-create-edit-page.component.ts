@@ -75,6 +75,10 @@ import {StoreService} from "../../store.service";
             class="textarea-md text-['#5CCEFF'] textarea-bordered w-1/2 h-40 md:m-0.5 rounded-box shadow-md"
           >
         </textarea>
+          <div class="text-red-500"
+               *ngIf="taskForm.get('description')?.errors?.['required'] && taskForm.get('description')?.touched">
+            * La descripción es obligatoria.
+          </div>
         </form>
         <div class="w-1/2 md:m-1">
           <h2 class="font-roboto font-bold mt-4 md:m-0.5">Asignado *</h2>
@@ -115,7 +119,7 @@ export class TaskCreateEditPageComponent implements OnInit {
 
   taskForm: FormGroup = this.formBuilder.group({
     name: ['', Validators.required],
-    description: [''],
+    description: ['', Validators.required],
     priority: [0],
     start_date: [this.today.toISOString().split('T')[0], Validators.required],
     due_date: ['', Validators.required],
@@ -171,8 +175,7 @@ export class TaskCreateEditPageComponent implements OnInit {
       return;
     }
     const onResponse = (response: Task) => {
-      // void this.router.navigateByUrl(`/task/${response.id}`);
-      console.log(response);
+      void this.router.navigateByUrl(`/task/${response.id}`);
     };
 
     if (!this.store.task.id) {
@@ -187,7 +190,7 @@ export class TaskCreateEditPageComponent implements OnInit {
     } else {
       this.loadingMessage = "Actualizando datos...";
       this.showLoading = true;
-      console.log(this.store.taskPostBody());
+      
       this.api.put(`tasks/${this.store.task.id}/`, this.store.taskPostBody()).subscribe(onResponse, (error) => {
         this.warningMessage = "Error al actualizar la tarea. Por favor, inténtelo de nuevo. \n Procura que todos los campos estén completos.";
         this.showWarning = true;

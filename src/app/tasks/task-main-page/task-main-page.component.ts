@@ -177,10 +177,8 @@ export class TaskMainPageComponent implements OnInit {
       .subscribe((response) => {
         this.store.updateTaskFromResponse(response)
         this.taskResponse = response;
-        console.log(this.taskResponse);
       });
 
-    console.log(this.store.task);
   }
 
   statusName(status: number) {
