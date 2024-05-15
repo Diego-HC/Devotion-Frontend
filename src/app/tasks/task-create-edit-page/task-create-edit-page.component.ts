@@ -1,161 +1,205 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from "@angular/router";
-import { ApiService } from "../../api.service";
-
-export interface Task {
-  name: string;
-  description?: string;
-  priority?: number;
-  start_date?: string;
-  due_date: string;
-  parent_project: string;
-  parent_task?: any;
-  asignee: any;
-}
+import {Component, OnInit} from '@angular/core';
+import {Router} from "@angular/router";
+import {FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl} from "@angular/forms";
+import {ApiService} from "../../api.service";
+import {StoreService} from "../../store.service";
 
 @Component({
   selector: 'app-task-create-edit-page',
   template: `
-    <div class="overflow-x-auto mx-32">
-      <div class="bg-white py-8 rounded-lg">
+    <app-loading *ngIf="showLoading" [message]="loadingMessage"/>
+    <div class="mx-32" *ngIf="!showLoading && (store.membersPool.length > 0)">
+      <div>
         <h2 class="font-roboto font-bold">
-          Nueva Tarea
+          {{ store.task.id ? 'Editar Tarea *' : 'Nueva Tarea *' }}
         </h2>
-        <div class="flex flex-row items-center mt-2 gap-4">
-          <input type="text"
-                 class="input-md input-bordered input-['#5CCEFF'] md:w-5/12 text-3xl font-helvetica rounded-box font-bold shadow-md"
-                 [(ngModel)]="taskData.name" (ngModelChange)="taskData.name = $event"/>
-          <div class="flex flex-col items-center">
-            <button (click)="onSubmit()" class="btn-circle items-center justify-center"
-                    style="background-color: #2A4365">+
-            </button>
-            <p class="text-xs font-robotoCondensed">Publicar</p>
-          </div>
-        </div>
-        <div class="flex flex-row items-center mt-2 gap-8">
-          <div class="flex flex-col items-center">
-            <h2 class="font-roboto font-bold">Fecha Inicio</h2>
-            <input type="date" class="input-md input-bordered input-['#5CCEFF'] md:w-40 font-helvetica font-bold"
-                   [(ngModel)]="taskData.start_date" (ngModelChange)="taskData.start_date = $event"/>
-          </div>
-          <div class="flex flex-col items-center">
-            <h2 class="font-roboto font-bold">Fecha Fin</h2>
-            <input type="date" class="input-md input-bordered input-['#5CCEFF'] md:w-40 font-helvetica font-bold"
-                   [(ngModel)]="taskData.due_date" (ngModelChange)="taskData.due_date = $event"/>
-          </div>
-          <div class="flex flex-col items-center">
-            <h2 class="font-roboto font-bold">Prioridad</h2>
-            <div class="dropdown dropdown-right">
-              <div tabindex="0" role="button" class="btn m-1">{{ selectedPriority }}</div>
-              <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                <li><a (click)="updatePriority('Baja')">Baja</a></li>
-                <li><a (click)="updatePriority('Media')">Media</a></li>
-                <li><a (click)="updatePriority('Alta')">Alta</a></li>
-              </ul>
+        <form [formGroup]="taskForm" class="mt-4">
+          <div class="flex flex-row items-center mt-2 gap-4">
+            <input type="text"
+                   formControlName="name"
+                   required
+                   class="input-md input-bordered input-['#5CCEFF'] md:w-5/12 md:m-0.5 text-3xl font-helvetica rounded-box font-bold shadow-md"
+            />
+            <div class="flex flex-col items-center">
+              <button
+                (click)="onSubmit()"
+                class="bg-devotionPrimary btn-circle flex items-center justify-center mt-4 w-12 h-12"
+              >
+                <app-checkmark-icon />
+              </button>
+              <p class="text-xs font-robotoCondensed">Publicar</p>
             </div>
           </div>
-        </div>
-        <h2 class="font-roboto font-bold mt-4">Descripción</h2>
-        <textarea class="textarea-md text-['#5CCEFF'] textarea-bordered w-1/2 h-40 rounded-box shadow-md"
-                  [(ngModel)]="taskData.description"
-                  (ngModelChange)="taskData.description = $event">
+          <div class="flex flex-row items-center mt-2 gap-8">
+            <div class="flex flex-col items-center">
+              <h2 class="font-roboto font-bold">Fecha Inicio</h2>
+              <input type="date"
+                     formControlName="start_date"
+                     class="input-md input-bordered input-['#5CCEFF'] md:w-40 font-helvetica font-bold"
+              />
+            </div>
+            <div class="flex flex-col items-center">
+              <h2 class="font-roboto font-bold">Fecha Fin *</h2>
+              <input type="date"
+                     formControlName="due_date"
+                     class="input-md input-bordered input-['#5CCEFF'] md:w-40 font-helvetica font-bold"
+              />
+            </div>
+            <div class="flex flex-col items-center">
+              <h2 class="font-roboto font-bold">Prioridad *</h2>
+              <div class="dropdown dropdown-right">
+                <div tabindex="0" role="button" class="btn m-1">{{ selectedPriority }}</div>
+                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box">
+                  <li><button (click)="updatePriority('Baja')">
+                    <app-priority-icon
+                      class="pr-6"
+                      [priority]="0"
+                      [animated]="false"
+                    />
+                  </button></li>
+                  <li><button (click)="updatePriority('Media')">
+                    <app-priority-icon
+                      class="pr-6"
+                      [priority]="1"
+                      [animated]="false"
+                    />
+                  </button></li>
+                  <li><button (click)="updatePriority('Alta')">
+                    <app-priority-icon
+                      class="pr-6"
+                      [priority]="2"
+                      [animated]="false"
+                    />
+                  </button></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <h2 class="font-roboto font-bold mt-4 md:m-0.5">Descripción</h2>
+          <textarea
+            formControlName="description"
+            class="textarea-md text-['#5CCEFF'] textarea-bordered w-1/2 h-40 md:m-0.5 rounded-box shadow-md"
+          >
         </textarea>
-        <div class="w-1/2">
-          <h2 class="font-roboto font-bold mt-4">Asignado</h2>
-          <app-search-select [projectId]="parentProject" [singleSelectedMode]="true"
-                             (selectedMembersOutput)="onMembersSelected($event)"></app-search-select>
-        </div>
-        <app-alert *ngIf="!tasksResponse" [showWarning]="showWarning" [message]="warningMessage"></app-alert>
+          <div class="w-1/2 md:m-1">
+            <h2 class="font-roboto font-bold mt-4 md:m-0.5">Asignado *</h2>
+            <app-search-select selecting="assignee"/>
+          </div>
+        </form>
+        <hr class="w-1/2 md:m-1">
+        <button
+          *ngIf="store.task.id"
+          (click)="store.showConfirmDeletion = true"
+          class="text-cardRed border border-cardRed bg-white text-sm font-roboto font-bold py-2 px-4 rounded-lg mt-4"
+        >
+          Eliminar Tarea
+        </button>
+        <app-confirm-deletion
+          *ngIf="store.showConfirmDeletion"
+          [deletingTask]="true"
+        />
+        <app-alert *ngIf="showWarning" [message]="warningMessage"/>
       </div>
+      <br/><br/><br/><br/><br/><br/><br/>ㅤ
     </div>
   `
 })
 export class TaskCreateEditPageComponent implements OnInit {
-  constructor(private api: ApiService, private route: ActivatedRoute, private router: Router) { }
-
-  tasksResponse: any;
-  taskData: Task = {
-    name: '',
-    description: '',
-    priority: 0,
-    start_date: '',
-    due_date: '',
-    parent_project: '',
-    parent_task: null,
-    asignee: ''
-  };
-
-  parentProject: string = '';
-  showWarning: boolean = false;
-  warningMessage: string = '';
-  isSubtask: boolean = false;
-
-  parentTaskIdInfo: string = '';
-
-  onMembersSelected(members: string[]) {
-    this.taskData.asignee = members[0];
+  constructor(private api: ApiService, private router: Router, protected store: StoreService, private formBuilder: FormBuilder) {
   }
 
-  // Get the parent task info if the task is a subtask of another task
-  taskInfo() {
-    // Get the parent task id from the URL
-    this.route.queryParams.subscribe(params => {
-      this.parentTaskIdInfo = params['Parent'];
-    });
-    // If the task is a subtask, get the parent task info
-    this.api.get(`tasks/${this.parentTaskIdInfo}`).subscribe((response) => {
-      if (response.parent_task == null) { // if the parent_task is null, the task is a subtask of a PROJECT
-        this.isSubtask = true;
-        this.parentProject = response.parentProject;
-        this.taskData.parent_task = response.id;
-      }
-      else if (response.parentTask) { // if the parentTask is not null, the task is a subtask of another TASK
-        this.isSubtask = true;
-        this.parentProject = response.parentProject;
-        this.taskData.parent_task = response.parentTask;
-      }
-    });
-  }
+  showWarning = false;
+  warningMessage = '';
+  showLoading = false;
+  loadingMessage = '';
+  selectedPriority = 'Baja';
 
-  // Call the function when the component is initialized
+  taskForm: FormGroup = this.formBuilder.group({
+    name: ['', Validators.required],
+    description: [''],
+    priority: [0],
+    start_date: [''],
+    due_date: ['', Validators.required],
+    parent_project: [''],
+    parent_task: [null],
+    assignee: ['', Validators.required]
+  });
+
   ngOnInit() {
-    this.taskInfo();
+    // return;
+    if (this.store.pageWasReloaded) {
+      void this.router.navigateByUrl("/home");
+      return;
+    }
+    if (this.store.membersPool.length == 0) {
+      this.api.get(
+        `projects/${this.store.task.parentProject}/members/`
+      ).subscribe((members) => {
+        this.store.membersPool = members;
+      });
+    }
+
+    // If editing existing task, populate form with existing task data
+    if (this.store.task.id) {
+      this.taskForm.patchValue({
+        name: this.store.task.name,
+        description: this.store.task.description,
+        priority: this.store.task.priority,
+        start_date: this.store.task.startDate,
+        due_date: this.store.task.dueDate,
+        parent_project: this.store.task.parentProject,
+        parent_task: this.store.task.parentTask,
+        assignee: this.store.task.assignee
+      });
+    }
+
   }
 
   onSubmit() {
-    let priorityValue: number;
-    switch (this.selectedPriority) {
-      case 'Baja':
-        priorityValue = 0;
-        break;
-      case 'Media':
-        priorityValue = 1;
-        break;
-      case 'Alta':
-        priorityValue = 2;
-        break;
-      default:
-        priorityValue = -1; // Default value if priority is not recognized
+    if (this.taskForm.invalid) {
+      // Mark all fields as touched to trigger validation messages
+      this.taskForm.markAllAsTouched();
+      return;
     }
+    const onResponse = (response: Task) => {
+      void this.router.navigateByUrl(`/task/${response.id}`);
+    };
 
-    this.taskData.priority = priorityValue;
-    this.taskData.parent_project = this.parentProject;
+    if (!this.store.task.id) {
+      this.loadingMessage = "Creando tarea...";
+      this.showLoading = true;
 
-    this.api.post('tasks/', this.taskData).subscribe((response) => {
-        this.tasksResponse = response;
-        this.router.navigateByUrl(`/task/${this.tasksResponse.id}`)
-    },
-      (error) => {
-        this.showWarning = true;
+      this.api.post('tasks/', this.store.taskPostBody()).subscribe(onResponse, (error) => {
         this.warningMessage = "Error al crear la tarea. Por favor, inténtelo de nuevo. \n Procura que todos los campos estén completos.";
-        console.log(error);
-      }
-    );
-  }
+        this.showWarning = true;
+        this.showLoading = false;
+      });
+    } else {
+      this.loadingMessage = "Actualizando datos...";
+      this.showLoading = true;
 
-  selectedPriority: string = 'Baja';
+      this.api.put(`tasks/${this.store.task.id}/`, this.store.taskPostBody()).subscribe(onResponse, (error) => {
+        this.warningMessage = "Error al actualizar la tarea. Por favor, inténtelo de nuevo. \n Procura que todos los campos estén completos.";
+        this.showWarning = true;
+        this.showLoading = false;
+      });
+    }
+  }
 
   updatePriority(priority: string) {
     this.selectedPriority = priority;
+    switch (this.selectedPriority) {
+      case 'Baja':
+        this.store.task.priority = 0;
+        break;
+      case 'Media':
+        this.store.task.priority = 1;
+        break;
+      case 'Alta':
+        this.store.task.priority = 2;
+        break;
+      default:
+        this.store.task.priority = 0;
+    }
   }
 }

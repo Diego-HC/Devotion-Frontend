@@ -9,6 +9,7 @@ import { CreateEditPageComponent } from "./projects/create-edit-page/create-edit
 import { TaskCreateEditPageComponent } from "./tasks/task-create-edit-page/task-create-edit-page.component";
 import { DashboardMainPageComponent } from "./dashboards/dashboard-main-page/dashboard-main-page.component";
 import { DataSourcesMainPageComponent } from "./dashboards/dataSources/data-sources-main-page/data-sources-main-page.component";
+import { ProjectMembersPageComponent } from "./projects/project-members-page/project-members-page.component";
 
 const routes: Routes = [
   { path: "", component: LandingPageComponent },
@@ -46,12 +47,16 @@ const routes: Routes = [
     component: TaskCreateEditPageComponent,
   },
   {
-    path: "edit/project/:id",
+    path: "edit/project",
     component: CreateEditPageComponent,
   },
   {
-    path: "edit/task/:id",
+    path: "edit/task",
     component: TaskCreateEditPageComponent,
+  },
+  {
+    path: "project/:id/members",
+    component: ProjectMembersPageComponent,
   },
   {
     path: "",
