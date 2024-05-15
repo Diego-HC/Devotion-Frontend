@@ -1,7 +1,8 @@
 import { Component, DoCheck, OnInit } from "@angular/core";
 import { SessionStorageService } from "../../session-storage.service";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { ApiService } from "../../api.service";
+import { StoreService } from "../../store.service";
 
 @Component({
   selector: "app-dashboard-main-page",
@@ -26,11 +27,11 @@ import { ApiService } from "../../api.service";
             >Ir a proyecto</span
           >
         </a>
-        <a routerLink="/dashboard/{{ id }}/dataSources">
+        <button (click)="viewDataSources()">
           <span class="font-bold hover:underline text-base text-devotionAccent"
             >Ver entradas de datos</span
           >
-        </a>
+        </button>
       </div>
 
       <div class="grid grid-cols-2 gap-4 w-full mt-2 mb-6">
@@ -50,7 +51,7 @@ import { ApiService } from "../../api.service";
         }
         <div class="w-52 h-52 grid" [ngClass]="{ hidden: !isEditing }">
           <div
-            class="grid place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow place-self-center w-24 h-24 hover:cursor-pointer"
+            class="grid place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow place-self-center size-24 hover:cursor-pointer"
             (click)="modal?.showModal()"
           >
             <app-plus-icon
@@ -90,7 +91,9 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
   constructor(
     protected storage: SessionStorageService,
     private route: ActivatedRoute,
-    protected api: ApiService
+    protected api: ApiService,
+    private store: StoreService,
+    private router: Router,
   ) {}
 
   fetchApi = () => {
@@ -125,4 +128,11 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
   startEdit = () => {
     this.isEditing = !this.isEditing;
   };
+
+  viewDataSources() {
+    this.store.dataSources = this.dataSources;
+    this.store.project.id = this.id;
+    console.log("View members", this.store.dataSources, this.store.project.id);
+    void this.router.navigateByUrl(`/dashboard/${this.id}/dataSources`);
+  }
 }

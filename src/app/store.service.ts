@@ -14,6 +14,8 @@ export class StoreService {
   pageWasReloaded = true;
   showConfirmDeletion = false;
 
+  dataSources?: DataSource[];
+
   clearProject(parent = "") {
     this.project = {
       id: "",
