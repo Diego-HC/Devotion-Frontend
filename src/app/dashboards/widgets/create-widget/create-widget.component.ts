@@ -29,7 +29,7 @@ interface DataSource {
             class="col-span-1 rounded-md border-2 flex flex-col justify-between"
           >
             <form [formGroup]="widgetForm" class="p-4">
-              <label for="widget-name">Widget Name: </label>
+              <label for="widget-name">Nombre: </label>
               <input
                 id="widget-name"
                 type="text"
@@ -38,7 +38,7 @@ interface DataSource {
                 class="border-2 rounded-md px-2 py-1 my-1 w-full"
               />
 
-              <label for="widget-display-type">Display Type: </label>
+              <label for="widget-display-type">Tipo de widget: </label>
               <select
                 id="widget-display-type"
                 formControlName="displayType"
@@ -51,28 +51,21 @@ interface DataSource {
                 }
               </select>
 
-              <label for="widget-data-source">Data Source: </label>
+              <label for="widget-data-source">Fuente de datos: </label>
               <select
                 id="widget-data-source"
                 formControlName="dataSource"
                 required
                 class="border-2 rounded-md px-2 py-1 my-1 w-full bg-white"
               >
-                <option
-                  class="text-sm bg-slate-50"
-                  value="b85d5997-835f-4758-a62b-de07d61650d6"
-                >
-                  Sensor Temperatura 1
+                @for (dataSource of dataSources; track $index) {
+                <option class="text-sm bg-slate-50" [value]="dataSource.id">
+                  {{ dataSource.name }}
                 </option>
-                <option
-                  class="text-sm bg-slate-50"
-                  value="b85d5997-835f-4758-a62b-de07d61650d6"
-                >
-                  Sensor Temperatura 2
-                </option>
+                }
               </select>
 
-              <label for="widget-unit">Unit: </label>
+              <label for="widget-unit">Unidad: </label>
               <input
                 id="widget-unit"
                 type="text"
@@ -82,12 +75,36 @@ interface DataSource {
               />
             </form>
 
+            @if (isCreating) {
+            <button
+              class="btn btn-primary bg-accent hover:bg-accentSecondary mx-auto mb-8"
+              disabled
+            >
+              <svg class="mr-3 h-5 w-5 animate-spin" viewBox="0 0 24 24">
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V4a10 10 0 00-10 10h2zm2 0a6 6 0 016-6V4a8 8 0 00-8 8h2zm2 0a4 4 0 014-4V4a6 6 0 00-6 6h2zm2 0a2 2 0 012-2V4a4 4 0 00-4 4h2z"
+                />
+              </svg>
+              Procesando
+            </button>
+            } @else {
             <button
               class="btn bg-devotionPrimary text-white hover:bg-sky-800 mx-auto mb-8"
               (click)="onSubmit()"
             >
-              Close
+              Crear widget
             </button>
+            }
           </div>
           <div
             class="col-span-3 rounded-md border-2 p-4 items-center flex flex-col"
@@ -119,12 +136,16 @@ export class CreateWidgetComponent implements OnInit {
   @Input() modal: HTMLDialogElement | null = null;
   @Input() position = 0;
   @Input() projectId = "";
+  @Input() dataSources: DataSource[] = [];
+  @Input() fetchApi: () => void = () => {};
 
   widgetDisplayType = WidgetDisplayType;
 
   displayTypeOptions = Object.keys(this.widgetDisplayType)
     .filter((option) => isNaN(Number(option)))
     .map((option) => option.split("_").join(" "));
+
+  isCreating = false;
 
   constructor(private formBuilder: FormBuilder, protected api: ApiService) {}
 
@@ -134,8 +155,6 @@ export class CreateWidgetComponent implements OnInit {
     dataSource: ["", Validators.required],
     unit: ["", Validators.required],
   });
-
-  dataSources?: DataSource[];
 
   ngOnInit(): void {
     this.widgetForm.controls.displayType.valueChanges.subscribe((value) => {
@@ -153,6 +172,8 @@ export class CreateWidgetComponent implements OnInit {
       return;
     }
 
+    this.isCreating = true;
+
     const widgetBody = {
       ...this.widgetForm.value,
       display_type: this.widgetForm.value.displayType,
@@ -163,8 +184,9 @@ export class CreateWidgetComponent implements OnInit {
 
     this.api.post("widgets/", widgetBody).subscribe((response) => {
       console.log(response);
+      this.isCreating = false;
+      this.modal?.close();
+      this.fetchApi();
     });
-
-    this.modal?.close();
   }
 }

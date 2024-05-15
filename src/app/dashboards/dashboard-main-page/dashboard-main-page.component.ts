@@ -2,7 +2,6 @@ import { Component, DoCheck, OnInit } from "@angular/core";
 import { SessionStorageService } from "../../session-storage.service";
 import { ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
-import { WidgetDisplayType } from "../widgets/widget-display-type";
 
 @Component({
   selector: "app-dashboard-main-page",
@@ -17,22 +16,34 @@ import { WidgetDisplayType } from "../widgets/widget-display-type";
           <app-projects-icon fill="#000000" width="60" height="60" />
         </button>
       </div>
-      <a href="{{ '/project/' + id }}" class="flex flex-row items-center gap-2">
-        <app-projects-icon fill="#5CCEFF" width="25" height="25" />
-        <span class="font-bold hover:underline text-base text-devotionAccent"
-          >Ir a proyecto</span
+      <div class="flex items-center gap-4">
+        <a
+          href="{{ '/project/' + id }}"
+          class="flex flex-row items-center gap-2"
         >
-      </a>
+          <app-projects-icon fill="#5CCEFF" width="25" height="25" />
+          <span class="font-bold hover:underline text-base text-devotionAccent"
+            >Ir a proyecto</span
+          >
+        </a>
+        <a routerLink="/dashboard/{{ id }}/dataSources">
+          <span class="font-bold hover:underline text-base text-devotionAccent"
+            >Ver entradas de datos</span
+          >
+        </a>
+      </div>
+
       <div class="grid grid-cols-2 gap-4 w-full mt-2 mb-6">
-        <div class="">
+        <div>
           <h3 class="font-bold mb-1.5">Tus tareas por completar</h3>
           <app-dashboard-task-list [tasks]="tasksToDo" />
         </div>
-        <div class="">
+        <div>
           <h3 class="font-bold mb-1.5">Tus tareas en verificación</h3>
           <app-dashboard-task-list [tasks]="tasksToVerify" />
         </div>
       </div>
+
       <div class="flex flex-wrap gap-x-8 gap-y-6 mb-10">
         @for(widget of widgets; track $index) {
         <app-widget [widget]="widget" />
@@ -51,7 +62,13 @@ import { WidgetDisplayType } from "../widgets/widget-display-type";
         </div>
       </div>
 
-      <app-create-widget [modal]="modal" [projectId]="id" [position]="widgets.length" />
+      <app-create-widget
+        [modal]="modal"
+        [projectId]="id"
+        [position]="widgets.length"
+        [dataSources]="dataSources"
+        [fetchApi]="fetchApi"
+      />
     </div>
     } @else {
     <app-loading />
@@ -64,6 +81,7 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
   widgets?: Widget[];
   id = "";
   projectName = "";
+  dataSources: DataSource[] = [];
 
   modal: HTMLDialogElement | null = null;
 
@@ -75,22 +93,24 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
     protected api: ApiService
   ) {}
 
+  fetchApi = () => {
+    this.api.get(`dashboards/${this.id}/`).subscribe((response: Dashboard) => {
+      console.log(response);
+
+      this.projectName = response.projectName;
+      this.tasksToDo = response.tasksToDo;
+      this.tasksToVerify = response.tasksToVerify;
+      this.widgets = response.widgets;
+      this.widgets.sort((a, b) => a.position - b.position);
+      this.dataSources = response.dataSources;
+    });
+  };
+
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.id = params["id"];
-      console.log(this.id);
 
-      this.api
-        .get(`dashboards/${this.id}/`)
-        .subscribe((response: Dashboard) => {
-          console.log(response);
-
-          this.projectName = response.projectName;
-          this.tasksToDo = response.tasksToDo;
-          this.tasksToVerify = response.tasksToVerify;
-          this.widgets = response.widgets;
-          this.widgets.sort((a, b) => a.position - b.position);
-        });
+      this.fetchApi();
     });
   }
 

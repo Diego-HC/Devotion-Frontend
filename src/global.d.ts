@@ -67,6 +67,12 @@ declare global {
     parentProject: string;
   };
 
+  interface DataSource {
+    id: string;
+    name: string;
+    mqttTopic: string;
+  }
+
   interface Widget {
     id: string;
     name: string;
@@ -82,6 +88,7 @@ declare global {
     tasksToVerify: TaskDashboard[];
 
     widgets: Widget[];
+    dataSources: DataSource[];
   }
 }
 
