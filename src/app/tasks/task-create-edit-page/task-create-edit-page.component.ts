@@ -100,6 +100,7 @@ import {StoreService} from "../../store.service";
           *ngIf="store.showConfirmDeletion"
           [deletingTask]="true"
         />
+        <div class="md:mt-3"></div>
         <app-alert *ngIf="showWarning" [message]="warningMessage"/>
       </div>
       <br/><br/><br/><br/><br/><br/><br/>ㅤ
@@ -178,24 +179,27 @@ export class TaskCreateEditPageComponent implements OnInit {
       void this.router.navigateByUrl(`/task/${response.id}`);
     };
 
+    // Error handling function
+    const onError = (errorResponse: any) => {
+      if (errorResponse.error && errorResponse.error.message) {
+        this.warningMessage = errorResponse.error.message;
+      } else {
+        this.warningMessage = "Error al realizar la solicitud. Por favor, inténtelo de nuevo.";
+      }
+      this.showWarning = true;
+      this.showLoading = false;
+    };
+
     if (!this.store.task.id) {
       this.loadingMessage = "Creando tarea...";
       this.showLoading = true;
 
-      this.api.post('tasks/', this.store.taskPostBody()).subscribe(onResponse, (error) => {
-        this.warningMessage = "Error al crear la tarea. Por favor, inténtelo de nuevo. \n Procura que todos los campos estén completos.";
-        this.showWarning = true;
-        this.showLoading = false;
-      });
+      this.api.post('tasks/', this.store.taskPostBody()).subscribe(onResponse, onError);
     } else {
       this.loadingMessage = "Actualizando datos...";
       this.showLoading = true;
-      
-      this.api.put(`tasks/${this.store.task.id}/`, this.store.taskPostBody()).subscribe(onResponse, (error) => {
-        this.warningMessage = "Error al actualizar la tarea. Por favor, inténtelo de nuevo. \n Procura que todos los campos estén completos.";
-        this.showWarning = true;
-        this.showLoading = false;
-      });
+
+      this.api.put(`tasks/${this.store.task.id}/`, this.store.taskPostBody()).subscribe(onResponse, onError);
     }
   }
 

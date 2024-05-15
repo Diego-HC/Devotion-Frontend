@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {error} from "@angular/compiler-cli/src/transformers/util";
 
 @Component({
   selector: "app-create-edit-page",
@@ -84,6 +85,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
           <app-confirm-deletion
             *ngIf="store.showConfirmDeletion"
           />
+          <div class="md:mt-3"></div>
           <app-alert
             *ngIf="showWarning"
             [message]="warningMessage"
@@ -165,6 +167,17 @@ export class CreateEditPageComponent implements OnInit {
       void this.router.navigateByUrl(`/project/${response.id}`);
     };
 
+    // Error handling function
+    const onError = (errorResponse: any) => {
+      if (errorResponse.error && errorResponse.error.message) {
+        this.warningMessage = errorResponse.error.message;
+      } else {
+        this.warningMessage = "Error al realizar la solicitud. Por favor, inténtelo de nuevo.";
+      }
+      this.showWarning = true;
+      this.showLoading = false;
+    };
+
     // Crear proyecto
     if (!this.store.project.id) {
       if (this.store.project.parent) {
@@ -177,24 +190,14 @@ export class CreateEditPageComponent implements OnInit {
       }
       this.showLoading = true;
 
-      this.api.post("projects/", this.store.projectPostBody()).subscribe(onResponse, (_) => {
-        this.warningMessage =
-          "Error al crear el proyecto. Por favor, inténtelo de nuevo.";
-        this.showWarning = true;
-        this.showLoading = false;
-      });
+      this.api.post("projects/", this.store.projectPostBody()).subscribe(onResponse, onError);
 
     // Editar proyecto
     } else {
       this.loadingMessage = "Actualizando datos...";
       this.showLoading = true;
 
-      this.api.put(`projects/${this.store.project.id}/`, this.store.projectPostBody()).subscribe(onResponse, (_) => {
-        this.warningMessage =
-          "Error al editar el proyecto. Por favor, inténtelo de nuevo.";
-        this.showWarning = true;
-        this.showLoading = false;
-      });
+      this.api.put(`projects/${this.store.project.id}/`, this.store.projectPostBody()).subscribe(onResponse, onError);
     }
   }
 }
