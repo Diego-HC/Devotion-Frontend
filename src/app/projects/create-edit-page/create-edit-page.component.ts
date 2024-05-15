@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {error} from "@angular/compiler-cli/src/transformers/util";
 
 @Component({
   selector: "app-create-edit-page",
@@ -10,67 +12,68 @@ import { StoreService } from "../../store.service";
     <div class="px-16" *ngIf="!showLoading && (store.membersPool.length > 0)">
       <div class="flex justify-center items-center">
         <div class="px-12 lg:w-1/2 py-10">
-          <h1 class=" text-l font-roboto font-extrabold">{{ store.project.id ? 'Editar Proyecto' : 'Nuevo Proyecto *' }}</h1>
-          <div class="flex flex-row flex-grow items-center justify-center">
-            <input
-              type="text"
-              class="input input-bordered flex-grow mr-4 shadow-md font-helvetica font-bold text-3xl"
-              [(ngModel)]="store.project.name"
-              #name="ngModel"
-              name="name"
-              required
-            />
-            <div class="flex flex-col items-center">
-              <button
-                (click)="onSubmit()"
-                class="bg-devotionPrimary btn-circle flex items-center justify-center mt-4 w-12 h-12"
-              >
-                <app-checkmark-icon />
-              </button>
-              <p class="text-xs font-robotoCondensed">Publicar</p>
+          <h1
+            class=" text-l font-roboto font-extrabold">{{ store.project.id ? 'Editar Proyecto' : 'Nuevo Proyecto *' }}</h1>
+          <form [formGroup]="projectForm">
+            <div class="flex flex-row flex-grow items-center justify-center">
+              <input
+                type="text"
+                formControlName="name"
+                required
+                class="input input-bordered flex-grow mr-4 shadow-md font-helvetica font-bold text-3xl"
+              />
+              <div class="flex flex-col items-center">
+                <button
+                  type="submit"
+                  (click)="onSubmit()"
+                  class="bg-devotionPrimary btn-circle items-center justify-center mt-4 text-white font-bold font-helvetica text-3xl w-12 h-12"
+                >
+                  +
+                </button>
+                <p class="text-xs font-robotoCondensed">Publicar</p>
+              </div>
             </div>
-          </div>
-          <div
-            *ngIf="name.invalid && name.touched"
-            class="text-red-500 text-xs -mt-3"
-          >
-            * El nombre del proyecto es obligatorio.
-          </div>
-
-          <div class="flex flex-col flex-grow justify-center">
-            <h1 class=" text-l font-roboto font-extrabold mb-3">
-              Descripción *
+            <div class="text-red-500 md:mb-1"
+                 *ngIf="projectForm.get('name')?.errors?.['required'] && projectForm.get('name')?.touched">
+              * El nombre del proyecto es obligatorio.
+            </div>
+            <div class="flex flex-col flex-grow justify-center">
+              <h1 class=" text-l font-roboto font-extrabold mb-3">
+                Descripción *
+              </h1>
+              <textarea
+                rows="4"
+                formControlName="description"
+                required
+                class="textarea textarea-bordered mr-4 shadow-md font-robotoCondensed text-s w-full min-h-10"
+              ></textarea>
+            </div>
+            <div class="text-red-500 md:mt-1"
+                 *ngIf="projectForm.get('description')?.errors?.['required'] && projectForm.get('description')?.touched">
+              * La descripción del proyecto es obligatoria.
+            </div>
+            <h1 class="text-l font-roboto font-extrabold mb-3 mt-3">
+              Líderes *
             </h1>
-            <textarea
-              rows="4"
-              class="textarea textarea-bordered mr-4 shadow-md font-robotoCondensed text-s w-full min-h-10"
-              [(ngModel)]="store.project.description"
-              #desc="ngModel"
-              desc="desc"
-              required
-            ></textarea>
-          </div>
-          <div
-            *ngIf="desc.invalid && desc.touched"
-            class="text-red-500 text-xs mt-1"
-          >
-            * La descripción del proyecto es obligatoria.
-          </div>
-          <h1 class="text-l font-roboto font-extrabold mb-3 mt-3">
-            Líderes
-          </h1>
-          <app-search-select
-            selecting="leaders"
-          />
-          <p class="text-xs font-robotoCondensed text-[#5E6377] -mt-3">
-            La persona líder será quien valide las tareas de este subproyecto.
-            También podrá validar tareas de todos los subproyectos
-            descendientes.
-          </p>
-          <h1 class=" text-l font-roboto font-extrabold mb-3 mt-3">Miembros</h1>
-          <app-search-select
-            selecting="members"
-          />
+            <app-search-select
+              selecting="leaders"
+            />
+            <p class="text-xs font-robotoCondensed text-[#5E6377] -mt-3">
+              La persona líder será quien valide las tareas de este subproyecto.
+              También podrá validar tareas de todos los subproyectos
+              descendientes.
+            </p>
+            <div class="text-red-500 md:mt-1"
+                 *ngIf="projectForm.get('leaders')?.errors?.['required'] && projectForm.get('leaders')?.touched">
+              * Agregar líderes es necesario para la creación del proyecto.
+            </div>
+            <h1 class=" text-l font-roboto font-extrabold mb-3 mt-3">
+              Miembros
+            </h1>
+            <app-search-select
+              selecting="members"
+            />
+          </form>
           <hr>
           <button
             *ngIf="store.project.id"
@@ -82,6 +85,7 @@ import { StoreService } from "../../store.service";
           <app-confirm-deletion
             *ngIf="store.showConfirmDeletion"
           />
+          <div class="md:mt-3"></div>
           <app-alert
             *ngIf="showWarning"
             [message]="warningMessage"
@@ -92,12 +96,19 @@ import { StoreService } from "../../store.service";
   `,
 })
 export class CreateEditPageComponent implements OnInit {
-  constructor(private api: ApiService, protected store: StoreService, private router: Router) {}
+  constructor(private api: ApiService, protected store: StoreService, private router: Router, private formBuilder: FormBuilder) {}
 
   showWarning = false;
   warningMessage = "";
   showLoading = false;
   loadingMessage = "";
+
+  projectForm: FormGroup = this.formBuilder.group({
+    name: ['', Validators.required],
+    description: ['', Validators.required],
+    leaders: ['', Validators.required],
+    members: [''],
+  });
 
   ngOnInit() {
     if (this.store.pageWasReloaded) {
@@ -109,9 +120,38 @@ export class CreateEditPageComponent implements OnInit {
         this.store.membersPool = users;
       });
     }
+
+    // If editing existing project, populate form with existing project data
+    if(this.store.project.id) {
+      this.projectForm.patchValue({
+        name: this.store.project.name,
+        description: this.store.project.description,
+        leaders: this.store.project.leaders,
+        members: this.store.project.members,
+      });
+    }
   }
 
   onSubmit() {
+
+    this.projectForm.patchValue({
+      leaders: this.store.project.leaders,
+      members: this.store.project.members,
+    });
+
+    this.store.project.name = this.projectForm.value.name;
+    this.store.project.description = this.projectForm.value.description;
+
+    Object.values(this.projectForm.controls).forEach(control => {
+      control.markAsTouched();
+    });
+
+
+    if (this.projectForm.invalid) {
+      console.log("Invalid form.");
+      return;
+    }
+
     if (!this.store.project.name || !this.store.project.description) {
       this.showWarning = true;
       this.warningMessage = "Por favor, completa todos los campos requeridos.";
@@ -127,6 +167,17 @@ export class CreateEditPageComponent implements OnInit {
       void this.router.navigateByUrl(`/project/${response.id}`);
     };
 
+    // Error handling function
+    const onError = (errorResponse: any) => {
+      if (errorResponse.error && errorResponse.error.message) {
+        this.warningMessage = errorResponse.error.message;
+      } else {
+        this.warningMessage = "Error al realizar la solicitud. Por favor, inténtelo de nuevo.";
+      }
+      this.showWarning = true;
+      this.showLoading = false;
+    };
+
     // Crear proyecto
     if (!this.store.project.id) {
       if (this.store.project.parent) {
@@ -139,24 +190,14 @@ export class CreateEditPageComponent implements OnInit {
       }
       this.showLoading = true;
 
-      this.api.post("projects/", this.store.projectPostBody()).subscribe(onResponse, (_) => {
-        this.warningMessage =
-          "Error al crear el proyecto. Por favor, inténtelo de nuevo.";
-        this.showWarning = true;
-        this.showLoading = false;
-      });
+      this.api.post("projects/", this.store.projectPostBody()).subscribe(onResponse, onError);
 
     // Editar proyecto
     } else {
       this.loadingMessage = "Actualizando datos...";
       this.showLoading = true;
 
-      this.api.put(`projects/${this.store.project.id}/`, this.store.projectPostBody()).subscribe(onResponse, (_) => {
-        this.warningMessage =
-          "Error al editar el proyecto. Por favor, inténtelo de nuevo.";
-        this.showWarning = true;
-        this.showLoading = false;
-      });
+      this.api.put(`projects/${this.store.project.id}/`, this.store.projectPostBody()).subscribe(onResponse, onError);
     }
   }
 }

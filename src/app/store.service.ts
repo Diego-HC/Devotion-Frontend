@@ -77,7 +77,7 @@ export class StoreService {
   taskPostBody(): TaskPostBody {
     return {
       ...this.task,
-      description: this.task.description || undefined,
+      description: this.task.description,
       start_date: this.task.startDate,
       due_date: this.task.dueDate,
       assignee: this.task.assignee.id,

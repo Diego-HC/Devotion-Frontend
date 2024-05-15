@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
-import {FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ApiService} from "../../api.service";
 import {StoreService} from "../../store.service";
 
@@ -30,6 +30,10 @@ import {StoreService} from "../../store.service";
               <p class="text-xs font-robotoCondensed">Publicar</p>
             </div>
           </div>
+          <div class="text-red-500"
+               *ngIf="taskForm.get('name')?.errors?.['required'] && taskForm.get('name')?.touched">
+            * El nombre de la tarea es obligatorio.
+          </div>
           <div class="flex flex-row items-center mt-2 gap-8">
             <div class="flex flex-col items-center">
               <h2 class="font-roboto font-bold">Fecha Inicio</h2>
@@ -42,6 +46,7 @@ import {StoreService} from "../../store.service";
               <h2 class="font-roboto font-bold">Fecha Fin *</h2>
               <input type="date"
                      formControlName="due_date"
+                     required
                      class="input-md input-bordered input-['#5CCEFF'] md:w-40 font-helvetica font-bold"
               />
             </div>
@@ -75,17 +80,35 @@ import {StoreService} from "../../store.service";
               </div>
             </div>
           </div>
+          <div class="flex gap-4">
+            <div class="text-red-500"
+                 *ngIf="taskForm.get('start_date')?.errors?.['required'] && taskForm.get('start_date')?.touched">
+              * La fecha de inicio es obligatoria.
+            </div>
+            <div class="text-red-500"
+                 *ngIf="taskForm.get('due_date')?.errors?.['required'] && taskForm.get('due_date')?.touched">
+              * La fecha de fin es obligatoria.
+            </div>
+          </div>
           <h2 class="font-roboto font-bold mt-4 md:m-0.5">Descripción</h2>
           <textarea
             formControlName="description"
             class="textarea-md text-['#5CCEFF'] textarea-bordered w-1/2 h-40 md:m-0.5 rounded-box shadow-md"
           >
         </textarea>
-          <div class="w-1/2 md:m-1">
-            <h2 class="font-roboto font-bold mt-4 md:m-0.5">Asignado *</h2>
-            <app-search-select selecting="assignee"/>
+          <div class="text-red-500"
+               *ngIf="taskForm.get('description')?.errors?.['required'] && taskForm.get('description')?.touched">
+            * La descripción es obligatoria.
           </div>
         </form>
+        <div class="w-1/2 md:m-1">
+          <h2 class="font-roboto font-bold mt-4 md:m-0.5">Asignado *</h2>
+          <app-search-select selecting="assignee"/>
+        </div>
+        <div class="text-red-500"
+             *ngIf="taskForm.get('assignee')?.errors?.['required'] && taskForm.get('assignee')?.touched">
+          * La tarea debe tener un asignado.
+        </div>
         <hr class="w-1/2 md:m-1">
         <button
           *ngIf="store.task.id"
@@ -98,6 +121,7 @@ import {StoreService} from "../../store.service";
           *ngIf="store.showConfirmDeletion"
           [deletingTask]="true"
         />
+        <div class="md:mt-3"></div>
         <app-alert *ngIf="showWarning" [message]="warningMessage"/>
       </div>
       <br/><br/><br/><br/><br/><br/><br/>ㅤ
@@ -113,15 +137,14 @@ export class TaskCreateEditPageComponent implements OnInit {
   showLoading = false;
   loadingMessage = '';
   selectedPriority = 'Baja';
+  today = new Date();
 
   taskForm: FormGroup = this.formBuilder.group({
     name: ['', Validators.required],
-    description: [''],
+    description: ['', Validators.required],
     priority: [0],
-    start_date: [''],
+    start_date: [this.today.toISOString().split('T')[0], Validators.required],
     due_date: ['', Validators.required],
-    parent_project: [''],
-    parent_task: [null],
     assignee: ['', Validators.required]
   });
 
@@ -147,8 +170,6 @@ export class TaskCreateEditPageComponent implements OnInit {
         priority: this.store.task.priority,
         start_date: this.store.task.startDate,
         due_date: this.store.task.dueDate,
-        parent_project: this.store.task.parentProject,
-        parent_task: this.store.task.parentTask,
         assignee: this.store.task.assignee
       });
     }
@@ -156,33 +177,51 @@ export class TaskCreateEditPageComponent implements OnInit {
   }
 
   onSubmit() {
+
+    this.taskForm.patchValue({
+      assignee: this.store.task.assignee
+    });
+
+    this.store.task.name = this.taskForm.value.name;
+    this.store.task.description = this.taskForm.value.description;
+    this.store.task.priority = this.taskForm.value.priority;
+    this.store.task.startDate = this.taskForm.value.start_date;
+    this.store.task.dueDate = this.taskForm.value.due_date;
+
+
+
+    Object.values(this.taskForm.controls).forEach(control => {
+      control.markAsTouched();
+    });
+
     if (this.taskForm.invalid) {
-      // Mark all fields as touched to trigger validation messages
-      this.taskForm.markAllAsTouched();
       return;
     }
     const onResponse = (response: Task) => {
       void this.router.navigateByUrl(`/task/${response.id}`);
     };
 
+    // Error handling function
+    const onError = (errorResponse: any) => {
+      if (errorResponse.error && errorResponse.error.message) {
+        this.warningMessage = errorResponse.error.message;
+      } else {
+        this.warningMessage = "Error al realizar la solicitud. Por favor, inténtelo de nuevo.";
+      }
+      this.showWarning = true;
+      this.showLoading = false;
+    };
+
     if (!this.store.task.id) {
       this.loadingMessage = "Creando tarea...";
       this.showLoading = true;
 
-      this.api.post('tasks/', this.store.taskPostBody()).subscribe(onResponse, (error) => {
-        this.warningMessage = "Error al crear la tarea. Por favor, inténtelo de nuevo. \n Procura que todos los campos estén completos.";
-        this.showWarning = true;
-        this.showLoading = false;
-      });
+      this.api.post('tasks/', this.store.taskPostBody()).subscribe(onResponse, onError);
     } else {
       this.loadingMessage = "Actualizando datos...";
       this.showLoading = true;
 
-      this.api.put(`tasks/${this.store.task.id}/`, this.store.taskPostBody()).subscribe(onResponse, (error) => {
-        this.warningMessage = "Error al actualizar la tarea. Por favor, inténtelo de nuevo. \n Procura que todos los campos estén completos.";
-        this.showWarning = true;
-        this.showLoading = false;
-      });
+      this.api.put(`tasks/${this.store.task.id}/`, this.store.taskPostBody()).subscribe(onResponse, onError);
     }
   }
 

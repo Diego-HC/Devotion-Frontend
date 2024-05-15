@@ -174,6 +174,7 @@ export class TaskMainPageComponent implements OnInit {
         this.store.updateTaskFromResponse(response)
         this.taskResponse = response;
       });
+
   }
 
   statusName(status: number) {
