@@ -113,7 +113,7 @@ declare global {
     id: string;
     name: string;
     displayType: WidgetDisplayType;
-    mqttTopic: string;
+    dataSource: DataSource;
     position: number;
     unit: string;
   }

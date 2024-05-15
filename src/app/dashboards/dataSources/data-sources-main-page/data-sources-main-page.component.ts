@@ -4,7 +4,6 @@ import { StoreService } from "../../../store.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { FormBuilder, Validators } from "@angular/forms";
 
-type Mode = "create" | "edit";
 interface DataSourceBody {
   name: string;
   mqtt_topic: string;
@@ -152,7 +151,7 @@ export class DataSourcesMainPageComponent implements OnInit, DoCheck {
   ) {}
 
   dataSources: DataSource[] = [];
-  mode: Mode = "create";
+  mode: "create" | "edit" = "create";
   isChanging = false;
   modal: HTMLDialogElement | null = null;
   projectId?: string;
@@ -164,7 +163,7 @@ export class DataSourcesMainPageComponent implements OnInit, DoCheck {
     mqttTopic: ["", Validators.required],
   });
 
-  fetchApi = (onResponse?: Function) => {
+  fetchApi = (onResponse?: () => void) => {
     this.api.get(`data_sources/${this.projectId}`).subscribe((response) => {
       this.dataSources = response;
 

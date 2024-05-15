@@ -14,7 +14,9 @@ export class StoreService {
   pageWasReloaded = true;
   showConfirmDeletion = false;
 
+  // dashboard data
   dataSources?: DataSource[];
+  widget?: Widget;
 
   clearProject(parent = "") {
     this.project = {

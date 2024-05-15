@@ -3,6 +3,7 @@ import { SessionStorageService } from "../../session-storage.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
+import { Subject } from "rxjs";
 
 @Component({
   selector: "app-dashboard-main-page",
@@ -13,7 +14,7 @@ import { StoreService } from "../../store.service";
         <h1 class="text-3xl font-semibold text-gray-800">
           {{ projectName }}
         </h1>
-        <button class="mr-6" (click)="startEdit()">
+        <button class="mr-6" (click)="changeMode()">
           <app-projects-icon fill="#000000" width="60" height="60" />
         </button>
       </div>
@@ -47,12 +48,22 @@ import { StoreService } from "../../store.service";
 
       <div class="flex flex-wrap gap-x-8 gap-y-6 mb-10">
         @for(widget of widgets; track $index) {
-        <app-widget [widget]="widget" />
+        <div class="grid grid-cols-1 grid-rows-1 relative">
+          <app-widget [widget]="widget" class="row-start-1 col-start-1" />
+          @if (isEditing) {
+          <button
+            class="btn btn-sm row-start-1 col-start-1 absolute top-2 right-2"
+            (click)="startChange(widget.id)"
+          >
+            Edit
+          </button>
+          }
+        </div>
         }
         <div class="w-52 h-52 grid" [ngClass]="{ hidden: !isEditing }">
           <div
             class="grid place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow place-self-center size-24 hover:cursor-pointer"
-            (click)="modal?.showModal()"
+            (click)="startChange()"
           >
             <app-plus-icon
               fill="#2A4365"
@@ -69,6 +80,7 @@ import { StoreService } from "../../store.service";
         [position]="widgets.length"
         [dataSources]="dataSources"
         [fetchApi]="fetchApi"
+        [startChange$]="startChange$"
       />
     </div>
     } @else {
@@ -77,26 +89,28 @@ import { StoreService } from "../../store.service";
   `,
 })
 export class DashboardMainPageComponent implements OnInit, DoCheck {
+  constructor(
+    protected storage: SessionStorageService,
+    private route: ActivatedRoute,
+    protected api: ApiService,
+    private store: StoreService,
+    private router: Router
+  ) {}
+
   tasksToDo?: TaskDashboard[];
   tasksToVerify?: TaskDashboard[];
   widgets?: Widget[];
   id = "";
   projectName = "";
   dataSources: DataSource[] = [];
-
   modal: HTMLDialogElement | null = null;
+  private startEditSubject = new Subject<void>();
+
+  startChange$ = this.startEditSubject.asObservable();
 
   isEditing = false;
 
-  constructor(
-    protected storage: SessionStorageService,
-    private route: ActivatedRoute,
-    protected api: ApiService,
-    private store: StoreService,
-    private router: Router,
-  ) {}
-
-  fetchApi = () => {
+  fetchApi = (onResponse?: () => void) => {
     this.api.get(`dashboards/${this.id}/`).subscribe((response: Dashboard) => {
       console.log(response);
 
@@ -106,6 +120,10 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
       this.widgets = response.widgets;
       this.widgets.sort((a, b) => a.position - b.position);
       this.dataSources = response.dataSources;
+
+      if (onResponse) {
+        onResponse();
+      }
     });
   };
 
@@ -121,11 +139,7 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
     this.modal = document.getElementById("modal") as HTMLDialogElement;
   }
 
-  addWidget() {
-    console.log("Add widget");
-  }
-
-  startEdit = () => {
+  changeMode = () => {
     this.isEditing = !this.isEditing;
   };
 
@@ -134,5 +148,12 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
     this.store.project.id = this.id;
     console.log("View members", this.store.dataSources, this.store.project.id);
     void this.router.navigateByUrl(`/dashboard/${this.id}/dataSources`);
+  }
+
+  startChange(id?: string) {
+    this.store.widget = this.widgets?.find((widget) => widget.id === id);
+    console.log("Start change", this.store.widget);
+
+    this.startEditSubject.next();
   }
 }
