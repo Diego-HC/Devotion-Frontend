@@ -101,7 +101,7 @@ export class SearchSelectComponent {
 
   deselectMember(member: MinimalUser) {
     if (this.selecting === 'assignee') {
-      this.store.task.assignee = { id: "", name: "" };
+      this.store.task.assignee = { id: "", name: "", email: "", isLeader: false };
       return;
     }
     this.store.project[this.selecting] = this.store.project[this.selecting].filter(
@@ -114,7 +114,7 @@ export class SearchSelectComponent {
       return;
     }
     if (this.selecting === 'assignee') {
-      this.store.task.assignee = { id: "", name: "" };
+      this.store.task.assignee = { id: "", name: "", email: "", isLeader: false };
       return;
     }
     this.store.project[this.selecting] = this.store.project[this.selecting].slice(0, -1);

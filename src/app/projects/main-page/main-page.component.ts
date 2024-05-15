@@ -37,7 +37,7 @@ import { cardColors } from "../../shared/cardColors";
                   >Ir a dashboard</span
                 >
               </a>
-              <a href="/members/project/{{ response.id }}">
+              <a routerLink="/project/{{ response.id }}/members">
                 <span class="font-bold hover:underline text-base text-devotionAccent">Ver miembros</span>
               </a>
               <div class="dropdown dropdown-right">

@@ -31,6 +31,7 @@ module.exports = {
         inReviewLight: "#e7fcff",
         done: "#00D387",
         doneLight: "#e8ffee",
+        ludicrousSpeed: "#FE57E6",
       }
     },
   },

@@ -30,8 +30,8 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     this.auth.profile.subscribe((profile) => {
+      this.api.put("me/", { profile_picture: profile.picture }).subscribe();
       if (!sessionStorage.getItem('profileName') && profile) {
-        this.api.put("me/", { profile_picture: profile.picture }).subscribe();
         this.zone.run(() => {
           this.storage.setItem('profileName', profile.name);
           this.storage.setItem('profileUrl', profile.picture);

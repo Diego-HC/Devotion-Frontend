@@ -45,7 +45,7 @@ const routes: Routes = [
     component: TaskCreateEditPageComponent,
   },
   {
-    path: "members/project/:id",
+    path: "project/:id/members",
     component: ProjectMembersPageComponent,
   },
   {

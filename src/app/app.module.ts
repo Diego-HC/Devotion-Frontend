@@ -48,6 +48,10 @@ import { TasksLoadingComponent } from './tasks/tasks-loading/tasks-loading.compo
 import { ProjectMembersPageComponent } from './projects/project-members-page/project-members-page.component';
 import { ConfirmDeletionComponent } from './shared/confirm-deletion/confirm-deletion.component';
 import { KanbanCardComponent } from './shared/kanban-card/kanban-card.component';
+import { PriorityIconComponent } from './shared/icons/priority-icon/priority-icon.component';
+import { CheckmarkIconComponent } from './shared/icons/checkmark-icon/checkmark-icon.component';
+import { XIconComponent } from './shared/icons/x-icon/x-icon.component';
+import { LeftChevronIconComponent } from './shared/icons/left-chevron-icon/left-chevron-icon.component';
 
 @NgModule({
   declarations: [
@@ -90,6 +94,10 @@ import { KanbanCardComponent } from './shared/kanban-card/kanban-card.component'
     ProjectMembersPageComponent,
     ConfirmDeletionComponent,
     KanbanCardComponent,
+    PriorityIconComponent,
+    CheckmarkIconComponent,
+    XIconComponent,
+    LeftChevronIconComponent,
   ],
   imports: [BrowserModule,
     AppRoutingModule,

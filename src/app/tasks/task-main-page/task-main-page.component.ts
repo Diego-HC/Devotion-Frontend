@@ -15,15 +15,11 @@ import { switchMap } from "rxjs";
     <div class="overflow-x-auto mx-20 mt-4" *ngIf="taskResponse !== undefined">
       <div class="bg-white py-6 rounded-lg">
         <div class="flex flex-row justify-between gap-12">
-          <div class="flex flex-row gap-6">
-            <h1 class="text-4xl font-helvetica">
+          <div class="flex flex-row">
+            <h1 class="text-4xl font-helvetica mr-3">
               {{ taskResponse.name }}
             </h1>
-            <img
-              src="../assets/coconut.webp"
-              alt="Coconut"
-              class="h-8 w-8 rounded-full col-start-1 row-start-1"
-            />
+            <app-priority-icon [priority]="taskResponse.priority" />
             <div
               class="radial-progress bg-devotionSecondary text-devotionPrimary"
               style="--value:70; --size:2rem; --thickness: 0.5rem;"

@@ -8,7 +8,7 @@ import {error} from "@angular/compiler-cli/src/transformers/util";
 @Component({
   selector: "app-create-edit-page",
   template: `
-    <app-loading *ngIf="showLoading" [message]="loadingMessage"/>
+    <app-loading *ngIf="showLoading" [message]="loadingMessage" />
     <div class="px-16" *ngIf="!showLoading && (store.membersPool.length > 0)">
       <div class="flex justify-center items-center">
         <div class="px-12 lg:w-1/2 py-10">

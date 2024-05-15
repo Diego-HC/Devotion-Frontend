@@ -34,7 +34,9 @@ export class StoreService {
       dueDate: "",
       assignee: {
         id: "",
-        name: ""
+        name: "",
+        email: "",
+        isLeader: false
       },
       priority: 0,
       status: 0,

@@ -84,12 +84,16 @@ declare global {
   interface MinimalUser {
     id: string;
     name: string;
+    email: string;
+    isLeader: boolean;
+    profilePicture?: string;
   }
 
   interface UserWithRole {
     email: string;
     name: string;
     isLeader: boolean;
+    profilePicture?: string;
   }
 }
 
