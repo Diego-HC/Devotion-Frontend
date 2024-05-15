@@ -53,6 +53,7 @@ import {
 import { WidgetComponent } from "./dashboards/widgets/widget/widget.component";
 import { WidgetNumberComponent } from "./dashboards/widgets/widget-number/widget-number.component";
 import { CreateWidgetComponent } from "./dashboards/widgets/create-widget/create-widget.component";
+import { DataSourcesMainPageComponent } from './dashboards/dataSources/data-sources-main-page/data-sources-main-page.component';
 
 @NgModule({
   declarations: [
@@ -98,6 +99,7 @@ import { CreateWidgetComponent } from "./dashboards/widgets/create-widget/create
     WidgetComponent,
     WidgetNumberComponent,
     CreateWidgetComponent,
+    DataSourcesMainPageComponent,
   ],
   imports: [
     BrowserModule,
