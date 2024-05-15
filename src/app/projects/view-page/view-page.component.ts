@@ -22,17 +22,13 @@ import { StoreService } from "../../store.service";
         />
       }
 
-      <button (click)="newProject()" class="place-self-center w-[15.5rem]">
-        <div class="flex flex-col place-items-center justify-center">
-          <div
-            class="grid grid-cols-1 grid-rows-1 place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow"
-          >
-            <app-plus-icon
-              fill="#2A4365"
-              [width]="'45'"
-              [height]="'45'"
-            ></app-plus-icon>
-          </div>
+      <button (click)="newProject()" class="w-[248px] h-[160px] rounded-md border-2 border-gray-200">
+        <div class="flex flex-col gap-2 place-items-center justify-center">
+          <app-new-project-icon
+            fill="#2A4365"
+            width="40"
+            height="40"
+          />
           <span class="font-robotoCondensed">Nuevo proyecto</span>
         </div>
       </button>
