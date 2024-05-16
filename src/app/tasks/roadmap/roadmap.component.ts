@@ -8,19 +8,7 @@ import interactionPlugin from '@fullcalendar/interaction';
   template: `
     <div class="flex justify-center items-center">
       <div class="w-full h-full">
-      <full-calendar #calendar
-           defaultView="dayGridMonth"
-           [plugins]="[dayGridPlugin, interactionPlugin]"
-           [events]="events"
-           [header]="{
-             left: 'prev,next today',
-             center: 'title',
-             right: 'dayGridMonth,dayGridWeek,dayGridDay'
-           }"
-           [editable]="false"
-           [selectable]="false"
-           [eventClick]="handleEventClick">
-        </full-calendar>
+        
       </div>
     </div>
   `,

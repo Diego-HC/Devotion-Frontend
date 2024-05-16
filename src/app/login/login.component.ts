@@ -27,7 +27,7 @@ import { Component } from '@angular/core';
       </div>
       <div class="flex justify-center items-center gap-1.5">
 
-          <button (click)="login()" class="mbutton" class="bg-blue-800 text-white border-none rounded px-5 py-2.5 cursor-pointer flex items-center gap-1.5 fill=#2A4365">
+          <button (click)="login()" class="bg-devotionPrimary text-white border-none rounded px-5 py-2.5 cursor-pointer flex items-center gap-1.5 ">
             <img src="https://imagepng.org/wp-content/uploads/2019/08/google-icon.png" alt="Microsoft Logo" class="h-5 w-auto">
             Ingresar con Google
 
