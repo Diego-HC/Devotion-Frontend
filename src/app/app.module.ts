@@ -52,6 +52,8 @@ import { PriorityIconComponent } from './shared/icons/priority-icon/priority-ico
 import { CheckmarkIconComponent } from './shared/icons/checkmark-icon/checkmark-icon.component';
 import { XIconComponent } from './shared/icons/x-icon/x-icon.component';
 import { LeftChevronIconComponent } from './shared/icons/left-chevron-icon/left-chevron-icon.component';
+import { NewProjectIconComponent } from './shared/icons/new-project-icon/new-project-icon.component';
+import { PencilIconComponent } from './shared/icons/pencil-icon/pencil-icon.component';
 
 @NgModule({
   declarations: [
@@ -98,6 +100,8 @@ import { LeftChevronIconComponent } from './shared/icons/left-chevron-icon/left-
     CheckmarkIconComponent,
     XIconComponent,
     LeftChevronIconComponent,
+    NewProjectIconComponent,
+    PencilIconComponent,
   ],
   imports: [BrowserModule,
     AppRoutingModule,
