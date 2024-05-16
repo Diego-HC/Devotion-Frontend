@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { OAuthModule } from "angular-oauth2-oidc";
 
@@ -42,6 +42,19 @@ import { DevotionIsoComponent } from './shared/icons/devotion-iso/devotion-iso.c
 import { LoadingComponent } from './shared/loading/loading.component';
 import {NgOptimizedImage} from "@angular/common";
 import { AlertComponent } from './shared/alert/alert.component';
+import { CalendarCellComponent } from './tasks/calendar-cell/calendar-cell.component';
+import { CalendarTaskComponent } from './tasks/calendar-task/calendar-task.component';
+import { TasksLoadingComponent } from './tasks/tasks-loading/tasks-loading.component';
+import { ProjectMembersPageComponent } from './projects/project-members-page/project-members-page.component';
+import { ConfirmDeletionComponent } from './shared/confirm-deletion/confirm-deletion.component';
+import { KanbanCardComponent } from './shared/kanban-card/kanban-card.component';
+import { PriorityIconComponent } from './shared/icons/priority-icon/priority-icon.component';
+import { CheckmarkIconComponent } from './shared/icons/checkmark-icon/checkmark-icon.component';
+import { XIconComponent } from './shared/icons/x-icon/x-icon.component';
+import { LeftChevronIconComponent } from './shared/icons/left-chevron-icon/left-chevron-icon.component';
+import { ConfirmGoBackComponent } from './shared/confirm-go-back/confirm-go-back.component';
+import { NewProjectIconComponent } from './shared/icons/new-project-icon/new-project-icon.component';
+import { PencilIconComponent } from './shared/icons/pencil-icon/pencil-icon.component';
 
 @NgModule({
   declarations: [
@@ -78,11 +91,28 @@ import { AlertComponent } from './shared/alert/alert.component';
     DevotionIsoComponent,
     LoadingComponent,
     AlertComponent,
+    CalendarCellComponent,
+    CalendarTaskComponent,
+    TasksLoadingComponent,
+    ProjectMembersPageComponent,
+    ConfirmDeletionComponent,
+    KanbanCardComponent,
+    PriorityIconComponent,
+    CheckmarkIconComponent,
+    XIconComponent,
+    LeftChevronIconComponent,
+    ConfirmGoBackComponent,
+    NewProjectIconComponent,
+    PencilIconComponent,
   ],
   imports: [BrowserModule,
     AppRoutingModule,
     OAuthModule.forRoot(),
-    FormsModule, HttpClientModule, NgOptimizedImage,],
+    FormsModule,
+    HttpClientModule,
+    NgOptimizedImage,
+    ReactiveFormsModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

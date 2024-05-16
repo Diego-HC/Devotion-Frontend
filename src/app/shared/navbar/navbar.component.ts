@@ -1,7 +1,8 @@
 import { Router } from "@angular/router";
 import {Component, OnInit, NgZone } from '@angular/core';
 import { AuthGoogleService } from "../../auth-google.service";
-import {SessionStorageService} from "../../session-storage.service";
+import { SessionStorageService } from "../../session-storage.service";
+import { ApiService } from "../../api.service";
 
 @Component({
   selector: 'app-navbar',
@@ -25,10 +26,11 @@ import {SessionStorageService} from "../../session-storage.service";
   `
 })
 export class NavbarComponent implements OnInit {
-  constructor(protected auth: AuthGoogleService, private router: Router, private zone: NgZone, protected storage: SessionStorageService) { }
+  constructor(protected auth: AuthGoogleService, private router: Router, private zone: NgZone, protected storage: SessionStorageService, private api: ApiService) { }
 
   ngOnInit() {
     this.auth.profile.subscribe((profile) => {
+      this.api.put("me/", { profile_picture: profile.picture }).subscribe();
       if (!sessionStorage.getItem('profileName') && profile) {
         this.zone.run(() => {
           this.storage.setItem('profileName', profile.name);

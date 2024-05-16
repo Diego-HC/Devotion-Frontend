@@ -1,7 +1,8 @@
-import { cardColors } from "./../../shared/cardColors";
-import { Component } from "@angular/core";
+import { cardColors } from "../../shared/cardColors";
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { ApiService } from "../../api.service";
-import { OnInit } from "@angular/core";
+import { StoreService } from "../../store.service";
 
 @Component({
   selector: "app-view-page",
@@ -12,40 +13,43 @@ import { OnInit } from "@angular/core";
       class="flex flex-row flex-wrap gap-10 m-20 justify-center md:justify-normal"
     >
       @for (project of this.projects; track $index) {
-      <app-project-card
-        [id]="project.id"
-        [name]="project.name"
-        [description]="project.description"
-        [colors]="cardColors[$index % cardColors.length]"
-      />
+        <app-project-card
+          [id]="project.id"
+          [name]="project.name"
+          [description]="project.description"
+          [colors]="cardColors[$index % cardColors.length]"
+          [isLeader]="project.isLeader"
+        />
       }
 
-      <a href="/new/project" class="place-self-center w-[15.5rem]">
-        <div class="flex flex-col place-items-center justify-center">
-          <div
-            class="grid grid-cols-1 grid-rows-1 place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow"
-          >
-            <app-plus-icon
-              fill="#2A4365"
-              [width]="'45'"
-              [height]="'45'"
-            ></app-plus-icon>
-          </div>
+      <button (click)="newProject()" class="w-[248px] h-[160px] rounded-md border-2 border-gray-200">
+        <div class="flex flex-col gap-2 place-items-center justify-center">
+          <app-new-project-icon
+            fill="#2A4365"
+            width="40"
+            height="40"
+          />
           <span class="font-robotoCondensed">Nuevo proyecto</span>
         </div>
-      </a>
+      </button>
     </div>
   `,
 })
 export class ViewPageComponent implements OnInit {
-  constructor(private api: ApiService) {}
+  constructor(private router: Router, private api: ApiService, private store: StoreService) {}
 
-  projects: any;
+  projects: ProjectView[] | undefined;
   cardColors = cardColors;
 
   ngOnInit(): void {
+    this.store.pageWasReloaded = false;
     this.api.get("me/projects/").subscribe((projects) => {
       this.projects = projects;
     });
+  }
+
+  newProject() {
+    this.store.clearProject();
+    void this.router.navigateByUrl("/new/project");
   }
 }

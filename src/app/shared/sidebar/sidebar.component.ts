@@ -4,12 +4,9 @@ import { Component } from "@angular/core";
   selector: "app-sidebar",
   template: `
     <aside
-      class="sideBar
-          fixed z-20 flex flex-col justify-between w-16 min-h-screen
-          rounded-xl rounded-bl-none rounded-tl-none
-          shadow-lg
-          text-white"
-      style=" background-color: #2A4365;"
+      class="
+        fixed z-20 flex flex-col justify-between w-16 min-h-screen
+        rounded-r-xl shadow-lg bg-devotionPrimary text-white"
     >
       <div>
         <div class="flex flex-col py-3">

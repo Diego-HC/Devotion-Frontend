@@ -10,7 +10,19 @@ import { Component, Input, OnInit } from "@angular/core";
           class="card card-normal rounded-l-none rounded-md w-60 flex flex-col justify-between h-40"
           [ngClass]="this.colors.light"
         >
-          <h2 class="card-title mx-6 my-4">{{ this.shortName }}</h2>
+          <div class="flex flex-col gap-2">
+            <h2 class="break-words max-w-full text-xl font-black mx-6 mt-4">
+              {{ this.shortName }}
+            </h2>
+            @if (this.isLeader) {
+            <div
+              class="px-2 py-1 opacity-50 rounded-md w-fit text-white text-xs mx-6"
+              [ngClass]="this.colors.normal"
+            >
+              <p class="opacity-100">{{ "Líder" }}</p>
+            </div>
+            }
+          </div>
           <p class="break-words text-xs mx-5 my-3">
             {{ this.shortDescription }}
           </p>
@@ -24,6 +36,7 @@ export class ProjectCardComponent implements OnInit {
   @Input() name!: string;
   @Input() description!: string;
   @Input() colors!: { light: string; normal: string };
+  @Input() isLeader!: boolean;
 
   shortName!: string;
   shortDescription!: string;
@@ -33,7 +46,7 @@ export class ProjectCardComponent implements OnInit {
       this.name.length > 20 ? this.name.slice(0, 20) + "..." : this.name;
     this.shortDescription =
       this.description.length > 50
-        ? this.description.slice(0, 55) + "..."
+        ? this.description.slice(0, 37) + "..."
         : this.description;
   }
 }

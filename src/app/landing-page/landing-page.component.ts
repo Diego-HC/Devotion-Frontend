@@ -5,7 +5,7 @@ import { AuthGoogleService } from '../auth-google.service';
 @Component({
   selector: 'app-landing-page',
   template: `
-    <app-loading tips="false" />
+    <app-loading message="none" />
   `
 })
 export class LandingPageComponent implements OnInit {

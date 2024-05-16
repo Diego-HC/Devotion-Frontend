@@ -1,5 +1,4 @@
 import { Component, Input } from "@angular/core";
-import { Project } from "../main-page/main-page.component";
 
 @Component({
   selector: "app-subproject-card",
@@ -18,10 +17,8 @@ import { Project } from "../main-page/main-page.component";
             </p>
           </div>
           <div
-            class="radial-progress bg-[#E1EFFF] text-[#2A4365] min-w-8"
-            style="--value:{{
-              this.progress
-            }}; --size:2rem; --thickness: 0.5rem;"
+            class="radial-progress bg-devotionSecondary text-devotionPrimary min-w-8"
+            [style]="{'--value':this.progress, '--size':'2rem', '--thickness': '0.5rem'}"
             role="progressbar"
           ></div>
         </div>
@@ -30,7 +27,7 @@ import { Project } from "../main-page/main-page.component";
   `,
 })
 export class SubprojectCardComponent {
-  @Input() subproject: Project = {
+  @Input() subproject: any = {
     id: "",
     name: "",
     description: "",
@@ -41,7 +38,7 @@ export class SubprojectCardComponent {
   id: string = "";
   name: string = "";
   description: string = "";
-  progress: number = 23;
+  progress: number = 0;
 
   shortName!: string;
   shortDescription!: string;
