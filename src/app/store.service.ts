@@ -13,6 +13,7 @@ export class StoreService {
   membersPool: MinimalUser[] = [];
   pageWasReloaded = true;
   showConfirmDeletion = false;
+  showConfirmGoBack = false;
 
   clearProject(parent = "") {
     this.project = {

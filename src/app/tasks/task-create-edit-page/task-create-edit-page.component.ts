@@ -1,14 +1,20 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ApiService} from "../../api.service";
 import {StoreService} from "../../store.service";
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-task-create-edit-page',
   template: `
     <app-loading *ngIf="showLoading" [message]="loadingMessage"/>
     <div class="mx-32" *ngIf="!showLoading && (store.membersPool.length > 0)">
+      <a (click)="backPage()" class="flex flex-row items-center gap-3 text-devotionPrimary text-lg font-semibold">
+        <app-left-chevron-icon/>
+        Volver
+      </a>
+      <div class="md:mb-2"></div>
       <div>
         <h2 class="font-roboto font-bold">
           {{ store.task.id ? 'Editar Tarea *' : 'Nueva Tarea *' }}
@@ -25,7 +31,7 @@ import {StoreService} from "../../store.service";
                 (click)="onSubmit()"
                 class="bg-devotionPrimary btn-circle flex items-center justify-center mt-4 w-12 h-12"
               >
-                <app-checkmark-icon />
+                <app-checkmark-icon/>
               </button>
               <p class="text-xs font-robotoCondensed">Publicar</p>
             </div>
@@ -55,27 +61,33 @@ import {StoreService} from "../../store.service";
               <div class="dropdown dropdown-right">
                 <div tabindex="0" role="button" class="btn m-1">{{ selectedPriority }}</div>
                 <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box">
-                  <li><button (click)="updatePriority('Baja')">
-                    <app-priority-icon
-                      class="pr-6"
-                      [priority]="0"
-                      [animated]="false"
-                    />
-                  </button></li>
-                  <li><button (click)="updatePriority('Media')">
-                    <app-priority-icon
-                      class="pr-6"
-                      [priority]="1"
-                      [animated]="false"
-                    />
-                  </button></li>
-                  <li><button (click)="updatePriority('Alta')">
-                    <app-priority-icon
-                      class="pr-6"
-                      [priority]="2"
-                      [animated]="false"
-                    />
-                  </button></li>
+                  <li>
+                    <button (click)="updatePriority('Baja')">
+                      <app-priority-icon
+                        class="pr-6"
+                        [priority]="0"
+                        [animated]="false"
+                      />
+                    </button>
+                  </li>
+                  <li>
+                    <button (click)="updatePriority('Media')">
+                      <app-priority-icon
+                        class="pr-6"
+                        [priority]="1"
+                        [animated]="false"
+                      />
+                    </button>
+                  </li>
+                  <li>
+                    <button (click)="updatePriority('Alta')">
+                      <app-priority-icon
+                        class="pr-6"
+                        [priority]="2"
+                        [animated]="false"
+                      />
+                    </button>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -117,9 +129,9 @@ import {StoreService} from "../../store.service";
         >
           Eliminar Tarea
         </button>
-        <app-confirm-deletion
-          *ngIf="store.showConfirmDeletion"
-          [deletingTask]="true"
+        <app-confirm-go-back
+          *ngIf="store.showConfirmGoBack"
+          [backButtonLink]="backButtonLink"
         />
         <div class="md:mt-3"></div>
         <app-alert *ngIf="showWarning" [message]="warningMessage"/>
@@ -128,7 +140,7 @@ import {StoreService} from "../../store.service";
     </div>
   `
 })
-export class TaskCreateEditPageComponent implements OnInit {
+export class TaskCreateEditPageComponent implements OnInit, OnDestroy {
   constructor(private api: ApiService, private router: Router, protected store: StoreService, private formBuilder: FormBuilder) {
   }
 
@@ -138,6 +150,11 @@ export class TaskCreateEditPageComponent implements OnInit {
   loadingMessage = '';
   selectedPriority = 'Baja';
   today = new Date();
+  backButtonLink = "/home";
+  showBackWarning = false;
+  initialFormValue : any;
+
+  private formChangesSubscription: Subscription | undefined;
 
   taskForm: FormGroup = this.formBuilder.group({
     name: ['', Validators.required],
@@ -162,6 +179,12 @@ export class TaskCreateEditPageComponent implements OnInit {
       });
     }
 
+    if (this.store.task.parentTask) {
+      this.backButtonLink = `/task/${this.store.task.parentTask}`;
+    } else if (this.store.task.parentProject) {
+      this.backButtonLink = `/project/${this.store.task.parentProject}`;
+    }
+
     // If editing existing task, populate form with existing task data
     if (this.store.task.id) {
       this.taskForm.patchValue({
@@ -172,8 +195,58 @@ export class TaskCreateEditPageComponent implements OnInit {
         due_date: this.store.task.dueDate,
         assignee: this.store.task.assignee
       });
+      this.backButtonLink = `/task/${this.store.task.id}`;
     }
 
+    // Store initial form value when the form is initialized
+    this.initialFormValue = { ...this.taskForm.value };
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe from valueChanges to prevent memory leaks
+    if (this.formChangesSubscription) {
+      this.formChangesSubscription.unsubscribe();
+    }
+  }
+
+  isEqual(value1: any, value2: any): boolean {
+    // Check if both values are objects
+    if (typeof value1 === 'object' && typeof value2 === 'object') {
+      // Get the keys of both objects
+      const keys1 = Object.keys(value1);
+      const keys2 = Object.keys(value2);
+
+      // Check if the number of keys is the same
+      if (keys1.length !== keys2.length) {
+        return false;
+      }
+
+      // Check if all keys and their values are equal
+      for (const key of keys1) {
+        if (!this.isEqual(value1[key], value2[key])) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    // If not objects, compare values directly
+    return value1 === value2;
+  }
+
+  backPage() {
+    // Check if there are any changes in the form
+    const formHasChanged = !this.isEqual(this.taskForm.value, this.initialFormValue);
+
+    if (formHasChanged) {
+      // If form has changed, show warning or navigate back
+      this.store.showConfirmGoBack = true;
+      this.showBackWarning = true; // Or trigger navigation logic here
+    } else {
+      // If form has not changed, proceed with back navigation
+      this.router.navigateByUrl(this.backButtonLink);
+    }
   }
 
   onSubmit() {
@@ -187,7 +260,6 @@ export class TaskCreateEditPageComponent implements OnInit {
     this.store.task.priority = this.taskForm.value.priority;
     this.store.task.startDate = this.taskForm.value.start_date;
     this.store.task.dueDate = this.taskForm.value.due_date;
-
 
 
     Object.values(this.taskForm.controls).forEach(control => {
