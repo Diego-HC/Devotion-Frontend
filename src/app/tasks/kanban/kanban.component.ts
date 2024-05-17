@@ -19,16 +19,16 @@ export class KanbanComponent implements OnInit{
 
   @Input() projectOrTaskId: string = '';
   response? : KanbanView;
-  
+
 
   ngOnInit(): void {
-    const endpoint = `projects/${this.projectOrTaskId}/?view=kanban&partial=true`
+    const endpoint = `projects/${this.projectOrTaskId}/?view=kanban&get=tasks`
     this.api.get(endpoint).subscribe((response : KanbanView) => {
       this.response = response;
     });
   }
 
   navigateToTask(taskId: string) {
-    
+
   }
 }

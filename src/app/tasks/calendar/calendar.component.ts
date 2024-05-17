@@ -1,11 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ApiService } from "../../api.service";
+import { StoreService } from "../../store.service";
 import { CalendarService } from "./calendar.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-calendar',
   template: `
-    <app-tasks-loading *ngIf="response === undefined" />
+    <app-tasks-loading *ngIf="store.loadingSubtasks" />
     <table class="w-full table" *ngIf="calendar !== undefined">
       <thead>
       <tr>
@@ -39,28 +41,37 @@ export class CalendarComponent implements OnInit {
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre", "Enero"];
   weekdays = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
-  constructor(private api: ApiService, protected calService: CalendarService) { }
+  constructor(private api: ApiService, protected store: StoreService, protected calService: CalendarService) { }
 
   @Input() projectOrTaskId: string = '';
   @Input() isTask: boolean = false;
 
+  private subscriptions = new Subscription();
   calendar?: {matrix: CalendarCellData[][], today: number[]};
   response?: MainPageProjectCalendarView;
   title: string = '';
 
   ngOnInit() {
+    this.subscriptions.add(this.store.showAssignedTasks$.subscribe(() => this.generateCalendar()));
+    this.subscriptions.add(this.store.showSubtreeTasks$.subscribe(() => this.generateCalendar()));
+    this.generateCalendar();
+  }
+
+  generateCalendar() {
     this.calendar = this.calService.generateCalendarMatrix();
     const startDate = this.calendar!.matrix[0][0].date;
     const startMonth = startDate!.getMonth();
     this.title = `${this.months[startMonth]}/${this.months[startMonth + 1]} ${startDate!.getFullYear()}`;
 
-    const endpoint = `${this.isTask ? "tasks" : "projects"}/${this.projectOrTaskId}/?view=calendar&partial=true`;
+    this.store.loadingSubtasks = true;
+    const endpoint = `${this.isTask ? "tasks" : "projects"}/${this.projectOrTaskId}/?get=tasks&view=calendar&assigned=${this.store.showAssignedTasks}&subtree=${this.store.showSubtreeTasks}`;
     this.api.get(endpoint).subscribe((response: MainPageProjectCalendarView) => {
       this.response = response;
       for (const taskData of response.tasks) {
         const [calendarRow, calendarCol] = taskData.date;
         this.calendar!.matrix[calendarRow][calendarCol].tasks = taskData.tasks;
       }
+      this.store.loadingSubtasks = false;
     });
   }
 }

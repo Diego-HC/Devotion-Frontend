@@ -29,11 +29,10 @@ import { Subscription } from 'rxjs';
               />
               <div class="flex flex-col items-center">
                 <button
-                  type="submit"
                   (click)="onSubmit()"
-                  class="bg-devotionPrimary btn-circle items-center justify-center mt-4 text-white font-bold font-helvetica text-3xl w-12 h-12"
+                  class="bg-devotionPrimary btn-circle flex items-center justify-center mt-4 w-12 h-12"
                 >
-                  +
+                  <app-checkmark-icon/>
                 </button>
                 <p class="text-xs font-robotoCondensed">Publicar</p>
               </div>
@@ -259,7 +258,6 @@ export class CreateEditPageComponent implements OnInit, OnDestroy {
         }, 2500);
       }
       this.showLoading = true;
-
       this.api.post("projects/", this.store.projectPostBody()).subscribe(onResponse, onError);
 
     // Editar proyecto

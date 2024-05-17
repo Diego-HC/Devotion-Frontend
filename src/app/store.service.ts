@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,29 @@ export class StoreService {
   pageWasReloaded = true;
   showConfirmDeletion = false;
   showConfirmGoBack = false;
+  loadingSubtasks = false;
+
+  private _showAssignedTasks = new BehaviorSubject<boolean>(false);
+  private _showSubtreeTasks = new BehaviorSubject<boolean>(false);
+
+  showAssignedTasks$ = this._showAssignedTasks.asObservable();
+  showSubtreeTasks$ = this._showSubtreeTasks.asObservable();
+
+  set showAssignedTasks(value: boolean) {
+    this._showAssignedTasks.next(value);
+  }
+
+  get showAssignedTasks() {
+    return this._showAssignedTasks.getValue();
+  }
+
+  set showSubtreeTasks(value: boolean) {
+    this._showSubtreeTasks.next(value);
+  }
+
+  get showSubtreeTasks() {
+    return this._showSubtreeTasks.getValue();
+  }
 
   clearProject(parent = "") {
     this.project = {
@@ -53,7 +77,7 @@ export class StoreService {
 
   updateProjectFromResponse(projectResponse: MainPageProject) {
     this.pageWasReloaded = false;
-    this.membersPool = projectResponse.members;
+    this.membersPool = [...projectResponse.members, ...projectResponse.leaders];
     this.project = {
       ...projectResponse,
     }
