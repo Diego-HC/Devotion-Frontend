@@ -97,6 +97,24 @@ declare global {
     isLeader: boolean;
     profilePicture?: string;
   }
+  interface TaskKanban {
+    id: string;
+    name: string;
+    description: string;
+    priority: number;
+    assignee : MinimalUser;
+  }
+
+  interface Tasks {
+    notStarted : TaskKanban[];
+    inProgress : TaskKanban[];
+    inReview : TaskKanban[];
+    done : TaskKanban[];
+  }
+
+  interface KanbanView {
+    tasks : Tasks;
+  }
 
   // Dashboard types
   type TaskDashboard = Omit<Task, "startDate" | "asignee" | "status"> & {

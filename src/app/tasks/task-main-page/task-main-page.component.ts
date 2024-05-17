@@ -67,7 +67,10 @@ import { switchMap } from "rxjs";
           <div class="dropdown dropdown-right">
             <div tabindex="0" role="button" class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••</div>
             <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-              <li><a routerLink="/edit/task">Editar</a></li>
+              <li><a class="flex flex-row gap-2" routerLink="/edit/task">
+                <app-pencil-icon [detailed]="false" fill="#2A4365" width="15" height="15"/>
+                Editar
+              </a></li>
             </ul>
           </div>
         </div>
@@ -174,6 +177,7 @@ export class TaskMainPageComponent implements OnInit {
         this.store.updateTaskFromResponse(response)
         this.taskResponse = response;
       });
+
   }
 
   statusName(status: number) {
