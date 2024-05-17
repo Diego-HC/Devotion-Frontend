@@ -1,11 +1,17 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
 import {Router} from '@angular/router';
+import {Subscription} from "rxjs";
+import {ApiService} from "../../api.service";
+import {StoreService} from "../../store.service";
 
 @Component({
   selector: 'app-table',
   template: `
-    <div class="flex justify-center items-center">
-      <table class="w-full my-5 overflow-auto">
+    <app-tasks-loading *ngIf="store.loadingSubtasks" />
+    <div
+      *ngIf="tasks !== undefined"
+    >
+      <table class="w-full mt-5" #headerTable>
         <thead class="text-left font-medium">
         <tr class="border-none box-shadow-none">
           <th class="font-roboto text-left italic px-4 py-2 no-border whitespace-nowrap overflow-auto text-[#676767]">
@@ -25,36 +31,83 @@ import {Router} from '@angular/router';
           </th>
         </tr>
         </thead>
-        <tbody>
-        <tr class="cursor-pointer hover:bg-gray-50 border-2 font-robotoCondensed" *ngFor="let task of tasks"
-            (click)="navigateToTask(task.id)">
-          <td class="text-left px-4 py-2 font-semibold">
-            {{ task.name | slice:0:35 }}
-          </td>
-          <td
-            class="px-6 py-2 whitespace-nowrap flex justify-between items-center overflow-auto text-center font-black font-inter">
-            <app-badge *ngIf="task.status === 0" [status]="'No iniciado'"></app-badge>
-            <app-badge *ngIf="task.status === 1" [status]="'En proceso'"></app-badge>
-            <app-badge *ngIf="task.status === 2" [status]="'En revisión'"></app-badge>
-            <app-badge *ngIf="task.status === 3" [status]="'Completado'"></app-badge>
-          </td>
-          <td class="text-left px-4 py-2 text-[#5E6377]">{{ task.startDate }}</td>
-          <td class="text-left px-4 py-2 text-[#5E6377]">{{ task.dueDate }}</td>
-          <td class="text-left px-4 py-2 text-[#5E6377]">{{ task.assignee }}</td>
-        </tr>
-        </tbody>
       </table>
+      <div class="w-full mb-8 max-h-[400px] overflow-y-auto">
+        <table class="w-full" #bodyTable>
+          <tbody>
+          <tr class="cursor-pointer hover:bg-gray-50 border-2 font-robotoCondensed" *ngFor="let task of tasks"
+              (click)="navigateToTask(task.id)">
+            <td class="text-left px-4 py-2 font-semibold">
+              {{ task.name | slice:0:35 }}
+            </td>
+            <td
+              class="py-2 pr-6 whitespace-nowrap flex text-center items-center">
+              <app-badge *ngIf="task.status === 0" [status]="'No iniciado'"></app-badge>
+              <app-badge *ngIf="task.status === 1" [status]="'En proceso'"></app-badge>
+              <app-badge *ngIf="task.status === 2" [status]="'En revisión'"></app-badge>
+              <app-badge *ngIf="task.status === 3" [status]="'Completado'"></app-badge>
+            </td>
+            <td class="text-left px-4 py-2 text-[#5E6377]">{{ task.startDate }}</td>
+            <td class="text-left px-4 py-2 text-[#5E6377]">{{ task.dueDate }}</td>
+            <td class="text-left px-4 py-2 text-[#5E6377] truncate">{{ task.assignee }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   `,
 })
-export class TableComponent {
+export class TableComponent implements OnInit, AfterViewInit {
+  constructor(private router: Router, private api: ApiService, protected store: StoreService) { }
 
-  @Input() tasks?: any[];
+  @ViewChild('headerTable') headerTable!: ElementRef;
+  @ViewChild('bodyTable') bodyTable!: ElementRef;
 
-  constructor(private router: Router) { }
+  @Input() defaultTasks?: Task[];
+  @Input() projectOrTaskId = ""
+  @Input() isTask = false;
 
+  private subscriptions = new Subscription();
+  tasks?: Task[];
+
+  ngOnInit() {
+    this.subscriptions.add(this.store.showAssignedTasks$.subscribe(() => this.updateTasks()));
+    this.subscriptions.add(this.store.showSubtreeTasks$.subscribe(() => this.updateTasks()));
+    this.updateTasks()
+  }
+
+  updateTasks() {
+    if (!this.store.showAssignedTasks && !this.store.showSubtreeTasks) {
+      this.tasks = this.defaultTasks;
+      setTimeout(() => this.applyColumnWidths(), 0);
+      return;
+    }
+    this.store.loadingSubtasks = true;
+    const endpoint = `${this.isTask ? "tasks" : "projects"}/${this.projectOrTaskId}/?get=tasks&assigned=${this.store.showAssignedTasks}&subtree=${this.store.showSubtreeTasks}`;
+    this.api.get(endpoint).subscribe((response) => {
+      this.tasks = response.tasks;
+      setTimeout(() => this.applyColumnWidths(), 0);
+      this.store.loadingSubtasks = false;
+    });
+  }
 
   navigateToTask(taskId: string) {
     this.router.navigate(['/task', taskId]);
+  }
+
+  ngAfterViewInit() {
+    this.applyColumnWidths();
+  }
+
+  applyColumnWidths() {
+    const headerRows = this.headerTable.nativeElement.rows;
+    const bodyRows = this.bodyTable.nativeElement.rows;
+
+    if (bodyRows.length > 0) {
+      for (let i = 0; i < headerRows[0].cells.length; i++) {
+        const bodyWidth = bodyRows[0].cells[i].offsetWidth;
+        headerRows[0].cells[i].style.width = `${bodyWidth}px`;
+      }
+    }
   }
 }
