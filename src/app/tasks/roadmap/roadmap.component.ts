@@ -7,44 +7,12 @@ import { Plugin as Selection } from 'gantt-schedule-timeline-calendar/dist/plugi
 @Component({
   selector: 'app-roadmap',
   template: `
-    <div class="container">
-      <div #gstcElement></div>
-    </div>
+    <p>
+      roadmap don't work! why???
+    </p>
+    <div #gstcElement></div>
   `,
-  styles: [`
-    .status-badge {
-      padding: 0.2em 0.5em;
-      border-radius: 3px;
-      font-size: 0.9em;
-      color: white;
-      display: inline-block;
-    }
-    .status-badge.not-started {
-      background-color: black;
-    }
-    .status-badge.doing {
-      background-color: yellow;
-      color: black;
-    }
-    .status-badge.in-review {
-      background-color: orange;
-    }
-    .status-badge.done {
-      background-color: green;
-    }
-    .container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      width: 100%;
-    }
-    .gantt-container {
-      width: 100%;
-      max-width: 1200px;
-    }
-  `],
-  encapsulation: ViewEncapsulation.None,
+  
 })
 export class RoadmapComponent implements OnInit {
   @Input() tasks?: any[];
@@ -79,7 +47,7 @@ export class RoadmapComponent implements OnInit {
       const itemId = GSTC.api.GSTCID(task.id.toString());
       items[itemId] = {
         id: itemId,
-        label: this.getTaskLabel(task.status),
+        label: task.name,
         time: {
           start: new Date(task.startDate).getTime(),
           end: new Date(task.dueDate).getTime(),
@@ -120,21 +88,6 @@ export class RoadmapComponent implements OnInit {
       },
       plugins: [TimelinePointer(), Selection()],
     };
-  }
-
-  getTaskLabel(status: number): string {
-    switch (status) {
-      case 0:
-        return '<span class="status-badge not-started">NOT STARTED</span>';
-      case 1:
-        return '<span class="status-badge doing">DOING</span>';
-      case 2:
-        return '<span class="status-badge in-review">IN REVIEW</span>';
-      case 3:
-        return '<span class="status-badge done">DONE</span>';
-      default:
-        return '';
-    }
   }
 
   navigateToTask(taskId: string) {
