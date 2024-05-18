@@ -192,7 +192,8 @@ import { cardColors } from "../../shared/cardColors";
         [projectOrTaskId]="response.id"
         [isTask]="false"
       />
-      <app-roadmap *ngIf="currentView === 'roadmap'"/>
+      <app-roadmap 
+        *ngIf="currentView === 'roadmap'"[tasks]="response?.tasks"/>
     </div>
   `,
 })
