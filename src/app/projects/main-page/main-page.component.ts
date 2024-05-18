@@ -7,12 +7,12 @@ import { cardColors } from "../../shared/cardColors";
 @Component({
   selector: "app-main-page",
   template: `
-    <app-loading *ngIf="response === undefined" />
+    <app-loading *ngIf="response === undefined"/>
     <app-breadcrumbs
       *ngIf="response !== undefined"
       [breadcrumbs]="response.breadcrumbs"
     />
-    <div class="overflow-x-auto mx-20 mt-4 mb-4" *ngIf="response !== undefined">
+    <div class="overflow-x-auto mx-20 my-4" *ngIf="response !== undefined">
       <div class="bg-white py-6 rounded-lg">
         <div class="flex flex-row justify-between gap-20">
           <div class="flex flex-col mb-7">
@@ -34,19 +34,22 @@ import { cardColors } from "../../shared/cardColors";
                   height="25"
                 ></app-dashboard-icon>
                 <span class="font-bold hover:underline text-base text-devotionAccent"
-                  >Ir a dashboard</span
+                >Ir a dashboard</span
                 >
               </a>
               <a routerLink="/project/{{ response.id }}/members">
                 <span class="font-bold hover:underline text-base text-devotionAccent">Ver miembros</span>
               </a>
               <div class="dropdown dropdown-right">
-                <div tabindex="0" role="button" class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••</div>
+                <div tabindex="0" role="button" class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••
+                </div>
                 <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                  <li><a class="flex flex-row gap-2" routerLink="/edit/project">
-                    <app-pencil-icon [detailed]="false" fill="#2A4365" width="15" height="15"/>
-                    Editar
-                  </a></li>
+                  <li>
+                    <button (click)="editProject()" class="flex flex-row gap-2">
+                      <app-pencil-icon [detailed]="false" fill="#2A4365" width="15" height="15"/>
+                      Editar
+                    </button>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -92,8 +95,8 @@ import { cardColors } from "../../shared/cardColors";
             </div>
           </div>
         </div>
-        <div class="flex flex-col justify-between">
-          <h3 class="font-bold mb-4">Tareas</h3>
+        <h3 class="font-bold mb-4">Tareas</h3>
+        <div class="flex flex-row justify-between">
           <div class="flex flex-row items-center gap-5">
             <app-icon
               iconType="table"
@@ -150,13 +153,46 @@ import { cardColors } from "../../shared/cardColors";
               </div>
             </button>
           </div>
+          <div class="flex flex-row items-center gap-5">
+            <div class="flex flex-row items-center gap-1">
+              <input
+                [disabled]="store.loadingSubtasks"
+                type="checkbox"
+                id="showAssigned"
+                name="showAssigned"
+                class="h-5 w-5 text-devotionSecondary"
+                (change)="store.showAssignedTasks = !store.showAssignedTasks"
+              />
+              <label for="showAssigned" class="font-robotoCondensed">Asignado a mí</label>
+            </div>
+            <div class="flex flex-row items-center gap-1">
+              <input
+                [disabled]="store.loadingSubtasks"
+                type="checkbox"
+                id="showSubtree"
+                name="showSubtree"
+                class="h-5 w-5 text-devotionSecondary"
+                (change)="store.showSubtreeTasks = !store.showSubtreeTasks"
+              />
+              <label for="showSubtree" class="font-robotoCondensed">Subtareas</label>
+            </div>
+          </div>
         </div>
       </div>
 
-      <app-table *ngIf="currentView === 'table'" [tasks]="response?.tasks" />
-      <app-kanban *ngIf="currentView === 'kanban'" />
-      <app-calendar *ngIf="currentView === 'calendar'" />
-      <app-roadmap *ngIf="currentView === 'roadmap'"  [tasks]="response?.tasks"/>
+      <app-table
+        *ngIf="currentView === 'table'"
+        [defaultTasks]="response.tasks"
+        [projectOrTaskId]="response.id"
+        [isTask]="false"
+      />
+      <app-kanban *ngIf="currentView === 'kanban'" [projectOrTaskId]="response.id" />
+      <app-calendar
+        *ngIf="currentView === 'calendar'"
+        [projectOrTaskId]="response.id"
+        [isTask]="false"
+      />
+      <app-roadmap *ngIf="currentView === 'roadmap'"/>
     </div>
   `,
 })
@@ -165,7 +201,7 @@ export class MainPageComponent implements OnInit {
     protected api: ApiService,
     private route: ActivatedRoute,
     private router: Router,
-    private store: StoreService
+    protected store: StoreService
   ) {}
 
   response: MainPageProject | undefined;
@@ -183,6 +219,15 @@ export class MainPageComponent implements OnInit {
 
   onTabClick(selected: string) {
     this.currentView = selected;
+  }
+
+  editProject() {
+    // Si es un proyecto top level, todos los usuarios de devotion
+    // deberán poder ser agregados.
+    if ((this.response?.breadcrumbs.length ?? 0) < 2) {
+      this.store.membersPool = [];
+    }
+    void this.router.navigateByUrl("/edit/project");
   }
 
   newTask() {

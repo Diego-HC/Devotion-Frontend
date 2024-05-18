@@ -12,7 +12,7 @@ import { switchMap } from "rxjs";
       *ngIf="taskResponse !== undefined"
       [breadcrumbs]="taskResponse.breadcrumbs"
     />
-    <div class="overflow-x-auto mx-20 mt-4" *ngIf="taskResponse !== undefined">
+    <div class="overflow-x-auto mx-20 my-4" *ngIf="taskResponse !== undefined">
       <div class="bg-white py-6 rounded-lg">
         <div class="flex flex-row justify-between gap-12">
           <div class="flex flex-row">
@@ -86,8 +86,8 @@ import { switchMap } from "rxjs";
           {{ taskResponse.description }}
         </p>
 
-        <div class="flex flex-col justify-between">
-          <h3 class="font-bold md:mb-4 md:mt-12">Tareas</h3>
+        <h3 class="font-bold mb-4">Tareas</h3>
+        <div class="flex flex-row justify-between">
           <div class="flex flex-row items-center gap-5">
             <app-icon
               iconType="table"
@@ -100,7 +100,7 @@ import { switchMap } from "rxjs";
               ></app-table-icon>
             </app-icon>
             <app-icon
-              [iconType]="'kanban'"
+              iconType="kanban"
               [selectedIcon]="currentView"
               (selectedIconChange)="onTabClick($event)"
             >
@@ -110,7 +110,7 @@ import { switchMap } from "rxjs";
               ></app-kanban-icon>
             </app-icon>
             <app-icon
-              [iconType]="'calendar'"
+              iconType="calendar"
               [selectedIcon]="currentView"
               (selectedIconChange)="onTabClick($event)"
             >
@@ -120,14 +120,14 @@ import { switchMap } from "rxjs";
               ></app-calendar-icon>
             </app-icon>
             <app-icon
-              [iconType]="'roadmap'"
+              iconType="roadmap"
               [selectedIcon]="currentView"
               (selectedIconChange)="onTabClick($event)"
             >
               <app-roadmap-icon
                 class="col-start-1 row-start-1"
                 [fill]="currentView === 'roadmap' ? '#FFFFFF' : '#2A4365'"
-              ></app-roadmap-icon>
+              />
             </app-icon>
             <button (click)="newTask()">
               <div class="flex flex-col place-items-center justify-center">
@@ -136,28 +136,59 @@ import { switchMap } from "rxjs";
                 >
                   <app-plus-icon
                     fill="#2A4365"
-                    [width]="'25'"
-                    [height]="'25'"
-                  ></app-plus-icon>
+                    width="25"
+                    height="25"
+                  />
                 </div>
                 <span class="font-robotoCondensed">Nueva tarea</span>
               </div>
             </button>
           </div>
-          <app-table
-            *ngIf="currentView === 'table'"
-            [tasks]="taskResponse!.tasks"
-          />
-          <app-kanban *ngIf="currentView === 'kanban'" />
-          <app-calendar *ngIf="currentView === 'calendar'" [projectOrTaskId]="taskResponse.id" [isTask]="true"/>
-          <app-roadmap *ngIf="currentView === 'roadmap'" />
+          <div class="flex flex-row items-center gap-5">
+            <div class="flex flex-row items-center gap-1">
+              <input
+                [disabled]="store.loadingSubtasks"
+                type="checkbox"
+                id="showAssigned"
+                name="showAssigned"
+                class="h-5 w-5 text-devotionSecondary"
+                (change)="store.showAssignedTasks = !store.showAssignedTasks"
+              />
+              <label for="showAssigned" class="font-robotoCondensed">Asignado a mí</label>
+            </div>
+            <div class="flex flex-row items-center gap-1">
+              <input
+                [disabled]="store.loadingSubtasks"
+                type="checkbox"
+                id="showSubtree"
+                name="showSubtree"
+                class="h-5 w-5 text-devotionSecondary"
+                (change)="store.showSubtreeTasks = !store.showSubtreeTasks"
+              />
+              <label for="showSubtree" class="font-robotoCondensed">Subtareas</label>
+            </div>
+          </div>
         </div>
       </div>
+
+      <app-table
+        *ngIf="currentView === 'table'"
+        [defaultTasks]="taskResponse.tasks"
+        [projectOrTaskId]="taskResponse.id"
+        [isTask]="true"
+      />
+      <app-kanban *ngIf="currentView === 'kanban'" [projectOrTaskId]="taskResponse.id" />
+      <app-calendar
+        *ngIf="currentView === 'calendar'"
+        [projectOrTaskId]="taskResponse.id"
+        [isTask]="true"
+      />
+      <app-roadmap *ngIf="currentView === 'roadmap'"/>
     </div>
   `
 })
 export class TaskMainPageComponent implements OnInit {
-  constructor(private api: ApiService, private store: StoreService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private api: ApiService, protected store: StoreService, private route: ActivatedRoute, private router: Router) {}
 
   taskResponse?: TaskData;
   currentView = "table";
@@ -216,6 +247,6 @@ export class TaskMainPageComponent implements OnInit {
 
   newTask() {
     this.store.clearTask(this.store.task.parentProject, this.store.task.id);
-    this.router.navigateByUrl("/new/task");
+    void this.router.navigateByUrl("/new/task");
   }
 }

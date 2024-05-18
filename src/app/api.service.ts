@@ -59,8 +59,11 @@ export class ApiService {
     "DevOps + Notion anyone?",
     "Checo Pérez no nos patrocina, pero nos gustaría.",
     "Nos gusta mucho el café de Tims.",
-    "Haz clic en \"Mostrar subtareas\" para ver todas las tareas que componen el proyecto actual.",
-    "Haz clic en \"Filtrar asignado a mí\" para ver solo las tareas que te corresponden."
+    "Haz clic en \"Subtareas\" para ver todas las tareas que componen el proyecto actual.",
+    "Haz clic en \"Asignado a mí\" para ver solo las tareas que te corresponden.",
+    "Devotion nunca te pedirá tu contraseña.",
+    "Sabemos que no leíste los términos y condiciones. Nosotros tampoco leímos la documentación de Angular.",
+    "Realmente no conocemos a ningún Hermenegildo.",
   ]
 
   tipsLength = this.tips.length;

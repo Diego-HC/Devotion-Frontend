@@ -48,24 +48,6 @@ type SelectionType = 'leaders' | 'members' | 'assignee';
           }
         </div>
       </div>
-<!--      @if (suggestions.length > 0) {-->
-<!--        <div-->
-<!--          class="scroll-container max-h-[120px] overflow-y-auto md:mt-2"-->
-<!--        >-->
-<!--          <div class="flex flex-wrap md:gap-2 md:mt-2">-->
-<!--            @for (member of store.membersPool; track $index) {-->
-<!--              <div class="box-content bg-gray-200 p-0 font-robotoCondensed font-bold">-->
-<!--                <button-->
-<!--                  class="btn btn-xs px-1 w-full h-full rounded-none bg-gray-200 border-gray-200 "-->
-<!--                  (click)="selectSuggestion(member)"-->
-<!--                >-->
-<!--                  {{ member.name }}-->
-<!--                </button>-->
-<!--              </div>-->
-<!--            }-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      }-->
     </div>
   `,
 })
