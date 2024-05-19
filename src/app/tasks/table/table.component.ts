@@ -27,7 +27,7 @@ import {Router} from '@angular/router';
         </thead>
         <tbody>
         <tr class="cursor-pointer hover:bg-gray-50 border-2 font-robotoCondensed" *ngFor="let task of tasks"
-            (click)="navigateToTask(task.id)">
+            (click)="showTaskPreview(task.id)">
           <td class="text-left px-4 py-2 font-semibold">
             {{ task.name | slice:0:35 }}
           </td>
@@ -45,11 +45,21 @@ import {Router} from '@angular/router';
         </tbody>
       </table>
     </div>
+    <app-task-preview *ngIf="selectedTaskId" [taskID]="selectedTaskId" (closePreview)="closeTaskPreview()"></app-task-preview>
   `,
 })
 export class TableComponent {
 
   @Input() tasks?: any[];
+  selectedTaskId: string | null = null;
+
+  showTaskPreview(taskId: string) {
+    this.selectedTaskId = taskId;
+  }
+
+  closeTaskPreview() {
+    this.selectedTaskId = null;
+  }
 
   constructor(private router: Router) { }
 

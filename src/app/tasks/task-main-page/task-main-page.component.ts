@@ -1,8 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ViewChild, OnDestroy } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
 import { switchMap } from "rxjs";
+import { Subscription } from "rxjs";
+import { TaskPreviewComponent} from "../task-preview/task-preview.component";
 
 @Component({
   selector: "app-task-main-page",
@@ -13,20 +15,15 @@ import { switchMap } from "rxjs";
       [breadcrumbs]="taskResponse.breadcrumbs"
     />
     <div class="overflow-x-auto mx-20 mt-4" *ngIf="taskResponse !== undefined">
-      <div class="bg-white py-6 rounded-lg">
-        <div class="flex flex-row justify-between gap-12">
+      <div class="bg-white md:py-6 rounded-lg">
+        <div class="flex flex-row justify-between md:gap-12">
           <div class="flex flex-row">
-            <h1 class="text-4xl font-helvetica mr-3">
+            <h1 class="text-4xl font-helvetica md:mr-3">
               {{ taskResponse.name }}
             </h1>
             <app-priority-icon [priority]="taskResponse.priority" />
-            <div
-              class="radial-progress bg-devotionSecondary text-devotionPrimary"
-              style="--value:70; --size:2rem; --thickness: 0.5rem;"
-              role="progressbar"
-            ></div>
           </div>
-          <div class="flex flex-row gap-24">
+          <div class="flex flex-row md:gap-24">
             <div class="flex flex-col">
               <h2 class="font-roboto font-bold">Asignado</h2>
               <p class="font-robotoCondensed font-normal">
@@ -47,7 +44,7 @@ import { switchMap } from "rxjs";
             </div>
           </div>
         </div>
-        <div class="flex flex-row items-center gap-4">
+        <div class="flex flex-row items-center md:gap-4">
           <div class="dropdown dropdown-bottom">
             <app-badge
               [status]="statusName(taskResponse.status)"
@@ -156,20 +153,25 @@ import { switchMap } from "rxjs";
     </div>
   `
 })
-export class TaskMainPageComponent implements OnInit {
+export class TaskMainPageComponent implements OnInit, OnDestroy {
   constructor(private api: ApiService, private store: StoreService, private route: ActivatedRoute, private router: Router) {}
-
   taskResponse?: TaskData;
   currentView = "table";
   dropdownOpen = false;
   showWarning = false;
   warningMessage = "";
 
+  @Input() taskId?: string;
+  @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
+
+  private updateSubscription: Subscription = new Subscription();
+
   ngOnInit() {
     this.route.params
       .pipe(
         switchMap((params) => {
           this.taskResponse = undefined;
+          // return this.api.get(`tasks/${this.taskId}/`);
           return this.api.get(`tasks/${params["id"]}/`);
         })
       )
@@ -178,6 +180,25 @@ export class TaskMainPageComponent implements OnInit {
         this.taskResponse = response;
       });
 
+    this.updateSubscription = this.store.needsUpdate$.subscribe(needsUpdate => {
+      if (needsUpdate) {
+        this.fetchApi();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.updateSubscription) {
+      this.updateSubscription.unsubscribe();
+    }
+  }
+
+  fetchApi() {
+    this.api.get(`tasks/${this.taskResponse!.id}/`).subscribe((response) => {
+      this.store.updateTaskFromResponse(response);
+      this.taskResponse = response;
+      this.store.disableButton = false;
+    });
   }
 
   statusName(status: number) {

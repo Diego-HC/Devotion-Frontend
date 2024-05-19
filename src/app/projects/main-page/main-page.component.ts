@@ -1,9 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
 import { cardColors } from "../../shared/cardColors";
-
+import { Subscription} from "rxjs";
+import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.component";
 @Component({
   selector: "app-main-page",
   template: `
@@ -160,7 +161,7 @@ import { cardColors } from "../../shared/cardColors";
     </div>
   `,
 })
-export class MainPageComponent implements OnInit {
+export class MainPageComponent implements OnInit, OnDestroy {
   constructor(
     protected api: ApiService,
     private route: ActivatedRoute,
@@ -172,12 +173,35 @@ export class MainPageComponent implements OnInit {
   cardColors = cardColors;
   currentView: string = "table";
 
+  @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
+
+  private updateSubscription: Subscription = new Subscription();
+
   ngOnInit() {
     this.route.params.subscribe((params) => {
       this.api.get(`projects/${params["id"]}/`).subscribe((response) => {
         this.store.updateProjectFromResponse(response);
         this.response = response;
       });
+    });
+    this.updateSubscription = this.store.needsUpdate$.subscribe(needsUpdate => {
+      if (needsUpdate) {
+        this.fetchApi();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.updateSubscription) {
+      this.updateSubscription.unsubscribe();
+    }
+  }
+
+  fetchApi() {
+    this.api.get(`projects/${this.response!.id}/`).subscribe((response) => {
+      this.store.updateProjectFromResponse(response);
+      this.response = response;
+      this.store.disableButton = false;
     });
   }
 
