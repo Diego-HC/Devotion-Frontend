@@ -55,6 +55,7 @@ import { LeftChevronIconComponent } from './shared/icons/left-chevron-icon/left-
 import { ConfirmGoBackComponent } from './shared/confirm-go-back/confirm-go-back.component';
 import { NewProjectIconComponent } from './shared/icons/new-project-icon/new-project-icon.component';
 import { PencilIconComponent } from './shared/icons/pencil-icon/pencil-icon.component';
+import { IconSidebarComponent } from './shared/icon-sidebar/icon-sidebar.component';
 
 @NgModule({
   declarations: [
@@ -104,6 +105,7 @@ import { PencilIconComponent } from './shared/icons/pencil-icon/pencil-icon.comp
     ConfirmGoBackComponent,
     NewProjectIconComponent,
     PencilIconComponent,
+    IconSidebarComponent,
   ],
   imports: [BrowserModule,
     AppRoutingModule,
