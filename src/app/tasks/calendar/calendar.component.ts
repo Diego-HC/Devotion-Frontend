@@ -1,6 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, Input, OnInit, ViewChild, OnDestroy} from '@angular/core';
 import { ApiService } from "../../api.service";
 import { CalendarService } from "./calendar.service";
+import { TaskPreviewComponent} from "../task-preview/task-preview.component";
+import { Subscription} from "rxjs";
+import { StoreService} from "../../store.service";
 
 @Component({
   selector: 'app-calendar',
@@ -34,15 +37,18 @@ import { CalendarService } from "./calendar.service";
     </table>
   `
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnDestroy {
   months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre", "Enero"];
   weekdays = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
-  constructor(private api: ApiService, protected calService: CalendarService) { }
+  constructor(private api: ApiService, protected calService: CalendarService, protected store: StoreService) { }
 
   @Input() projectOrTaskId: string = '';
   @Input() isTask: boolean = false;
+  @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
+
+  private updateSubscription: Subscription = new Subscription();
 
   calendar?: {matrix: CalendarCellData[][], today: number[]};
   response?: MainPageProjectCalendarView;
@@ -61,6 +67,29 @@ export class CalendarComponent implements OnInit {
         const [calendarRow, calendarCol] = taskData.date;
         this.calendar!.matrix[calendarRow][calendarCol].tasks = taskData.tasks;
       }
+    });
+    this.updateSubscription = this.store.needsUpdate$.subscribe(needsUpdate => {
+      if (needsUpdate) {
+        this.fetchApi();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.updateSubscription) {
+      this.updateSubscription.unsubscribe();
+    }
+  }
+
+  fetchApi() {
+    const endpoint = `${this.isTask ? "tasks" : "projects"}/${this.projectOrTaskId}/?view=calendar&partial=true`;
+    this.api.get(endpoint).subscribe((response: MainPageProjectCalendarView) => {
+      this.response = response;
+      for (const taskData of response.tasks) {
+        const [calendarRow, calendarCol] = taskData.date;
+        this.calendar!.matrix[calendarRow][calendarCol].tasks = taskData.tasks;
+      }
+      this.store.disableButton = false;
     });
   }
 }
