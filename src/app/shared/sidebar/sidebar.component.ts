@@ -21,9 +21,6 @@ import { Component } from "@angular/core";
                 [fill]="currentView === 'dashboard' ? '#2A4365' : '#FFFFFF'"
               />
             </app-icon-sidebar>
-            <p class="text-white" style="font-size:0.6rem">
-              Dashboard
-            </p>
           </a>
         </div>
         <div class="py-3">
@@ -38,9 +35,6 @@ import { Component } from "@angular/core";
                 [fill]="currentView === 'projects' ? '#2A4365' : '#FFFFFF'"
               />
             </app-icon-sidebar>
-            <p class="text-white py-1.5" style="font-size:0.6rem">
-              Proyectos
-            </p>
           </a>
         </div>
         <div class="py-3">
@@ -55,9 +49,6 @@ import { Component } from "@angular/core";
                 [fill]="currentView === 'files' ? '#2A4365' : '#FFFFFF'"
               />
             </app-icon-sidebar>
-            <p class="text-white py-1.5" style="font-size:0.6rem">
-              Archivos
-            </p>
           </a>
         </div>
       </div>
