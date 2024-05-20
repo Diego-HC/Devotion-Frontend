@@ -4,10 +4,10 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'app-kanban-card',
   template: `
-  <div class = "flex w-11/12"> 
+  <div class = "flex w-11/12">
     <div class = "flex flex-col mb-3 w-full">
       <div class = "flex align-middle place-items-center mb-3">
-        <div class = "shadow-sm w-2 h-2 rounded-full border-gray-500 border-solid mr-1" 
+        <div class = "shadow-sm w-2 h-2 rounded-full border-gray-500 border-solid mr-1"
         [class.bg-notStarted]="taskState === 'notStarted'"
         [class.bg-inProgress]="taskState === 'inProgress'"
         [class.bg-inReview]="taskState === 'inReview'"
@@ -21,7 +21,7 @@ import {Router} from '@angular/router';
         [class.bg-done]="taskState === 'done'"> {{ tasks?.length}} </div>
       </div>
       <ng-container *ngFor="let task of tasks">
-      <div class = "flex bg-white shadow-md w-full border-gray-500 rounded-sm m-1  hover:bg-gray-50" (click)="navigateToTask(task.id)">
+      <div class = "flex bg-white shadow-md w-full border-gray-500 rounded-sm m-1  hover:bg-gray-50" (click)="showTaskPreview(task.id)">
         <div class = "w-1 h-fullrounded-sm"
         [class.bg-notStarted]="taskState === 'notStarted'"
         [class.bg-inProgress]="taskState === 'inProgress'"
@@ -35,13 +35,23 @@ import {Router} from '@angular/router';
       </ng-container>
     </div>
   </div>
+  <app-task-preview *ngIf="selectedTaskId" [taskID]="selectedTaskId" (closePreview)="closeTaskPreview()"></app-task-preview>
   `
 })
 export class KanbanCardComponent {
   @Input() taskState: string = '';
   @Input() tasks? : TaskKanban[] = [];
+  selectedTaskId: string | null = null;
 
   constructor(private router: Router) { }
+
+  showTaskPreview(taskId: string) {
+    this.selectedTaskId = taskId;
+  }
+
+  closeTaskPreview() {
+    this.selectedTaskId = null;
+  }
 
   navigateToTask(taskid: string){
     this.router.navigate(['/task', taskid]);
@@ -57,7 +67,7 @@ export class KanbanCardComponent {
         return 'En Revisión';
       case 'done':
         return 'Completado';
-      default: 
+      default:
         return 'Unknown';
     }
   }
@@ -72,7 +82,7 @@ export class KanbanCardComponent {
         return 'bg-inReview';
       case 'done':
         return 'bg-done';
-      default: 
+      default:
         return 'Unknown';
     }
   }
