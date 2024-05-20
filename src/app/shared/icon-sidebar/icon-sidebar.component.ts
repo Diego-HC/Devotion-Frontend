@@ -13,6 +13,7 @@ import { Input, Output, EventEmitter } from "@angular/core";
                           [ngClass]="{'hidden':selectedIcon !== iconType}"></span>
             <ng-content></ng-content>
           </div>
+          <span class="font-robotoCondensed" style="font-size:0.7rem" >{{ iconName }}</span>
         </div>
       </div>
     </a>
