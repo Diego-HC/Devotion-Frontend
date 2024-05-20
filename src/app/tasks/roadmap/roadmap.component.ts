@@ -14,7 +14,7 @@ import { GanttComponent } from '@syncfusion/ej2-angular-gantt';
     <p>
      
     </p>
-    <ejs-gantt height="390px"
+    <ejs-gantt height="300px"
     [dataSource]="data"
     [taskFields]="taskSettings">
     
