@@ -1,99 +1,116 @@
 import { Component, Input, OnInit, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import GSTC, { Config, GSTCResult } from 'gantt-schedule-timeline-calendar';
-import { Plugin as TimelinePointer } from 'gantt-schedule-timeline-calendar/dist/plugins/timeline-pointer.esm.min.js';
-import { Plugin as Selection } from 'gantt-schedule-timeline-calendar/dist/plugins/selection.esm.min.js';
+import {Subscription, from} from "rxjs";
+import {ApiService} from "../../api.service";
+import {StoreService} from "../../store.service";
+
+import { selfData } from './data';
+import { GanttComponent } from '@syncfusion/ej2-angular-gantt';
+//import {DataManager, WebApiAdaptor} from '@syncfusion/ej2-data';
 
 @Component({
   selector: 'app-roadmap',
   template: `
     <p>
       roadmap don't work! why???
+      This finally works bitch
     </p>
-    <div #gstcElement></div>
+    <ejs-gantt height="390px"
+    [dataSource]="data"
+    [taskFields]="taskSettings">
+    
+    
+    <e-columns>
+        <e-column field='TaskID' headerText='TaskID' textAlign='Left'>
+            <ng-template #template let-data>
+                <div>{{data.TaskID}}</div>
+            </ng-template>
+        </e-column>
+        <e-column field='TaskName' headerText='Task Name' width='250'></e-column>
+          <ng-template #template let-data>
+              <div *ngFor="let task of tasks" (click)="navigateToTask(task.id)">
+              {{ task.name | slice:0:35 }}
+              </div>
+          </ng-template>
+        <e-column field='Date' headerText='Date' width='150'>
+            <ng-template #template let-data>
+                <div>{{getFormattedDates(data.StartDate, data.EndDate)}}</div>
+            </ng-template>
+        </e-column>
+    </e-columns>
+    </ejs-gantt>
+    
   `,
   
 })
 export class RoadmapComponent implements OnInit {
-  @Input() tasks?: any[];
-  @Input() taskId: string = '';
-  @ViewChild('gstcElement', { static: true }) gstcElement!: ElementRef;
+  
+  public data : Object[] = selfData;
+  /*public data : DataManager = new DataManager({
+    url: 'https://ej2services.syncfusion.com/production/web-services/api/GanttData',
+    adaptor: new WebApiAdaptor,
+    crossDomain: true
+  });*/
+  public toolbarOptions: any = ["ExpandAll", "CollapseAll"];
+  public taskSettings: Object = {
+    id: 'TaskID',
+    name: 'TaskName',
+    startDate: 'StartDate',
+    endDate: 'EndDate'
+  }; 
 
-  gstc!: GSTCResult;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private api: ApiService, protected store: StoreService) { }
+
+  @ViewChild('headerTable') headerTable!: ElementRef;
+  @ViewChild('bodyTable') bodyTable!: ElementRef;
+
+  @Input() defaultTasks?: Task[];
+  @Input() projectOrTaskId = ""
+  @Input() isTask = false;
+
+  private subscriptions = new Subscription();
+  tasks?: Task[];
 
   ngOnInit(): void {
-    if (this.tasks && this.tasks.length > 0) {
-      const state = GSTC.api.stateFromConfig(this.generateConfig());
-      this.gstc = GSTC({
-        element: this.gstcElement.nativeElement,
-        state,
-      });
-    }
+    this.subscriptions.add(this.store.showAssignedTasks$.subscribe(() => this.updateTasks()));
+    this.subscriptions.add(this.store.showSubtreeTasks$.subscribe(() => this.updateTasks()));
+    this.updateTasks()
   }
-
-  generateConfig(): Config {
-    const rows: { [key: string]: any } = {};
-    const items: { [key: string]: any } = {};
-
-    this.tasks?.forEach((task, index) => {
-      const rowId = GSTC.api.GSTCID(task.id.toString());
-      rows[rowId] = {
-        id: rowId,
-        label: task.name,
-      };
-
-      const itemId = GSTC.api.GSTCID(task.id.toString());
-      items[itemId] = {
-        id: itemId,
-        label: task.name,
-        time: {
-          start: new Date(task.startDate).getTime(),
-          end: new Date(task.dueDate).getTime(),
-        },
-        rowId: rowId,
-      };
+  updateTasks() {
+    if (!this.store.showAssignedTasks && !this.store.showSubtreeTasks) {
+      this.tasks = this.defaultTasks;
+      setTimeout(() => this.applyColumnWidths(), 0);
+      return;
+    }
+    this.store.loadingSubtasks = true;
+    const endpoint = `${this.isTask ? "tasks" : "projects"}/${this.projectOrTaskId}/?get=tasks&assigned=${this.store.showAssignedTasks}&subtree=${this.store.showSubtreeTasks}`;
+    this.api.get(endpoint).subscribe((response) => {
+      this.tasks = response.tasks;
+      setTimeout(() => this.applyColumnWidths(), 0);
+      this.store.loadingSubtasks = false;
     });
-
-    const columns = {
-      percent: 100,
-      resizer: {
-        inRealTime: true,
-      },
-      data: {
-        [GSTC.api.GSTCID('label')]: {
-          id: GSTC.api.GSTCID('label'),
-          data: 'label',
-          expander: true,
-          isHtml: true,
-          width: 230,
-          minWidth: 100,
-          header: {
-            content: 'Tarea',
-          },
-        },
-      },
-    };
-
-    return {
-      licenseKey:
-        '====BEGIN LICENSE KEY====\nXOfH/lnVASM6et4Co473t9jPIvhmQ/l0X3Ewog30VudX6GVkOB0n3oDx42NtADJ8HjYrhfXKSNu5EMRb5KzCLvMt/pu7xugjbvpyI1glE7Ha6E5VZwRpb4AC8T1KBF67FKAgaI7YFeOtPFROSCKrW5la38jbE5fo+q2N6wAfEti8la2ie6/7U2V+SdJPqkm/mLY/JBHdvDHoUduwe4zgqBUYLTNUgX6aKdlhpZPuHfj2SMeB/tcTJfH48rN1mgGkNkAT9ovROwI7ReLrdlHrHmJ1UwZZnAfxAC3ftIjgTEHsd/f+JrjW6t+kL6Ef1tT1eQ2DPFLJlhluTD91AsZMUg==||U2FsdGVkX1/SWWqU9YmxtM0T6Nm5mClKwqTaoF9wgZd9rNw2xs4hnY8Ilv8DZtFyNt92xym3eB6WA605N5llLm0D68EQtU9ci1rTEDopZ1ODzcqtTVSoFEloNPFSfW6LTIC9+2LSVBeeHXoLEQiLYHWihHu10Xll3KsH9iBObDACDm1PT7IV4uWvNpNeuKJc\npY3C5SG+3sHRX1aeMnHlKLhaIsOdw2IexjvMqocVpfRpX4wnsabNA0VJ3k95zUPS3vTtSegeDhwbl6j+/FZcGk9i+gAy6LuetlKuARjPYn2LH5Be3Ah+ggSBPlxf3JW9rtWNdUoFByHTcFlhzlU9HnpnBUrgcVMhCQ7SAjN9h2NMGmCr10Rn4OE0WtelNqYVig7KmENaPvFT+k2I0cYZ4KWwxxsQNKbjEAxJxrzK4HkaczCvyQbzj4Ppxx/0q+Cns44OeyWcwYD/vSaJm4Kptwpr+L4y5BoSO/WeqhSUQQ85nvOhtE0pSH/ZXYo3pqjPdQRfNm6NFeBl2lwTmZUEuw==\n====END LICENSE KEY====',
-      list: {
-        rows,
-        columns,
-      },
-      chart: {
-        items,
-      },
-      plugins: [TimelinePointer(), Selection()],
-    };
   }
 
   navigateToTask(taskId: string) {
     this.router.navigate(['/task', taskId]);
   }
 
+  ngAfterViewInit() {
+    this.applyColumnWidths();
+  }
+
+  applyColumnWidths() {
+    const headerRows = this.headerTable.nativeElement.rows;
+    const bodyRows = this.bodyTable.nativeElement.rows;
+
+    if (bodyRows.length > 0) {
+      for (let i = 0; i < headerRows[0].cells.length; i++) {
+        const bodyWidth = bodyRows[0].cells[i].offsetWidth;
+        headerRows[0].cells[i].style.width = `${bodyWidth}px`;
+      }
+    }
+  }
   getFormattedDates(startDate: string, endDate: string): string {
     const start = new Date(startDate);
     const end = new Date(endDate);
@@ -114,4 +131,6 @@ export class RoadmapComponent implements OnInit {
 
     return monthNames[monthIndex];
   }
+
+          
 }

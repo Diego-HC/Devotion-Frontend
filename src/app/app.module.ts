@@ -56,6 +56,9 @@ import { ConfirmGoBackComponent } from './shared/confirm-go-back/confirm-go-back
 import { NewProjectIconComponent } from './shared/icons/new-project-icon/new-project-icon.component';
 import { PencilIconComponent } from './shared/icons/pencil-icon/pencil-icon.component';
 
+import {GanttModule, ToolbarService} from '@syncfusion/ej2-angular-gantt'
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -104,6 +107,7 @@ import { PencilIconComponent } from './shared/icons/pencil-icon/pencil-icon.comp
     ConfirmGoBackComponent,
     NewProjectIconComponent,
     PencilIconComponent,
+    
   ],
   imports: [BrowserModule,
     AppRoutingModule,
@@ -112,8 +116,9 @@ import { PencilIconComponent } from './shared/icons/pencil-icon/pencil-icon.comp
     HttpClientModule,
     NgOptimizedImage,
     ReactiveFormsModule,
+    GanttModule,
   ],
-  providers: [],
+  providers: [ToolbarService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

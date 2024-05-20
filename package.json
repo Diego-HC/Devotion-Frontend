@@ -22,11 +22,15 @@
     "@fullcalendar/core": "^6.1.11",
     "@fullcalendar/daygrid": "^6.1.11",
     "@fullcalendar/interaction": "^6.1.11",
+    "@syncfusion/ej2-angular-gantt": "^25.2.4",
+    "angular-gantt": "^2.0.0-rc.1",
+    "angular-gantt-chart": "^1.2.0",
     "angular-oauth2-oidc": "^17.0.2",
     "gantt-schedule-timeline-calendar": "^3.35.6",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.14.3"
+    "zone.js": "~0.14.3",
+    "@syncfusion/ej2-material-theme": "~25.2.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.2.0",
