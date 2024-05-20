@@ -12,8 +12,7 @@ import { GanttComponent } from '@syncfusion/ej2-angular-gantt';
   selector: 'app-roadmap',
   template: `
     <p>
-      roadmap don't work! why???
-      This finally works bitch
+     
     </p>
     <ejs-gantt height="390px"
     [dataSource]="data"
