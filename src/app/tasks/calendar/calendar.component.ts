@@ -1,14 +1,14 @@
 import {Component, Input, OnInit, ViewChild, OnDestroy} from '@angular/core';
-import { ApiService } from "../../api.service";
-import { CalendarService } from "./calendar.service";
 import { TaskPreviewComponent} from "../task-preview/task-preview.component";
-import { Subscription} from "rxjs";
-import { StoreService} from "../../store.service";
+import { ApiService } from "../../api.service";
+import { StoreService } from "../../store.service";
+import { CalendarService } from "./calendar.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-calendar',
   template: `
-    <app-tasks-loading *ngIf="response === undefined" />
+    <app-tasks-loading *ngIf="store.loadingSubtasks" />
     <table class="w-full table" *ngIf="calendar !== undefined">
       <thead>
       <tr>
@@ -44,52 +44,44 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   constructor(private api: ApiService, protected calService: CalendarService, protected store: StoreService) { }
 
-  @Input() projectOrTaskId: string = '';
-  @Input() isTask: boolean = false;
   @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
 
-  private updateSubscription: Subscription = new Subscription();
+  @Input() projectOrTaskId: string = '';
+  @Input() isTask: boolean = false;
 
   calendar?: {matrix: CalendarCellData[][], today: number[]};
   response?: MainPageProjectCalendarView;
   title: string = '';
 
+  private subscriptions = new Subscription();
+
   ngOnInit() {
+    const _generateCalendar = this.generateCalendar.bind(this);
+    this.subscriptions.add(this.store.showAssignedTasks$.subscribe(_generateCalendar));
+    this.subscriptions.add(this.store.showSubtreeTasks$.subscribe(_generateCalendar));
+    this.subscriptions.add(this.store.needsUpdate$.subscribe(_generateCalendar));
+    this.generateCalendar();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
+
+  generateCalendar() {
     this.calendar = this.calService.generateCalendarMatrix();
     const startDate = this.calendar!.matrix[0][0].date;
     const startMonth = startDate!.getMonth();
     this.title = `${this.months[startMonth]}/${this.months[startMonth + 1]} ${startDate!.getFullYear()}`;
 
-    const endpoint = `${this.isTask ? "tasks" : "projects"}/${this.projectOrTaskId}/?view=calendar&partial=true`;
+    this.store.loadingSubtasks = true;
+    const endpoint = `${this.isTask ? "tasks" : "projects"}/${this.projectOrTaskId}/?get=tasks&view=calendar&assigned=${this.store.showAssignedTasks}&subtree=${this.store.showSubtreeTasks}`;
     this.api.get(endpoint).subscribe((response: MainPageProjectCalendarView) => {
       this.response = response;
       for (const taskData of response.tasks) {
         const [calendarRow, calendarCol] = taskData.date;
         this.calendar!.matrix[calendarRow][calendarCol].tasks = taskData.tasks;
       }
-    });
-    this.updateSubscription = this.store.needsUpdate$.subscribe(needsUpdate => {
-      if (needsUpdate) {
-        this.fetchApi();
-      }
-    });
-  }
-
-  ngOnDestroy() {
-    if (this.updateSubscription) {
-      this.updateSubscription.unsubscribe();
-    }
-  }
-
-  fetchApi() {
-    const endpoint = `${this.isTask ? "tasks" : "projects"}/${this.projectOrTaskId}/?view=calendar&partial=true`;
-    this.api.get(endpoint).subscribe((response: MainPageProjectCalendarView) => {
-      this.response = response;
-      for (const taskData of response.tasks) {
-        const [calendarRow, calendarCol] = taskData.date;
-        this.calendar!.matrix[calendarRow][calendarCol].tasks = taskData.tasks;
-      }
-      this.store.disableButton = false;
+      this.store.loadingSubtasks = false;
     });
   }
 }

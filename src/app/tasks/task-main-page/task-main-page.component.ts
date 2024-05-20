@@ -1,9 +1,8 @@
-import { Component, Input, OnInit, ViewChild, OnDestroy } from "@angular/core";
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
 import { switchMap } from "rxjs";
-import { Subscription } from "rxjs";
 import { TaskPreviewComponent} from "../task-preview/task-preview.component";
 
 @Component({
@@ -14,16 +13,16 @@ import { TaskPreviewComponent} from "../task-preview/task-preview.component";
       *ngIf="taskResponse !== undefined"
       [breadcrumbs]="taskResponse.breadcrumbs"
     />
-    <div class="overflow-x-auto mx-20 mt-4" *ngIf="taskResponse !== undefined">
-      <div class="bg-white md:py-6 rounded-lg">
-        <div class="flex flex-row justify-between md:gap-12">
+    <div class="overflow-x-auto mx-20 my-4" *ngIf="taskResponse !== undefined">
+      <div class="bg-white py-6 rounded-lg">
+        <div class="flex flex-row justify-between gap-12">
           <div class="flex flex-row">
-            <h1 class="text-4xl font-helvetica md:mr-3">
+            <h1 class="text-4xl font-helvetica mr-3">
               {{ taskResponse.name }}
             </h1>
             <app-priority-icon [priority]="taskResponse.priority" />
           </div>
-          <div class="flex flex-row md:gap-24">
+          <div class="flex flex-row gap-24">
             <div class="flex flex-col">
               <h2 class="font-roboto font-bold">Asignado</h2>
               <p class="font-robotoCondensed font-normal">
@@ -44,7 +43,7 @@ import { TaskPreviewComponent} from "../task-preview/task-preview.component";
             </div>
           </div>
         </div>
-        <div class="flex flex-row items-center md:gap-4">
+        <div class="flex flex-row items-center gap-4">
           <div class="dropdown dropdown-bottom">
             <app-badge
               [status]="statusName(taskResponse.status)"
@@ -83,8 +82,8 @@ import { TaskPreviewComponent} from "../task-preview/task-preview.component";
           {{ taskResponse.description }}
         </p>
 
-        <div class="flex flex-col justify-between">
-          <h3 class="font-bold md:mb-4 md:mt-12">Tareas</h3>
+        <h3 class="font-bold mb-4">Tareas</h3>
+        <div class="flex flex-row justify-between">
           <div class="flex flex-row items-center gap-5">
             <app-icon
               iconType="table"
@@ -97,7 +96,7 @@ import { TaskPreviewComponent} from "../task-preview/task-preview.component";
               ></app-table-icon>
             </app-icon>
             <app-icon
-              [iconType]="'kanban'"
+              iconType="kanban"
               [selectedIcon]="currentView"
               (selectedIconChange)="onTabClick($event)"
             >
@@ -107,7 +106,7 @@ import { TaskPreviewComponent} from "../task-preview/task-preview.component";
               ></app-kanban-icon>
             </app-icon>
             <app-icon
-              [iconType]="'calendar'"
+              iconType="calendar"
               [selectedIcon]="currentView"
               (selectedIconChange)="onTabClick($event)"
             >
@@ -117,14 +116,14 @@ import { TaskPreviewComponent} from "../task-preview/task-preview.component";
               ></app-calendar-icon>
             </app-icon>
             <app-icon
-              [iconType]="'roadmap'"
+              iconType="roadmap"
               [selectedIcon]="currentView"
               (selectedIconChange)="onTabClick($event)"
             >
               <app-roadmap-icon
                 class="col-start-1 row-start-1"
                 [fill]="currentView === 'roadmap' ? '#FFFFFF' : '#2A4365'"
-              ></app-roadmap-icon>
+              />
             </app-icon>
             <button (click)="newTask()">
               <div class="flex flex-col place-items-center justify-center">
@@ -133,28 +132,62 @@ import { TaskPreviewComponent} from "../task-preview/task-preview.component";
                 >
                   <app-plus-icon
                     fill="#2A4365"
-                    [width]="'25'"
-                    [height]="'25'"
-                  ></app-plus-icon>
+                    width="25"
+                    height="25"
+                  />
                 </div>
                 <span class="font-robotoCondensed">Nueva tarea</span>
               </div>
             </button>
           </div>
-          <app-table
-            *ngIf="currentView === 'table'"
-            [tasks]="taskResponse!.tasks"
-          />
-          <app-kanban *ngIf="currentView === 'kanban'" />
-          <app-calendar *ngIf="currentView === 'calendar'" [projectOrTaskId]="taskResponse.id" [isTask]="true"/>
-          <app-roadmap *ngIf="currentView === 'roadmap'" />
+          <div class="flex flex-row items-center gap-5">
+            <div class="flex flex-row items-center gap-1">
+              <input
+                [disabled]="store.loadingSubtasks"
+                type="checkbox"
+                id="showAssigned"
+                name="showAssigned"
+                class="h-5 w-5 text-devotionSecondary"
+                (change)="store.showAssignedTasks = !store.showAssignedTasks"
+              />
+              <label for="showAssigned" class="font-robotoCondensed">Asignado a mí</label>
+            </div>
+            <div class="flex flex-row items-center gap-1">
+              <input
+                [disabled]="store.loadingSubtasks"
+                type="checkbox"
+                id="showSubtree"
+                name="showSubtree"
+                class="h-5 w-5 text-devotionSecondary"
+                (change)="store.showSubtreeTasks = !store.showSubtreeTasks"
+              />
+              <label for="showSubtree" class="font-robotoCondensed">Subtareas</label>
+            </div>
+          </div>
         </div>
       </div>
+
+      <app-table
+        *ngIf="currentView === 'table'"
+        [defaultTasks]="taskResponse.tasks"
+        [projectOrTaskId]="taskResponse.id"
+        [isTask]="true"
+      />
+      <app-kanban *ngIf="currentView === 'kanban'" [projectOrTaskId]="taskResponse.id" />
+      <app-calendar
+        *ngIf="currentView === 'calendar'"
+        [projectOrTaskId]="taskResponse.id"
+        [isTask]="true"
+      />
+      <app-roadmap *ngIf="currentView === 'roadmap'"/>
     </div>
   `
 })
-export class TaskMainPageComponent implements OnInit, OnDestroy {
-  constructor(private api: ApiService, private store: StoreService, private route: ActivatedRoute, private router: Router) {}
+export class TaskMainPageComponent implements OnInit {
+  constructor(private api: ApiService, protected store: StoreService, private route: ActivatedRoute, private router: Router) {}
+
+  @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
+
   taskResponse?: TaskData;
   currentView = "table";
   dropdownOpen = false;
@@ -162,16 +195,12 @@ export class TaskMainPageComponent implements OnInit, OnDestroy {
   warningMessage = "";
 
   @Input() taskId?: string;
-  @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
-
-  private updateSubscription: Subscription = new Subscription();
 
   ngOnInit() {
     this.route.params
       .pipe(
         switchMap((params) => {
           this.taskResponse = undefined;
-          // return this.api.get(`tasks/${this.taskId}/`);
           return this.api.get(`tasks/${params["id"]}/`);
         })
       )
@@ -179,26 +208,6 @@ export class TaskMainPageComponent implements OnInit, OnDestroy {
         this.store.updateTaskFromResponse(response)
         this.taskResponse = response;
       });
-
-    this.updateSubscription = this.store.needsUpdate$.subscribe(needsUpdate => {
-      if (needsUpdate) {
-        this.fetchApi();
-      }
-    });
-  }
-
-  ngOnDestroy() {
-    if (this.updateSubscription) {
-      this.updateSubscription.unsubscribe();
-    }
-  }
-
-  fetchApi() {
-    this.api.get(`tasks/${this.taskResponse!.id}/`).subscribe((response) => {
-      this.store.updateTaskFromResponse(response);
-      this.taskResponse = response;
-      this.store.disableButton = false;
-    });
   }
 
   statusName(status: number) {
@@ -237,6 +246,6 @@ export class TaskMainPageComponent implements OnInit, OnDestroy {
 
   newTask() {
     this.store.clearTask(this.store.task.parentProject, this.store.task.id);
-    this.router.navigateByUrl("/new/task");
+    void this.router.navigateByUrl("/new/task");
   }
 }

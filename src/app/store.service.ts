@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject} from "rxjs";
+import { Subject, BehaviorSubject } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +15,38 @@ export class StoreService {
   pageWasReloaded = true;
   showConfirmDeletion = false;
   showConfirmGoBack = false;
-  public disableButton= true;
+  disableButton = true;
+  loadingSubtasks = false;
 
-  needsUpdateSubject = new BehaviorSubject<boolean>(false);
+  needsUpdateSubject = new Subject<void>();
   needsUpdate$ = this.needsUpdateSubject.asObservable();
+
+  triggerUpdate() {
+    this.disableButton = true;
+    this.needsUpdateSubject.next();
+  }
+
+  private _showAssignedTasks = new BehaviorSubject<boolean>(false);
+  private _showSubtreeTasks = new BehaviorSubject<boolean>(false);
+
+  showAssignedTasks$ = this._showAssignedTasks.asObservable();
+  showSubtreeTasks$ = this._showSubtreeTasks.asObservable();
+
+  set showAssignedTasks(value: boolean) {
+    this._showAssignedTasks.next(value);
+  }
+
+  get showAssignedTasks() {
+    return this._showAssignedTasks.getValue();
+  }
+
+  set showSubtreeTasks(value: boolean) {
+    this._showSubtreeTasks.next(value);
+  }
+
+  get showSubtreeTasks() {
+    return this._showSubtreeTasks.getValue();
+  }
 
   clearProject(parent = "") {
     this.project = {
@@ -58,7 +86,7 @@ export class StoreService {
 
   updateProjectFromResponse(projectResponse: MainPageProject) {
     this.pageWasReloaded = false;
-    this.membersPool = projectResponse.members;
+    this.membersPool = [...projectResponse.members, ...projectResponse.leaders];
     this.project = {
       ...projectResponse,
     }
@@ -69,11 +97,6 @@ export class StoreService {
     this.task = {
       ...taskResponse,
     }
-  }
-
-  triggerUpdate() {
-    this.disableButton = true;
-    this.needsUpdateSubject.next(true);
   }
 
   projectPostBody(): ProjectPostBody {

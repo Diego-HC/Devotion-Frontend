@@ -55,6 +55,7 @@ import { LeftChevronIconComponent } from './shared/icons/left-chevron-icon/left-
 import { ConfirmGoBackComponent } from './shared/confirm-go-back/confirm-go-back.component';
 import { NewProjectIconComponent } from './shared/icons/new-project-icon/new-project-icon.component';
 import { PencilIconComponent } from './shared/icons/pencil-icon/pencil-icon.component';
+import { IconSidebarComponent } from './shared/icon-sidebar/icon-sidebar.component';
 import { TaskPreviewComponent} from "./tasks/task-preview/task-preview.component";
 import { TaskPreviewInfoComponent } from './tasks/task-preview-info/task-preview-info.component';
 
@@ -106,6 +107,7 @@ import { TaskPreviewInfoComponent } from './tasks/task-preview-info/task-preview
     ConfirmGoBackComponent,
     NewProjectIconComponent,
     PencilIconComponent,
+    IconSidebarComponent,
     TaskPreviewComponent,
     TaskPreviewInfoComponent
   ],
