@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Subject, BehaviorSubject } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,16 @@ export class StoreService {
   pageWasReloaded = true;
   showConfirmDeletion = false;
   showConfirmGoBack = false;
+  disableButton = true;
   loadingSubtasks = false;
+
+  needsUpdateSubject = new Subject<void>();
+  needsUpdate$ = this.needsUpdateSubject.asObservable();
+
+  triggerUpdate() {
+    this.disableButton = true;
+    this.needsUpdateSubject.next();
+  }
 
   private _showAssignedTasks = new BehaviorSubject<boolean>(false);
   private _showSubtreeTasks = new BehaviorSubject<boolean>(false);

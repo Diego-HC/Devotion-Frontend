@@ -1,8 +1,9 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
 import { switchMap } from "rxjs";
+import { TaskPreviewComponent} from "../task-preview/task-preview.component";
 
 @Component({
   selector: "app-task-main-page",
@@ -20,11 +21,6 @@ import { switchMap } from "rxjs";
               {{ taskResponse.name }}
             </h1>
             <app-priority-icon [priority]="taskResponse.priority" />
-            <div
-              class="radial-progress bg-devotionSecondary text-devotionPrimary"
-              style="--value:70; --size:2rem; --thickness: 0.5rem;"
-              role="progressbar"
-            ></div>
           </div>
           <div class="flex flex-row gap-24">
             <div class="flex flex-col">
@@ -190,11 +186,15 @@ import { switchMap } from "rxjs";
 export class TaskMainPageComponent implements OnInit {
   constructor(private api: ApiService, protected store: StoreService, private route: ActivatedRoute, private router: Router) {}
 
+  @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
+
   taskResponse?: TaskData;
   currentView = "table";
   dropdownOpen = false;
   showWarning = false;
   warningMessage = "";
+
+  @Input() taskId?: string;
 
   ngOnInit() {
     this.route.params
@@ -208,7 +208,6 @@ export class TaskMainPageComponent implements OnInit {
         this.store.updateTaskFromResponse(response)
         this.taskResponse = response;
       });
-
   }
 
   statusName(status: number) {

@@ -1,9 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
 import { cardColors } from "../../shared/cardColors";
-
+import { Subscription} from "rxjs";
+import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.component";
 @Component({
   selector: "app-main-page",
   template: `
@@ -196,7 +197,7 @@ import { cardColors } from "../../shared/cardColors";
     </div>
   `,
 })
-export class MainPageComponent implements OnInit {
+export class MainPageComponent implements OnInit, OnDestroy {
   constructor(
     protected api: ApiService,
     private route: ActivatedRoute,
@@ -204,9 +205,13 @@ export class MainPageComponent implements OnInit {
     protected store: StoreService
   ) {}
 
+  @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
+
   response: MainPageProject | undefined;
   cardColors = cardColors;
   currentView: string = "table";
+
+  private subscription: Subscription = new Subscription();
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -214,6 +219,22 @@ export class MainPageComponent implements OnInit {
         this.store.updateProjectFromResponse(response);
         this.response = response;
       });
+    });
+    // Se necesita para actualizar la gráfica de progreso
+    this.subscription = this.store.needsUpdate$.subscribe(() => this.updateProjectInfo());
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  updateProjectInfo() {
+    this.api.get(`projects/${this.response!.id}/?get=info`).subscribe((response) => {
+      this.response = {
+        ...this.response!,
+        ...response,
+      };
+      this.store.disableButton = false;
     });
   }
 

@@ -1,5 +1,4 @@
-import {Component, Input, OnInit, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
-import {Router} from '@angular/router';
+import {Component, Input, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy} from '@angular/core';
 import {Subscription} from "rxjs";
 import {ApiService} from "../../api.service";
 import {StoreService} from "../../store.service";
@@ -36,7 +35,7 @@ import {StoreService} from "../../store.service";
         <table class="w-full" #bodyTable>
           <tbody>
           <tr class="cursor-pointer hover:bg-gray-50 border-2 font-robotoCondensed" *ngFor="let task of tasks"
-              (click)="navigateToTask(task.id)">
+              (click)="showTaskPreview(task.id)">
             <td class="text-left px-4 py-2 font-semibold">
               {{ task.name | slice:0:35 }}
             </td>
@@ -55,10 +54,11 @@ import {StoreService} from "../../store.service";
         </table>
       </div>
     </div>
+    <app-task-preview *ngIf="selectedTaskId" [taskID]="selectedTaskId" (closePreview)="closeTaskPreview()"></app-task-preview>
   `,
 })
-export class TableComponent implements OnInit, AfterViewInit {
-  constructor(private router: Router, private api: ApiService, protected store: StoreService) { }
+export class TableComponent implements OnInit, AfterViewInit, OnDestroy {
+  constructor(private api: ApiService, protected store: StoreService) { }
 
   @ViewChild('headerTable') headerTable!: ElementRef;
   @ViewChild('bodyTable') bodyTable!: ElementRef;
@@ -67,17 +67,29 @@ export class TableComponent implements OnInit, AfterViewInit {
   @Input() projectOrTaskId = ""
   @Input() isTask = false;
 
-  private subscriptions = new Subscription();
   tasks?: Task[];
+  selectedTaskId: string | null = null;
+
+  private subscriptions = new Subscription();
 
   ngOnInit() {
-    this.subscriptions.add(this.store.showAssignedTasks$.subscribe(() => this.updateTasks()));
-    this.subscriptions.add(this.store.showSubtreeTasks$.subscribe(() => this.updateTasks()));
+    const _updateTasks = this.updateTasks.bind(this);
+    this.subscriptions.add(this.store.showAssignedTasks$.subscribe(_updateTasks));
+    this.subscriptions.add(this.store.showSubtreeTasks$.subscribe(_updateTasks));
+    this.subscriptions.add(this.store.needsUpdate$.subscribe(() => this.updateTasks(true)));
     this.updateTasks()
   }
 
-  updateTasks() {
-    if (!this.store.showAssignedTasks && !this.store.showSubtreeTasks) {
+  ngAfterViewInit() {
+    this.applyColumnWidths();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
+
+  updateTasks(force = false) {
+    if (!force && !this.store.showAssignedTasks && !this.store.showSubtreeTasks) {
       this.tasks = this.defaultTasks;
       setTimeout(() => this.applyColumnWidths(), 0);
       return;
@@ -91,14 +103,6 @@ export class TableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  navigateToTask(taskId: string) {
-    this.router.navigate(['/task', taskId]);
-  }
-
-  ngAfterViewInit() {
-    this.applyColumnWidths();
-  }
-
   applyColumnWidths() {
     const headerRows = this.headerTable.nativeElement.rows;
     const bodyRows = this.bodyTable.nativeElement.rows;
@@ -109,5 +113,13 @@ export class TableComponent implements OnInit, AfterViewInit {
         headerRows[0].cells[i].style.width = `${bodyWidth}px`;
       }
     }
+  }
+
+  showTaskPreview(taskId: string) {
+    this.selectedTaskId = taskId;
+  }
+
+  closeTaskPreview() {
+    this.selectedTaskId = null;
   }
 }

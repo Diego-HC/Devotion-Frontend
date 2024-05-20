@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, Input, OnInit, ViewChild, OnDestroy} from '@angular/core';
+import { TaskPreviewComponent} from "../task-preview/task-preview.component";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
 import { CalendarService } from "./calendar.service";
@@ -36,25 +37,34 @@ import { Subscription } from "rxjs";
     </table>
   `
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnDestroy {
   months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre", "Enero"];
   weekdays = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
-  constructor(private api: ApiService, protected store: StoreService, protected calService: CalendarService) { }
+  constructor(private api: ApiService, protected calService: CalendarService, protected store: StoreService) { }
+
+  @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
 
   @Input() projectOrTaskId: string = '';
   @Input() isTask: boolean = false;
 
-  private subscriptions = new Subscription();
   calendar?: {matrix: CalendarCellData[][], today: number[]};
   response?: MainPageProjectCalendarView;
   title: string = '';
 
+  private subscriptions = new Subscription();
+
   ngOnInit() {
-    this.subscriptions.add(this.store.showAssignedTasks$.subscribe(() => this.generateCalendar()));
-    this.subscriptions.add(this.store.showSubtreeTasks$.subscribe(() => this.generateCalendar()));
+    const _generateCalendar = this.generateCalendar.bind(this);
+    this.subscriptions.add(this.store.showAssignedTasks$.subscribe(_generateCalendar));
+    this.subscriptions.add(this.store.showSubtreeTasks$.subscribe(_generateCalendar));
+    this.subscriptions.add(this.store.needsUpdate$.subscribe(_generateCalendar));
     this.generateCalendar();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   generateCalendar() {

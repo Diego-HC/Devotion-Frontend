@@ -56,6 +56,8 @@ import { ConfirmGoBackComponent } from './shared/confirm-go-back/confirm-go-back
 import { NewProjectIconComponent } from './shared/icons/new-project-icon/new-project-icon.component';
 import { PencilIconComponent } from './shared/icons/pencil-icon/pencil-icon.component';
 import { IconSidebarComponent } from './shared/icon-sidebar/icon-sidebar.component';
+import { TaskPreviewComponent} from "./tasks/task-preview/task-preview.component";
+import { TaskPreviewInfoComponent } from './tasks/task-preview-info/task-preview-info.component';
 
 @NgModule({
   declarations: [
@@ -106,6 +108,8 @@ import { IconSidebarComponent } from './shared/icon-sidebar/icon-sidebar.compone
     NewProjectIconComponent,
     PencilIconComponent,
     IconSidebarComponent,
+    TaskPreviewComponent,
+    TaskPreviewInfoComponent
   ],
   imports: [BrowserModule,
     AppRoutingModule,
