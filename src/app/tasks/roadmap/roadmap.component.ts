@@ -20,12 +20,7 @@ import { GanttComponent } from '@syncfusion/ej2-angular-gantt';
     
     
     <e-columns>
-        <e-column field='TaskID' headerText='TaskID' textAlign='Left'>
-            <ng-template #template let-data>
-                <div>{{data.TaskID}}</div>
-            </ng-template>
-        </e-column>
-        <e-column field='TaskName' headerText='Task Name' width='250'></e-column>
+        <e-column field='TaskName' headerText='Tarea' width='250'></e-column>
           <ng-template #template let-data>
               <div *ngFor="let task of tasks" (click)="navigateToTask(task.id)">
               {{ task.name | slice:0:35 }}
