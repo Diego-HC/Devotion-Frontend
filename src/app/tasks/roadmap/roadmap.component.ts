@@ -18,7 +18,7 @@ import {StoreService} from "../../store.service";
         </tr>
         </thead>
       </table>
-      <div class="w-full mb-8 max-h-[400px] overflow-y-auto">
+      <div class="w-full mb-8 max-h-[480px] overflow-y-auto">
         <table class="w-full" #bodyTable>
           <tbody>
           <tr class="cursor-pointer hover:bg-gray-50 border-2 font-robotoCondensed" *ngFor="let task of tasks"(click)="showTaskPreview(task.id)">
@@ -186,6 +186,7 @@ export class RoadmapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isActiveDay(startDate: string, endDate: string, month: number, day: number): boolean {
     const start = new Date(startDate);
+    start.setDate(start.getDate() - 1);
     const end = new Date(endDate);
     const date = new Date(start.getFullYear(), month, day);
 
