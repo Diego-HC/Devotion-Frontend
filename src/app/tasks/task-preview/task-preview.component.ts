@@ -7,14 +7,14 @@ import { Subscription } from 'rxjs';
   selector: 'app-task-preview',
   template: `
     <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white rounded-lg shadow-lg h-[calc(50%-6rem)] w-[calc(50%-6rem)]">
-        <div class="flex justify-end items-center gap-4 mb-4 mr-4">
-          <button (click)="navigateToTask()" [disabled]="isUpdating">0</button>
+      <div class="bg-white rounded-lg shadow-lg w-1/2">
+        <div class="flex justify-end items-center gap-4 mx-6 mt-4">
+          <button (click)="navigateToTask()" [disabled]="isUpdating" class="text-xl">0</button>
           <button (click)="close()" [disabled]="isUpdating">
-            <app-x-icon fill="#2A4365" width="12" height="12"></app-x-icon>
+            <app-x-icon fill="#2A4365" width="20" height="20"></app-x-icon>
           </button>
         </div>
-        <div class="h-40 w-full">
+        <div class="w-full">
           <app-task-preview-info [taskId]="taskID" (taskUpdated)="onTaskUpdated()"></app-task-preview-info>
         </div>
       </div>
