@@ -129,6 +129,10 @@ import { Subscription } from 'rxjs';
         >
           Eliminar Tarea
         </button>
+        <app-confirm-deletion
+          *ngIf="store.showConfirmDeletion"
+          [deletingTask]="true"
+        ></app-confirm-deletion>
         <app-confirm-go-back
           *ngIf="store.showConfirmGoBack"
           [backButtonLink]="backButtonLink"
