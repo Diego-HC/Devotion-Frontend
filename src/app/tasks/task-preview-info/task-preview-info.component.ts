@@ -52,7 +52,7 @@ import { switchMap } from "rxjs";
         </div>
         <h3 class="font-roboto font-bold">Descripción</h3>
         <p
-          class="font-robotoCondensed text-lg md:mb-4 text-[#5E6377] font-normal max-h-32 overflow-auto whitespace-pre-line break-words"
+          class="font-robotoCondensed text-lg md:mb-4 text-[#5E6377] font-normal max-h-32 overflow-auto whitespace-pre-line break-words truncate"
         >
           {{ taskResponse.description }}
         </p>

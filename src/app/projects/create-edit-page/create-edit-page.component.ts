@@ -240,7 +240,10 @@ export class CreateEditPageComponent implements OnInit, OnDestroy {
     const onError = (errorResponse: any) => {
       if (errorResponse.error && errorResponse.error.message) {
         this.warningMessage = errorResponse.error.message;
-      } else {
+      } else if (errorResponse.error.non_field_errors) {
+        this.warningMessage = errorResponse.error.non_field_errors[0];
+      }
+      else {
         this.warningMessage = "Error al realizar la solicitud. Por favor, inténtelo de nuevo.";
       }
       this.showWarning = true;
