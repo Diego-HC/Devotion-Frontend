@@ -9,9 +9,9 @@ export class StoreService {
     this.clear();
   }
 
-  project!: ProjectData;
+  project!: Project;
   task!: Task;
-  membersPool: MinimalUser[] = [];
+  membersPool: User[] = [];
   pageWasReloaded = true;
   showConfirmDeletion = false;
   showConfirmGoBack = false;
@@ -88,7 +88,7 @@ export class StoreService {
     this.clearTask();
   }
 
-  updateProjectFromResponse(projectResponse: MainPageProject) {
+  updateProjectFromResponse(projectResponse: ProjectResponse) {
     this.pageWasReloaded = false;
     this.membersPool = [...projectResponse.members, ...projectResponse.leaders];
     this.project = {
@@ -96,23 +96,23 @@ export class StoreService {
     }
   }
 
-  updateTaskFromResponse(taskResponse: TaskData) {
+  updateTaskFromResponse(taskResponse: TaskResponse) {
     this.pageWasReloaded = false;
     this.task = {
       ...taskResponse,
     }
   }
 
-  projectPostBody(): ProjectPostBody {
+  projectRequestBody(): ProjectRequestBody {
     return {
       ...this.project,
       parent: this.project.parent || undefined,
       leaders: this.project.leaders.map(leader => leader.id).join(','),
-      members: this.project.members.map(member => member.id).join(',')
+      members: this.project.members.map(member => member.id).join(','),
     }
   }
 
-  taskPostBody(): TaskPostBody {
+  taskRequestBody(): TaskRequestBody {
     return {
       ...this.task,
       description: this.task.description,

@@ -37,7 +37,7 @@ export class KanbanCardComponent implements OnInit {
   constructor(private router: Router) { }
 
   @Input() taskStatus: string = '';
-  @Input() tasks? : TaskKanban[] = [];
+  @Input() tasks? : KanbanTask[] = [];
 
   selectedTaskId: string | null = null;
   color: string = '';

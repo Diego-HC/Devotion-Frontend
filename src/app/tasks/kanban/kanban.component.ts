@@ -26,7 +26,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
   @Input() projectOrTaskId: string = '';
   @Input() isTask = false;
 
-  response? : KanbanView;
+  response? : KanbanResponse;
   private subscriptions: Subscription = new Subscription();
 
   ngOnInit(): void {
@@ -44,7 +44,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
   updateTasks() {
     this.store.loadingSubtasks = true;
     const endpoint = `${this.isTask ? "tasks" : "projects"}/${this.projectOrTaskId}/?get=tasks&view=kanban&assigned=${this.store.showAssignedTasks}&subtree=${this.store.showSubtreeTasks}`;
-    this.api.get(endpoint).subscribe((response: KanbanView) => {
+    this.api.get(endpoint).subscribe((response: KanbanResponse) => {
       this.response = response;
       this.store.loadingSubtasks = false;
     });

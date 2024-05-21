@@ -8,37 +8,37 @@ import { TaskPreviewComponent} from "../task-preview/task-preview.component";
 @Component({
   selector: "app-task-main-page",
   template: `
-    <app-loading *ngIf="taskResponse === undefined" />
+    <app-loading *ngIf="task === undefined"/>
     <app-breadcrumbs
-      *ngIf="taskResponse !== undefined"
-      [breadcrumbs]="taskResponse.breadcrumbs"
+      *ngIf="task !== undefined"
+      [breadcrumbs]="task.breadcrumbs"
     />
-    <div class="overflow-x-auto mx-20 my-4" *ngIf="taskResponse !== undefined">
+    <div class="overflow-x-auto mx-20 my-4" *ngIf="task !== undefined">
       <div class="bg-white py-6 rounded-lg">
         <div class="flex flex-row justify-between gap-12">
           <div class="flex flex-row">
             <h1 class="text-4xl font-helvetica mr-3">
-              {{ taskResponse.name }}
+              {{ task.name }}
             </h1>
-            <app-priority-icon [priority]="taskResponse.priority" />
+            <app-priority-icon [priority]="task.priority"/>
           </div>
           <div class="flex flex-row gap-24">
             <div class="flex flex-col">
               <h2 class="font-roboto font-bold">Asignado</h2>
               <p class="font-robotoCondensed font-normal">
-                {{ taskResponse.assignee.name }}
+                {{ task.assignee.name }}
               </p>
             </div>
             <div class="flex flex-col">
               <h2 class="font-roboto font-bold">Fecha Inicio</h2>
               <p class="font-robotoCondensed font-normal">
-                {{ taskResponse.startDate }}
+                {{ task.startDate }}
               </p>
             </div>
             <div class="flex flex-col">
               <h2 class="font-roboto font-bold">Fecha Fin</h2>
               <p class="font-robotoCondensed font-normal">
-                {{ taskResponse.dueDate }}
+                {{ task.dueDate }}
               </p>
             </div>
           </div>
@@ -46,7 +46,7 @@ import { TaskPreviewComponent} from "../task-preview/task-preview.component";
         <div class="flex flex-row items-center gap-4">
           <div class="dropdown dropdown-bottom">
             <app-badge
-              [status]="statusName(taskResponse.status)"
+              [status]="statusName(task.status)"
               tabindex="0"
               role="button"
             ></app-badge>
@@ -79,7 +79,7 @@ import { TaskPreviewComponent} from "../task-preview/task-preview.component";
         <p
           class="font-robotoCondensed text-lg my-4 max-w-3xl text-[#5E6377] font-normal"
         >
-          {{ taskResponse.description }}
+          {{ task.description }}
         </p>
 
         <h3 class="font-bold mb-4">Tareas</h3>
@@ -169,18 +169,18 @@ import { TaskPreviewComponent} from "../task-preview/task-preview.component";
 
       <app-table
         *ngIf="currentView === 'table'"
-        [defaultTasks]="taskResponse.tasks"
-        [projectOrTaskId]="taskResponse.id"
+        [defaultTasks]="task.tasks"
+        [projectOrTaskId]="task.id"
         [isTask]="true"
       />
       <app-kanban
         *ngIf="currentView === 'kanban'"
-        [projectOrTaskId]="taskResponse.id"
+        [projectOrTaskId]="task.id"
         [isTask]="true"
       />
       <app-calendar
         *ngIf="currentView === 'calendar'"
-        [projectOrTaskId]="taskResponse.id"
+        [projectOrTaskId]="task.id"
         [isTask]="true"
       />
       <app-roadmap *ngIf="currentView === 'roadmap'"/>
@@ -192,7 +192,7 @@ export class TaskMainPageComponent implements OnInit {
 
   @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
 
-  taskResponse?: TaskData;
+  task?: TaskResponse;
   currentView = "table";
   dropdownOpen = false;
   showWarning = false;
@@ -204,13 +204,13 @@ export class TaskMainPageComponent implements OnInit {
     this.route.params
       .pipe(
         switchMap((params) => {
-          this.taskResponse = undefined;
+          this.task = undefined;
           return this.api.get(`tasks/${params["id"]}/`);
         })
       )
       .subscribe((response) => {
         this.store.updateTaskFromResponse(response)
-        this.taskResponse = response;
+        this.task = response;
       });
   }
 
@@ -231,10 +231,10 @@ export class TaskMainPageComponent implements OnInit {
 
   updateStatus(status: number) {
     this.api
-      .put(`tasks/${this.taskResponse!.id}/status/`, { status: status })
+      .put(`tasks/${this.task!.id}/status/`, { status: status })
       .subscribe(
         () => {
-          this.taskResponse!.status = status;
+          this.task!.status = status;
           this.dropdownOpen = false;
         },
         (error) => {

@@ -52,7 +52,7 @@ type SelectionType = 'leaders' | 'members' | 'assignee';
   `,
 })
 export class SearchSelectComponent {
-  suggestions: MinimalUser[] = [];
+  suggestions: User[] = [];
   showSuggestions = false;
   searchInput = "";
 
@@ -60,7 +60,7 @@ export class SearchSelectComponent {
 
   constructor(protected store: StoreService) {}
 
-  selection(): MinimalUser[] {
+  selection(): User[] {
     if (this.selecting === 'assignee') {
       if (this.store.task.assignee.id === "") {
         return [];
@@ -70,7 +70,7 @@ export class SearchSelectComponent {
     return this.store.project[this.selecting];
   }
 
-  selectMember(member: MinimalUser) {
+  selectMember(member: User) {
     if (this.selecting === 'assignee') {
       this.store.task.assignee = member;
       return;
@@ -81,7 +81,7 @@ export class SearchSelectComponent {
     this.store.project[this.selecting].push(member);
   }
 
-  deselectMember(member: MinimalUser) {
+  deselectMember(member: User) {
     if (this.selecting === 'assignee') {
       this.store.task.assignee = { id: "", name: "", email: "", isLeader: false };
       return;
@@ -114,7 +114,7 @@ export class SearchSelectComponent {
     });
   }
 
-  selectSuggestion(member: MinimalUser) {
+  selectSuggestion(member: User) {
     this.searchInput = "";
     this.suggestions = [];
     this.selectMember(member);

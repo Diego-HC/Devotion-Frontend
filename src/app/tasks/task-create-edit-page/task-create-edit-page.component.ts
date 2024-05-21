@@ -199,6 +199,7 @@ export class TaskCreateEditPageComponent implements OnInit, OnDestroy {
         due_date: this.store.task.dueDate,
         assignee: this.store.task.assignee
       });
+      this.selectedPriority = ["Baja", "Media", "Alta"][this.store.task.priority];
       this.backButtonLink = `/task/${this.store.task.id}`;
     }
 
@@ -295,12 +296,12 @@ export class TaskCreateEditPageComponent implements OnInit, OnDestroy {
       this.loadingMessage = "Creando tarea...";
       this.showLoading = true;
 
-      this.api.post('tasks/', this.store.taskPostBody()).subscribe(onResponse, onError);
+      this.api.post('tasks/', this.store.taskRequestBody()).subscribe(onResponse, onError);
     } else {
       this.loadingMessage = "Actualizando datos...";
       this.showLoading = true;
 
-      this.api.put(`tasks/${this.store.task.id}/`, this.store.taskPostBody()).subscribe(onResponse, onError);
+      this.api.put(`tasks/${this.store.task.id}/`, this.store.taskRequestBody()).subscribe(onResponse, onError);
     }
   }
 

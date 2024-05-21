@@ -7,23 +7,25 @@ import { switchMap } from "rxjs";
 @Component({
   selector: 'app-task-preview-info',
   template: `
-    <div *ngIf="taskResponse === undefined" class="w-full h-[306px] flex justify-center items-center p-10 pt-0">
+    <div *ngIf="task === undefined" class="w-full h-[308px] flex justify-center items-center p-10 pt-0">
       <video autoplay loop muted class="w-20">
-        <source src="/assets/animation.mp4" type="video/mp4" />
+        <source src="/assets/animation.mp4" type="video/mp4"/>
         Video not supported
       </video>
     </div>
-    <div *ngIf="taskResponse !== undefined" class="w-full p-10 pt-0">
+    <div *ngIf="task !== undefined" class="w-full p-10 pt-0">
       <div class="w-full flex flex-row">
-        <h1 class="text-4xl font-helvetica mr-3">
-          {{ taskResponse.name }}
+        <h1 class="text-4xl font-helvetica mr-3 mb-3 line-clamp-2">
+          {{ task.name }}
         </h1>
-        <app-priority-icon [priority]="taskResponse.priority"/>
+        <div class="flex justify-center items-center min-w-[80px]">
+          <app-priority-icon [priority]="task.priority" />
+        </div>
       </div>
       <div class="w-full flex flex-row items-center gap-4">
         <div class="dropdown dropdown-bottom">
           <app-badge
-            [status]="statusName(taskResponse.status)"
+            [status]="statusName(task.status)"
             tabindex="0"
             role="button"
           ></app-badge>
@@ -57,23 +59,23 @@ import { switchMap } from "rxjs";
       <p
         class="font-robotoCondensed text-lg mb-4 text-[#5E6377] font-normal line-clamp-5"
       >
-        {{ taskResponse.description }}
+        {{ task.description }}
       </p>
       <h2 class="font-roboto font-bold">Asignado</h2>
       <p class="font-robotoCondensed font-normal">
-        {{ taskResponse.assignee.name }}
+        {{ task.assignee.name }}
       </p>
       <div class="flex gap-12 mt-4">
         <div class="flex flex-col">
           <h2 class="font-roboto font-bold">Fecha Inicio</h2>
           <p class="font-robotoCondensed font-normal">
-            {{ taskResponse.startDate }}
+            {{ task.startDate }}
           </p>
         </div>
         <div class="flex flex-col">
           <h2 class="font-roboto font-bold">Fecha Fin</h2>
           <p class="font-robotoCondensed font-normal">
-            {{ taskResponse.dueDate }}
+            {{ task.dueDate }}
           </p>
         </div>
       </div>
@@ -83,7 +85,7 @@ import { switchMap } from "rxjs";
 export class TaskPreviewInfoComponent implements OnInit {
   constructor(private api: ApiService, private store: StoreService, private route: ActivatedRoute, private router: Router) { }
 
-  taskResponse?: TaskData;
+  task?: TaskResponse;
   @Input() taskId?: string;
   @Output() taskUpdated = new EventEmitter<void>();
 
@@ -95,14 +97,14 @@ export class TaskPreviewInfoComponent implements OnInit {
     this.route.params
       .pipe(
         switchMap((params) => {
-          this.taskResponse = undefined;
+          this.task = undefined;
           return this.api.get(`tasks/${this.taskId}/?get=info`);
           // return this.api.get(`tasks/${params["id"]}/`);
         })
       )
       .subscribe((response) => {
         this.store.updateTaskFromResponse(response)
-        this.taskResponse = response;
+        this.task = response;
       });
 
   }
@@ -124,14 +126,14 @@ export class TaskPreviewInfoComponent implements OnInit {
 
   updateStatus(status: number) {
     this.api
-      .put(`tasks/${this.taskResponse!.id}/status/`, { status: status })
+      .put(`tasks/${this.task!.id}/status/`, { status: status })
       .subscribe(
         () => {
-          this.taskResponse!.status = status;
+          this.task!.status = status;
           this.dropdownOpen = false;
           this.api.get(`tasks/${this.taskId}/?get=info`).subscribe((response) => {
             this.store.updateTaskFromResponse(response)
-            this.taskResponse = response;
+            this.task = response;
             this.store.triggerUpdate(); // Emit event when task is updated
             this.taskUpdated.emit();
           });
