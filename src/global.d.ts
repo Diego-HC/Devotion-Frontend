@@ -143,8 +143,10 @@ declare global {
     tasks: KanbanLists;
   }
 
-  // Dashboard types
-  type TaskDashboard = Omit<Task, "startDate" | "asignee" | "status"> & {
+  // Dashboard
+  // ---------
+
+  type DashboardTask = Omit<Task, "startDate" | "assignee" | "status"> & {
     parentProject: string;
   };
 
@@ -165,8 +167,8 @@ declare global {
 
   interface Dashboard {
     projectName: string;
-    tasksToDo: TaskDashboard[];
-    tasksToVerify: TaskDashboard[];
+    tasksToDo: DashboardTask[];
+    tasksToVerify: DashboardTask[];
 
     widgets: Widget[];
     dataSources: DataSource[];

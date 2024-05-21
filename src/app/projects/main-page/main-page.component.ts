@@ -29,7 +29,7 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
             </div>
             <div class="flex flex-row items-center gap-4">
               <a
-                href="{{ '/dashboard/' + response.id }}"
+                href="{{ '/dashboard/' + project.id }}"
                 class="flex flex-row items-center gap-2"
               >
                 <app-dashboard-icon

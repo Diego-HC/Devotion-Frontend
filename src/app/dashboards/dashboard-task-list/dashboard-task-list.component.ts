@@ -24,7 +24,7 @@ import { Component, Input } from "@angular/core";
   `,
 })
 export class DashboardTaskComponent {
-  @Input() task!: TaskDashboard;
+  @Input() task!: DashboardTask;
 }
 
 @Component({
@@ -38,5 +38,5 @@ export class DashboardTaskComponent {
   `,
 })
 export class DashboardTaskListComponent {
-  @Input() tasks: TaskDashboard[] = [];
+  @Input() tasks: DashboardTask[] = [];
 }

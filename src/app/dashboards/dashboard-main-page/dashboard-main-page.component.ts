@@ -97,8 +97,8 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
     private router: Router
   ) {}
 
-  tasksToDo?: TaskDashboard[];
-  tasksToVerify?: TaskDashboard[];
+  tasksToDo?: DashboardTask[];
+  tasksToVerify?: DashboardTask[];
   widgets?: Widget[];
   id = "";
   projectName = "";
