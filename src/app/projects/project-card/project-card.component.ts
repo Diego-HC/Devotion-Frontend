@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "app-project-card",
@@ -11,8 +11,10 @@ import { Component, Input, OnInit } from "@angular/core";
           [ngClass]="this.colors.light"
         >
           <div class="flex flex-col gap-2">
-            <h2 class="break-words max-w-full text-xl font-black mx-6 mt-4">
-              {{ this.shortName }}
+            <h2
+              class="break-words line-clamp-2 max-w-full text-xl font-black mx-6 mt-4"
+            >
+              {{ this.name }}
             </h2>
             @if (this.isLeader) {
             <div
@@ -23,30 +25,18 @@ import { Component, Input, OnInit } from "@angular/core";
             </div>
             }
           </div>
-          <p class="break-words text-xs mx-5 my-3">
-            {{ this.shortDescription }}
+          <p class="break-words line-clamp-2 text-xs mx-5 my-3">
+            {{ this.description }}
           </p>
         </div>
       </a>
     </div>
   `,
 })
-export class ProjectCardComponent implements OnInit {
+export class ProjectCardComponent {
   @Input() id!: string;
   @Input() name!: string;
   @Input() description!: string;
   @Input() colors!: { light: string; normal: string };
   @Input() isLeader!: boolean;
-
-  shortName!: string;
-  shortDescription!: string;
-
-  ngOnInit() {
-    this.shortName =
-      this.name.length > 20 ? this.name.slice(0, 20) + "..." : this.name;
-    this.shortDescription =
-      this.description.length > 50
-        ? this.description.slice(0, 37) + "..."
-        : this.description;
-  }
 }

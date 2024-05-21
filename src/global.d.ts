@@ -1,3 +1,5 @@
+import { WidgetDisplayType } from "./app/dashboards/widgets/widget-display-type";
+
 declare global {
   // Usuarios
   // --------
@@ -139,6 +141,35 @@ declare global {
   // Asume que se pasó get=tasks en el endpoint
   interface KanbanResponse {
     tasks: KanbanLists;
+  }
+
+  // Dashboard types
+  type TaskDashboard = Omit<Task, "startDate" | "asignee" | "status"> & {
+    parentProject: string;
+  };
+
+  interface DataSource {
+    id: string;
+    name: string;
+    mqttTopic: string;
+  }
+
+  interface Widget {
+    id: string;
+    name: string;
+    displayType: WidgetDisplayType;
+    dataSource: DataSource;
+    position: number;
+    unit: string;
+  }
+
+  interface Dashboard {
+    projectName: string;
+    tasksToDo: TaskDashboard[];
+    tasksToVerify: TaskDashboard[];
+
+    widgets: Widget[];
+    dataSources: DataSource[];
   }
 }
 

@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { HttpClientModule } from "@angular/common/http";
 import { OAuthModule } from "angular-oauth2-oidc";
 
 import { AppRoutingModule } from "./app-routing.module";
@@ -23,6 +23,15 @@ import { TableComponent } from "./tasks/table/table.component";
 import { KanbanComponent } from "./tasks/kanban/kanban.component";
 import { CalendarComponent } from "./tasks/calendar/calendar.component";
 import { RoadmapComponent } from "./tasks/roadmap/roadmap.component";
+import { DashboardMainPageComponent } from "./dashboards/dashboard-main-page/dashboard-main-page.component";
+import {
+  DashboardTaskListComponent,
+  DashboardTaskComponent,
+} from "./dashboards/dashboard-task-list/dashboard-task-list.component";
+import { WidgetComponent } from "./dashboards/widgets/widget/widget.component";
+import { WidgetNumberComponent } from "./dashboards/widgets/widget-number/widget-number.component";
+import { CreateWidgetComponent } from "./dashboards/widgets/create-widget/create-widget.component";
+import { DataSourcesMainPageComponent } from './dashboards/dataSources/data-sources-main-page/data-sources-main-page.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginComponent } from './login/login.component';
 import { BadgeComponent } from './shared/badge/badge.component';
@@ -104,6 +113,13 @@ import { TaskPreviewInfoComponent } from './tasks/task-preview-info/task-preview
     CheckmarkIconComponent,
     XIconComponent,
     LeftChevronIconComponent,
+    DashboardMainPageComponent,
+    DashboardTaskListComponent,
+    DashboardTaskComponent,
+    WidgetComponent,
+    WidgetNumberComponent,
+    CreateWidgetComponent,
+    DataSourcesMainPageComponent,
     ConfirmGoBackComponent,
     NewProjectIconComponent,
     PencilIconComponent,
@@ -111,7 +127,8 @@ import { TaskPreviewInfoComponent } from './tasks/task-preview-info/task-preview
     TaskPreviewComponent,
     TaskPreviewInfoComponent
   ],
-  imports: [BrowserModule,
+  imports: [
+    BrowserModule,
     AppRoutingModule,
     OAuthModule.forRoot(),
     FormsModule,
