@@ -193,7 +193,10 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
         [projectOrTaskId]="response.id"
         [isTask]="false"
       />
-      <app-roadmap *ngIf="currentView === 'roadmap'"/>
+      <app-roadmap *ngIf="currentView === 'roadmap'"
+        [defaultTasks]="response.tasks"
+        [projectOrTaskId]="response.id"
+        [isTask]="false"/>
     </div>
   `,
 })
