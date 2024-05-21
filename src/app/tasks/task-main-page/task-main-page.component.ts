@@ -173,7 +173,11 @@ import { TaskPreviewComponent} from "../task-preview/task-preview.component";
         [projectOrTaskId]="taskResponse.id"
         [isTask]="true"
       />
-      <app-kanban *ngIf="currentView === 'kanban'" [projectOrTaskId]="taskResponse.id" />
+      <app-kanban
+        *ngIf="currentView === 'kanban'"
+        [projectOrTaskId]="taskResponse.id"
+        [isTask]="true"
+      />
       <app-calendar
         *ngIf="currentView === 'calendar'"
         [projectOrTaskId]="taskResponse.id"
