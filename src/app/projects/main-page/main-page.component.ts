@@ -75,6 +75,7 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
               <button
                 (click)="newSubproject()"
                 class="place-self-center w-[12.375rem] h-24"
+                id="newSubprojectButton"
               >
                 <div
                   class="flex flex-col place-items-center justify-center h-full"
