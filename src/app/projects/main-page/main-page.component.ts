@@ -1,18 +1,19 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
 import { cardColors } from "../../shared/cardColors";
-
+import { Subscription} from "rxjs";
+import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.component";
 @Component({
   selector: "app-main-page",
   template: `
-    <app-loading *ngIf="response === undefined" />
+    <app-loading *ngIf="response === undefined"/>
     <app-breadcrumbs
       *ngIf="response !== undefined"
       [breadcrumbs]="response.breadcrumbs"
     />
-    <div class="overflow-x-auto mx-20 mt-4 mb-4" *ngIf="response !== undefined">
+    <div class="overflow-x-auto mx-20 my-4" *ngIf="response !== undefined">
       <div class="bg-white py-6 rounded-lg">
         <div class="flex flex-row justify-between gap-20">
           <div class="flex flex-col mb-7">
@@ -45,12 +46,15 @@ import { cardColors } from "../../shared/cardColors";
                 <span class="font-bold hover:underline text-base text-devotionAccent">Ver miembros</span>
               </a>
               <div class="dropdown dropdown-right">
-                <div tabindex="0" role="button" class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••</div>
+                <div tabindex="0" role="button" class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••
+                </div>
                 <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                  <li><a class="flex flex-row gap-2" routerLink="/edit/project">
-                    <app-pencil-icon [detailed]="false" fill="#2A4365" width="15" height="15"/>
-                    Editar
-                  </a></li>
+                  <li>
+                    <button (click)="editProject()" class="flex flex-row gap-2">
+                      <app-pencil-icon [detailed]="false" fill="#2A4365" width="15" height="15"/>
+                      Editar
+                    </button>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -75,6 +79,7 @@ import { cardColors } from "../../shared/cardColors";
               <button
                 (click)="newSubproject()"
                 class="place-self-center w-[12.375rem] h-24"
+                id="newSubprojectButton"
               >
                 <div
                   class="flex flex-col place-items-center justify-center h-full"
@@ -96,8 +101,8 @@ import { cardColors } from "../../shared/cardColors";
             </div>
           </div>
         </div>
-        <div class="flex flex-col justify-between">
-          <h3 class="font-bold mb-4">Tareas</h3>
+        <h3 class="font-bold mb-4">Tareas</h3>
+        <div class="flex flex-row justify-between">
           <div class="flex flex-row items-center gap-5">
             <app-icon
               iconType="table"
@@ -154,27 +159,71 @@ import { cardColors } from "../../shared/cardColors";
               </div>
             </button>
           </div>
+          <div class="flex flex-row items-center gap-5">
+            <div class="flex flex-row items-center gap-1">
+              <input
+                [disabled]="store.loadingSubtasks"
+                type="checkbox"
+                id="showAssigned"
+                name="showAssigned"
+                class="h-5 w-5 text-devotionSecondary"
+                (change)="store.showAssignedTasks = !store.showAssignedTasks"
+              />
+              <label for="showAssigned" class="font-robotoCondensed">Asignado a mí</label>
+            </div>
+            <div class="flex flex-row items-center gap-1">
+              <input
+                [disabled]="store.loadingSubtasks"
+                type="checkbox"
+                id="showSubtree"
+                name="showSubtree"
+                class="h-5 w-5 text-devotionSecondary"
+                (change)="store.showSubtreeTasks = !store.showSubtreeTasks"
+              />
+              <label for="showSubtree" class="font-robotoCondensed">Subtareas</label>
+            </div>
+          </div>
         </div>
       </div>
 
-      <app-table *ngIf="currentView === 'table'" [tasks]="response.tasks" />
-      <app-kanban *ngIf="currentView === 'kanban'" [projectOrTaskId]="response.id" />
-      <app-calendar *ngIf="currentView === 'calendar'" [projectOrTaskId]="response.id" [isTask]="false" />
-      <app-roadmap *ngIf="currentView === 'roadmap'" />
+      <app-table
+        *ngIf="currentView === 'table'"
+        [defaultTasks]="response.tasks"
+        [projectOrTaskId]="response.id"
+        [isTask]="false"
+      />
+      <app-kanban
+        *ngIf="currentView === 'kanban'"
+        [projectOrTaskId]="response.id"
+        [isTask]="false"
+      />
+      <app-calendar
+        *ngIf="currentView === 'calendar'"
+        [projectOrTaskId]="response.id"
+        [isTask]="false"
+      />
+      <app-roadmap *ngIf="currentView === 'roadmap'"
+        [defaultTasks]="response.tasks"
+        [projectOrTaskId]="response.id"
+        [isTask]="false"/>
     </div>
   `,
 })
-export class MainPageComponent implements OnInit {
+export class MainPageComponent implements OnInit, OnDestroy {
   constructor(
     protected api: ApiService,
     private route: ActivatedRoute,
     private router: Router,
-    private store: StoreService
+    protected store: StoreService
   ) {}
+
+  @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
 
   response: MainPageProject | undefined;
   cardColors = cardColors;
   currentView: string = "table";
+
+  private subscription: Subscription = new Subscription();
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -183,10 +232,35 @@ export class MainPageComponent implements OnInit {
         this.response = response;
       });
     });
+    // Se necesita para actualizar la gráfica de progreso
+    this.subscription = this.store.needsUpdate$.subscribe(() => this.updateProjectInfo());
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  updateProjectInfo() {
+    this.api.get(`projects/${this.response!.id}/?get=info`).subscribe((response) => {
+      this.response = {
+        ...this.response!,
+        ...response,
+      };
+      this.store.disableButton = false;
+    });
   }
 
   onTabClick(selected: string) {
     this.currentView = selected;
+  }
+
+  editProject() {
+    // Si es un proyecto top level, todos los usuarios de devotion
+    // deberán poder ser agregados.
+    if ((this.response?.breadcrumbs.length ?? 0) < 2) {
+      this.store.membersPool = [];
+    }
+    void this.router.navigateByUrl("/edit/project");
   }
 
   newTask() {

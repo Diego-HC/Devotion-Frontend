@@ -1,11 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, Input, OnInit, ViewChild, OnDestroy} from '@angular/core';
+import { TaskPreviewComponent} from "../task-preview/task-preview.component";
 import { ApiService } from "../../api.service";
+import { StoreService } from "../../store.service";
 import { CalendarService } from "./calendar.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-calendar',
   template: `
-    <app-tasks-loading *ngIf="response === undefined" />
+    <app-tasks-loading *ngIf="store.loadingSubtasks" />
     <table class="w-full table" *ngIf="calendar !== undefined">
       <thead>
       <tr>
@@ -34,12 +37,14 @@ import { CalendarService } from "./calendar.service";
     </table>
   `
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnDestroy {
   months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre", "Enero"];
   weekdays = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
-  constructor(private api: ApiService, protected calService: CalendarService) { }
+  constructor(private api: ApiService, protected calService: CalendarService, protected store: StoreService) { }
+
+  @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
 
   @Input() projectOrTaskId: string = '';
   @Input() isTask: boolean = false;
@@ -48,19 +53,35 @@ export class CalendarComponent implements OnInit {
   response?: MainPageProjectCalendarView;
   title: string = '';
 
+  private subscriptions = new Subscription();
+
   ngOnInit() {
+    const _generateCalendar = this.generateCalendar.bind(this);
+    this.subscriptions.add(this.store.showAssignedTasks$.subscribe(_generateCalendar));
+    this.subscriptions.add(this.store.showSubtreeTasks$.subscribe(_generateCalendar));
+    this.subscriptions.add(this.store.needsUpdate$.subscribe(_generateCalendar));
+    this.generateCalendar();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
+
+  generateCalendar() {
     this.calendar = this.calService.generateCalendarMatrix();
     const startDate = this.calendar!.matrix[0][0].date;
     const startMonth = startDate!.getMonth();
     this.title = `${this.months[startMonth]}/${this.months[startMonth + 1]} ${startDate!.getFullYear()}`;
 
-    const endpoint = `${this.isTask ? "tasks" : "projects"}/${this.projectOrTaskId}/?view=calendar&partial=true`;
+    this.store.loadingSubtasks = true;
+    const endpoint = `${this.isTask ? "tasks" : "projects"}/${this.projectOrTaskId}/?get=tasks&view=calendar&assigned=${this.store.showAssignedTasks}&subtree=${this.store.showSubtreeTasks}`;
     this.api.get(endpoint).subscribe((response: MainPageProjectCalendarView) => {
       this.response = response;
       for (const taskData of response.tasks) {
         const [calendarRow, calendarCol] = taskData.date;
         this.calendar!.matrix[calendarRow][calendarCol].tasks = taskData.tasks;
       }
+      this.store.loadingSubtasks = false;
     });
   }
 }

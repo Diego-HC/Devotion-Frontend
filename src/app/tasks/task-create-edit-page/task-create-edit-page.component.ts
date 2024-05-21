@@ -129,6 +129,10 @@ import { Subscription } from 'rxjs';
         >
           Eliminar Tarea
         </button>
+        <app-confirm-deletion
+          *ngIf="store.showConfirmDeletion"
+          [deletingTask]="true"
+        ></app-confirm-deletion>
         <app-confirm-go-back
           *ngIf="store.showConfirmGoBack"
           [backButtonLink]="backButtonLink"
@@ -277,7 +281,10 @@ export class TaskCreateEditPageComponent implements OnInit, OnDestroy {
     const onError = (errorResponse: any) => {
       if (errorResponse.error && errorResponse.error.message) {
         this.warningMessage = errorResponse.error.message;
-      } else {
+      } else if (errorResponse.error.non_field_errors) {
+        this.warningMessage = errorResponse.error.non_field_errors[0];
+      }
+      else {
         this.warningMessage = "Error al realizar la solicitud. Por favor, inténtelo de nuevo.";
       }
       this.showWarning = true;
@@ -301,16 +308,16 @@ export class TaskCreateEditPageComponent implements OnInit, OnDestroy {
     this.selectedPriority = priority;
     switch (this.selectedPriority) {
       case 'Baja':
-        this.store.task.priority = 0;
+        this.taskForm.patchValue({ priority: 0 });
         break;
       case 'Media':
-        this.store.task.priority = 1;
+        this.taskForm.patchValue({ priority: 1 });
         break;
       case 'Alta':
-        this.store.task.priority = 2;
+        this.taskForm.patchValue({ priority: 2 });
         break;
       default:
-        this.store.task.priority = 0;
+        this.taskForm.patchValue({ priority: 0 });
     }
   }
 }
