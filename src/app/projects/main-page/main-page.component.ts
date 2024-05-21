@@ -28,14 +28,18 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
               ></div>
             </div>
             <div class="flex flex-row items-center gap-4">
-              <a href="/dashboard" class="flex flex-row items-center gap-2">
+              <a
+                href="{{ '/dashboard/' + response.id }}"
+                class="flex flex-row items-center gap-2"
+              >
                 <app-dashboard-icon
                   fill="#5CCEFF"
                   width="25"
                   height="25"
                 ></app-dashboard-icon>
-                <span class="font-bold hover:underline text-base text-devotionAccent"
-                >Ir a dashboard</span
+                <span
+                  class="font-bold hover:underline text-base text-devotionAccent"
+                  >Ir a dashboard</span
                 >
               </a>
               <a routerLink="/project/{{ response.id }}/members">
