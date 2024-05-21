@@ -301,16 +301,16 @@ export class TaskCreateEditPageComponent implements OnInit, OnDestroy {
     this.selectedPriority = priority;
     switch (this.selectedPriority) {
       case 'Baja':
-        this.store.task.priority = 0;
+        this.taskForm.patchValue({ priority: 0 });
         break;
       case 'Media':
-        this.store.task.priority = 1;
+        this.taskForm.patchValue({ priority: 1 });
         break;
       case 'Alta':
-        this.store.task.priority = 2;
+        this.taskForm.patchValue({ priority: 2 });
         break;
       default:
-        this.store.task.priority = 0;
+        this.taskForm.patchValue({ priority: 0 });
     }
   }
 }
