@@ -114,7 +114,7 @@ export class CreateEditPageComponent implements OnInit, OnDestroy {
   showBackWarning = false;
   initialFormValue : any;
 
-  private formChangesSubscription: Subscription | undefined;
+  private formChangesSubscription?: Subscription;
 
   projectForm: FormGroup = this.formBuilder.group({
     name: ['', Validators.required],
@@ -232,7 +232,7 @@ export class CreateEditPageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const onResponse = (response: Project) => {
+    const onResponse = (response: BasicProject) => {
       void this.router.navigateByUrl(`/project/${response.id}`);
     };
 
@@ -261,14 +261,14 @@ export class CreateEditPageComponent implements OnInit, OnDestroy {
         }, 2500);
       }
       this.showLoading = true;
-      this.api.post("projects/", this.store.projectPostBody()).subscribe(onResponse, onError);
+      this.api.post("projects/", this.store.projectRequestBody()).subscribe(onResponse, onError);
 
     // Editar proyecto
     } else {
       this.loadingMessage = "Actualizando datos...";
       this.showLoading = true;
 
-      this.api.put(`projects/${this.store.project.id}/`, this.store.projectPostBody()).subscribe(onResponse, onError);
+      this.api.put(`projects/${this.store.project.id}/`, this.store.projectRequestBody()).subscribe(onResponse, onError);
     }
   }
 }

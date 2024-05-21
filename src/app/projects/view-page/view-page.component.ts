@@ -38,7 +38,7 @@ import { StoreService } from "../../store.service";
 export class ViewPageComponent implements OnInit {
   constructor(private router: Router, private api: ApiService, private store: StoreService) {}
 
-  projects: ProjectView[] | undefined;
+  projects: BasicProjectWithRole[] | undefined;
   cardColors = cardColors;
 
   ngOnInit(): void {
