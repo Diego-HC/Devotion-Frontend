@@ -103,7 +103,7 @@ describe("MainPageComponent", () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    await waitForProperty(() => component.response);
+    await waitForProperty(() => component.project);
   });
 
   it("should create", () => {
