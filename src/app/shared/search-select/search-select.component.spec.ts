@@ -2,6 +2,8 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {SearchSelectComponent} from './search-select.component';
 import {StoreService} from "../../store.service";
+import { ReactiveFormsModule} from "@angular/forms";
+import { FormsModule } from "@angular/forms";
 
 describe('SearchSelectComponent', () => {
   let component: SearchSelectComponent;
@@ -12,17 +14,24 @@ describe('SearchSelectComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [SearchSelectComponent],
+      imports: [ReactiveFormsModule, FormsModule],
       providers: [
         {
           provide: StoreService,
           useValue: {
             membersPool: [
               {
+                id: "c4c4d6d8-aeac-482b-9e15-4650b9be22f2",
                 name: "Andrea Guadalupe Badillo Ibarra",
-                email: "A00833511@tec.mx",
+                email: "a00833511@tec.mx",
                 isLeader: true,
               },
             ],
+            project: {
+              members: [],
+              leaders: [],
+              assignee: {id: "", name: "", email: "", isLeader: false},
+            },
           }
         },
       ]
@@ -46,8 +55,14 @@ describe('SearchSelectComponent', () => {
   });
 
   // • CA2H13 - Límite de selección: La cantidad de miembros que se pueden seleccionar son: [1, ∞]
-  // it('should allow selecting a member', () => {
-  //   component.selectSuggestion({name: assigneeId});
-  //   expect(component.selection()).toContain({name: assigneeToSearch});
-  // });
+  it('should allow selecting a member', () => {
+    component.selectSuggestion({id: assigneeId, name: assigneeToSearch, email: "a00833511@tec.mx", isLeader: true});
+    expect(component.selection()).toContain({id: assigneeId, name: assigneeToSearch, email: "a00833511@tec.mx", isLeader: true});
+  });
+
+  // should allow selecting more than one member
+  it('should allow selecting more than one member', () => {
+    component.selectSuggestion({id: assigneeId, name: assigneeToSearch, email: "a00833511@tec.mx", isLeader: true});
+    component.selectSuggestion({id: "05d4349f-8466-4b11-a1eb-fc376421bf3a", name: "Leonardo Corona Garza", email: "a00832792@tec.mx", isLeader: false});
+    expect(component.selection().length).toBe(2)});
 });
