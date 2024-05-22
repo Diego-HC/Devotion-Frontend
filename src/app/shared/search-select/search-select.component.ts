@@ -48,29 +48,11 @@ type SelectionType = 'leaders' | 'members' | 'assignee';
           }
         </div>
       </div>
-<!--      @if (suggestions.length > 0) {-->
-<!--        <div-->
-<!--          class="scroll-container max-h-[120px] overflow-y-auto md:mt-2"-->
-<!--        >-->
-<!--          <div class="flex flex-wrap md:gap-2 md:mt-2">-->
-<!--            @for (member of store.membersPool; track $index) {-->
-<!--              <div class="box-content bg-gray-200 p-0 font-robotoCondensed font-bold">-->
-<!--                <button-->
-<!--                  class="btn btn-xs px-1 w-full h-full rounded-none bg-gray-200 border-gray-200 "-->
-<!--                  (click)="selectSuggestion(member)"-->
-<!--                >-->
-<!--                  {{ member.name }}-->
-<!--                </button>-->
-<!--              </div>-->
-<!--            }-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      }-->
     </div>
   `,
 })
 export class SearchSelectComponent {
-  suggestions: MinimalUser[] = [];
+  suggestions: User[] = [];
   showSuggestions = false;
   searchInput = "";
 
@@ -78,7 +60,7 @@ export class SearchSelectComponent {
 
   constructor(protected store: StoreService) {}
 
-  selection(): MinimalUser[] {
+  selection(): User[] {
     if (this.selecting === 'assignee') {
       if (this.store.task.assignee.id === "") {
         return [];
@@ -88,7 +70,7 @@ export class SearchSelectComponent {
     return this.store.project[this.selecting];
   }
 
-  selectMember(member: MinimalUser) {
+  selectMember(member: User) {
     if (this.selecting === 'assignee') {
       this.store.task.assignee = member;
       return;
@@ -99,7 +81,7 @@ export class SearchSelectComponent {
     this.store.project[this.selecting].push(member);
   }
 
-  deselectMember(member: MinimalUser) {
+  deselectMember(member: User) {
     if (this.selecting === 'assignee') {
       this.store.task.assignee = { id: "", name: "", email: "", isLeader: false };
       return;
@@ -132,7 +114,7 @@ export class SearchSelectComponent {
     });
   }
 
-  selectSuggestion(member: MinimalUser) {
+  selectSuggestion(member: User) {
     this.searchInput = "";
     this.suggestions = [];
     this.selectMember(member);

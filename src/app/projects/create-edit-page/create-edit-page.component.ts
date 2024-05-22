@@ -1,15 +1,20 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {error} from "@angular/compiler-cli/src/transformers/util";
-
+import { Subscription } from 'rxjs';
 @Component({
   selector: "app-create-edit-page",
   template: `
-    <app-loading *ngIf="showLoading" [message]="loadingMessage" />
+    <app-loading *ngIf="showLoading" [message]="loadingMessage"/>
     <div class="px-16" *ngIf="!showLoading && (store.membersPool.length > 0)">
+      <a
+        (click)="backPage()"
+        class="flex flex-row items-center gap-3 text-devotionPrimary text-lg font-semibold">
+        <app-left-chevron-icon/>
+        Volver
+      </a>
       <div class="flex justify-center items-center">
         <div class="px-12 lg:w-1/2 py-10">
           <h1
@@ -24,11 +29,10 @@ import {error} from "@angular/compiler-cli/src/transformers/util";
               />
               <div class="flex flex-col items-center">
                 <button
-                  type="submit"
                   (click)="onSubmit()"
-                  class="bg-devotionPrimary btn-circle items-center justify-center mt-4 text-white font-bold font-helvetica text-3xl w-12 h-12"
+                  class="bg-devotionPrimary btn-circle flex items-center justify-center mt-4 w-12 h-12"
                 >
-                  +
+                  <app-checkmark-icon/>
                 </button>
                 <p class="text-xs font-robotoCondensed">Publicar</p>
               </div>
@@ -85,6 +89,10 @@ import {error} from "@angular/compiler-cli/src/transformers/util";
           <app-confirm-deletion
             *ngIf="store.showConfirmDeletion"
           />
+          <app-confirm-go-back
+            *ngIf="store.showConfirmGoBack"
+            [backButtonLink]="backButtonLink"
+          />
           <div class="md:mt-3"></div>
           <app-alert
             *ngIf="showWarning"
@@ -95,13 +103,18 @@ import {error} from "@angular/compiler-cli/src/transformers/util";
     </div>
   `,
 })
-export class CreateEditPageComponent implements OnInit {
+export class CreateEditPageComponent implements OnInit, OnDestroy {
   constructor(private api: ApiService, protected store: StoreService, private router: Router, private formBuilder: FormBuilder) {}
 
   showWarning = false;
   warningMessage = "";
   showLoading = false;
   loadingMessage = "";
+  backButtonLink = "/home";
+  showBackWarning = false;
+  initialFormValue : any;
+
+  private formChangesSubscription?: Subscription;
 
   projectForm: FormGroup = this.formBuilder.group({
     name: ['', Validators.required],
@@ -120,6 +133,11 @@ export class CreateEditPageComponent implements OnInit {
         this.store.membersPool = users;
       });
     }
+    if (this.store.project.parent) {
+      this.backButtonLink = `/project/${this.store.project.parent}`;
+    } else if (this.store.project.id) {
+      this.backButtonLink = `/project/${this.store.project.id}`;
+    }
 
     // If editing existing project, populate form with existing project data
     if(this.store.project.id) {
@@ -129,6 +147,57 @@ export class CreateEditPageComponent implements OnInit {
         leaders: this.store.project.leaders,
         members: this.store.project.members,
       });
+      this.backButtonLink = `/project/${this.store.project.id}`;
+    }
+
+    // Store initial form value when the form is initialized
+    this.initialFormValue = { ...this.projectForm.value };
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe from valueChanges to prevent memory leaks
+    if (this.formChangesSubscription) {
+      this.formChangesSubscription.unsubscribe();
+    }
+  }
+
+  isEqual(value1: any, value2: any): boolean {
+    // Check if both values are objects
+    if (typeof value1 === 'object' && typeof value2 === 'object') {
+      // Get the keys of both objects
+      const keys1 = Object.keys(value1);
+      const keys2 = Object.keys(value2);
+
+      // Check if the number of keys is the same
+      if (keys1.length !== keys2.length) {
+        return false;
+      }
+
+      // Check if all keys and their values are equal
+      for (const key of keys1) {
+        if (!this.isEqual(value1[key], value2[key])) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    // If not objects, compare values directly
+    return value1 === value2;
+  }
+
+  backPage() {
+    // Check if there are any changes in the form
+    const formHasChanged = !this.isEqual(this.projectForm.value, this.initialFormValue);
+
+    if (formHasChanged) {
+      // If form has changed, show warning or navigate back
+      this.store.showConfirmGoBack = true;
+      this.showBackWarning = true; // Or trigger navigation logic here
+    } else {
+      // If form has not changed, proceed with back navigation
+      this.router.navigateByUrl(this.backButtonLink);
     }
   }
 
@@ -163,7 +232,7 @@ export class CreateEditPageComponent implements OnInit {
       return;
     }
 
-    const onResponse = (response: Project) => {
+    const onResponse = (response: BasicProject) => {
       void this.router.navigateByUrl(`/project/${response.id}`);
     };
 
@@ -171,7 +240,10 @@ export class CreateEditPageComponent implements OnInit {
     const onError = (errorResponse: any) => {
       if (errorResponse.error && errorResponse.error.message) {
         this.warningMessage = errorResponse.error.message;
-      } else {
+      } else if (errorResponse.error.non_field_errors) {
+        this.warningMessage = errorResponse.error.non_field_errors[0];
+      }
+      else {
         this.warningMessage = "Error al realizar la solicitud. Por favor, inténtelo de nuevo.";
       }
       this.showWarning = true;
@@ -189,15 +261,14 @@ export class CreateEditPageComponent implements OnInit {
         }, 2500);
       }
       this.showLoading = true;
-
-      this.api.post("projects/", this.store.projectPostBody()).subscribe(onResponse, onError);
+      this.api.post("projects/", this.store.projectRequestBody()).subscribe(onResponse, onError);
 
     // Editar proyecto
     } else {
       this.loadingMessage = "Actualizando datos...";
       this.showLoading = true;
 
-      this.api.put(`projects/${this.store.project.id}/`, this.store.projectPostBody()).subscribe(onResponse, onError);
+      this.api.put(`projects/${this.store.project.id}/`, this.store.projectRequestBody()).subscribe(onResponse, onError);
     }
   }
 }

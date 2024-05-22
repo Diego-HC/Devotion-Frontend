@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject, BehaviorSubject } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -8,11 +9,48 @@ export class StoreService {
     this.clear();
   }
 
-  project!: ProjectData;
+  project!: Project;
   task!: Task;
-  membersPool: MinimalUser[] = [];
+  membersPool: User[] = [];
   pageWasReloaded = true;
   showConfirmDeletion = false;
+  showConfirmGoBack = false;
+  disableButton = true;
+  loadingSubtasks = false;
+
+  needsUpdateSubject = new Subject<void>();
+  needsUpdate$ = this.needsUpdateSubject.asObservable();
+
+  triggerUpdate() {
+    this.disableButton = true;
+    this.needsUpdateSubject.next();
+  }
+
+  private _showAssignedTasks = new BehaviorSubject<boolean>(false);
+  private _showSubtreeTasks = new BehaviorSubject<boolean>(false);
+
+  showAssignedTasks$ = this._showAssignedTasks.asObservable();
+  showSubtreeTasks$ = this._showSubtreeTasks.asObservable();
+
+  set showAssignedTasks(value: boolean) {
+    this._showAssignedTasks.next(value);
+  }
+
+  get showAssignedTasks() {
+    return this._showAssignedTasks.getValue();
+  }
+
+  set showSubtreeTasks(value: boolean) {
+    this._showSubtreeTasks.next(value);
+  }
+
+  get showSubtreeTasks() {
+    return this._showSubtreeTasks.getValue();
+  }
+
+  // dashboard data
+  dataSources?: DataSource[];
+  widget?: Widget;
 
   clearProject(parent = "") {
     this.project = {
@@ -50,31 +88,31 @@ export class StoreService {
     this.clearTask();
   }
 
-  updateProjectFromResponse(projectResponse: MainPageProject) {
+  updateProjectFromResponse(projectResponse: ProjectResponse) {
     this.pageWasReloaded = false;
-    this.membersPool = projectResponse.members;
+    this.membersPool = [...projectResponse.members, ...projectResponse.leaders];
     this.project = {
       ...projectResponse,
     }
   }
 
-  updateTaskFromResponse(taskResponse: TaskData) {
+  updateTaskFromResponse(taskResponse: TaskResponse) {
     this.pageWasReloaded = false;
     this.task = {
       ...taskResponse,
     }
   }
 
-  projectPostBody(): ProjectPostBody {
+  projectRequestBody(): ProjectRequestBody {
     return {
       ...this.project,
       parent: this.project.parent || undefined,
       leaders: this.project.leaders.map(leader => leader.id).join(','),
-      members: this.project.members.map(member => member.id).join(',')
+      members: this.project.members.map(member => member.id).join(','),
     }
   }
 
-  taskPostBody(): TaskPostBody {
+  taskRequestBody(): TaskRequestBody {
     return {
       ...this.task,
       description: this.task.description,

@@ -5,7 +5,7 @@ import { Component, Input } from '@angular/core';
   template: `
     <div class="w-[calc(100% - 32px)] h-5 mx-2 my-1 flex flex-row" *ngIf="task !== undefined">
       <span class="w-1.5 rounded-l-sm" [ngClass]="taskColor"></span>
-      <a class="w-full h-full" href="/task/{{ task.id }}">
+      <a class="w-full h-full" (click)="showTaskPreview(task.id)">
         <div
           [ngClass]="taskLightColor"
           class="h-full rounded-l-none rounded-sm px-2"
@@ -17,11 +17,21 @@ import { Component, Input } from '@angular/core';
           </div>
         </div>
       </a>
+      <app-task-preview *ngIf="selectedTaskId" [taskID]="task.id" (closePreview)="closeTaskPreview()"></app-task-preview>
     </div>
   `
 })
 export class CalendarTaskComponent {
-  @Input() task?: Task;
+  @Input() task?: CalendarTask;
+  selectedTaskId: string | null = null;
+
+  showTaskPreview(taskId: string) {
+    this.selectedTaskId = taskId;
+  }
+
+  closeTaskPreview() {
+    this.selectedTaskId = null;
+  }
 
   get taskColor(): string {
     switch (this.task?.status) {

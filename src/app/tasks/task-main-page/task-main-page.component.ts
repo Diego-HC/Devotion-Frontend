@@ -1,48 +1,44 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
 import { switchMap } from "rxjs";
+import { TaskPreviewComponent} from "../task-preview/task-preview.component";
 
 @Component({
   selector: "app-task-main-page",
   template: `
-    <app-loading *ngIf="taskResponse === undefined" />
+    <app-loading *ngIf="task === undefined"/>
     <app-breadcrumbs
-      *ngIf="taskResponse !== undefined"
-      [breadcrumbs]="taskResponse.breadcrumbs"
+      *ngIf="task !== undefined"
+      [breadcrumbs]="task.breadcrumbs"
     />
-    <div class="overflow-x-auto mx-20 mt-4" *ngIf="taskResponse !== undefined">
+    <div class="overflow-x-auto mx-20 my-4" *ngIf="task !== undefined">
       <div class="bg-white py-6 rounded-lg">
         <div class="flex flex-row justify-between gap-12">
           <div class="flex flex-row">
             <h1 class="text-4xl font-helvetica mr-3">
-              {{ taskResponse.name }}
+              {{ task.name }}
             </h1>
-            <app-priority-icon [priority]="taskResponse.priority" />
-            <div
-              class="radial-progress bg-devotionSecondary text-devotionPrimary"
-              style="--value:70; --size:2rem; --thickness: 0.5rem;"
-              role="progressbar"
-            ></div>
+            <app-priority-icon [priority]="task.priority"/>
           </div>
           <div class="flex flex-row gap-24">
             <div class="flex flex-col">
               <h2 class="font-roboto font-bold">Asignado</h2>
               <p class="font-robotoCondensed font-normal">
-                {{ taskResponse.assignee.name }}
+                {{ task.assignee.name }}
               </p>
             </div>
             <div class="flex flex-col">
               <h2 class="font-roboto font-bold">Fecha Inicio</h2>
               <p class="font-robotoCondensed font-normal">
-                {{ taskResponse.startDate }}
+                {{ task.startDate }}
               </p>
             </div>
             <div class="flex flex-col">
               <h2 class="font-roboto font-bold">Fecha Fin</h2>
               <p class="font-robotoCondensed font-normal">
-                {{ taskResponse.dueDate }}
+                {{ task.dueDate }}
               </p>
             </div>
           </div>
@@ -50,7 +46,7 @@ import { switchMap } from "rxjs";
         <div class="flex flex-row items-center gap-4">
           <div class="dropdown dropdown-bottom">
             <app-badge
-              [status]="statusName(taskResponse.status)"
+              [status]="statusName(task.status)"
               tabindex="0"
               role="button"
             ></app-badge>
@@ -67,7 +63,10 @@ import { switchMap } from "rxjs";
           <div class="dropdown dropdown-right">
             <div tabindex="0" role="button" class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••</div>
             <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-              <li><a routerLink="/edit/task">Editar</a></li>
+              <li><a class="flex flex-row gap-2" routerLink="/edit/task">
+                <app-pencil-icon [detailed]="false" fill="#2A4365" width="15" height="15"/>
+                Editar
+              </a></li>
             </ul>
           </div>
         </div>
@@ -80,11 +79,11 @@ import { switchMap } from "rxjs";
         <p
           class="font-robotoCondensed text-lg my-4 max-w-3xl text-[#5E6377] font-normal"
         >
-          {{ taskResponse.description }}
+          {{ task.description }}
         </p>
 
-        <div class="flex flex-col justify-between">
-          <h3 class="font-bold md:mb-4 md:mt-12">Tareas</h3>
+        <h3 class="font-bold mb-4">Tareas</h3>
+        <div class="flex flex-row justify-between">
           <div class="flex flex-row items-center gap-5">
             <app-icon
               iconType="table"
@@ -97,7 +96,7 @@ import { switchMap } from "rxjs";
               ></app-table-icon>
             </app-icon>
             <app-icon
-              [iconType]="'kanban'"
+              iconType="kanban"
               [selectedIcon]="currentView"
               (selectedIconChange)="onTabClick($event)"
             >
@@ -107,7 +106,7 @@ import { switchMap } from "rxjs";
               ></app-kanban-icon>
             </app-icon>
             <app-icon
-              [iconType]="'calendar'"
+              iconType="calendar"
               [selectedIcon]="currentView"
               (selectedIconChange)="onTabClick($event)"
             >
@@ -117,14 +116,14 @@ import { switchMap } from "rxjs";
               ></app-calendar-icon>
             </app-icon>
             <app-icon
-              [iconType]="'roadmap'"
+              iconType="roadmap"
               [selectedIcon]="currentView"
               (selectedIconChange)="onTabClick($event)"
             >
               <app-roadmap-icon
                 class="col-start-1 row-start-1"
                 [fill]="currentView === 'roadmap' ? '#FFFFFF' : '#2A4365'"
-              ></app-roadmap-icon>
+              />
             </app-icon>
             <button (click)="newTask()">
               <div class="flex flex-col place-items-center justify-center">
@@ -133,48 +132,86 @@ import { switchMap } from "rxjs";
                 >
                   <app-plus-icon
                     fill="#2A4365"
-                    [width]="'25'"
-                    [height]="'25'"
-                  ></app-plus-icon>
+                    width="25"
+                    height="25"
+                  />
                 </div>
                 <span class="font-robotoCondensed">Nueva tarea</span>
               </div>
             </button>
           </div>
-          <app-table
-            *ngIf="currentView === 'table'"
-            [tasks]="taskResponse!.tasks"
-          />
-          <app-kanban *ngIf="currentView === 'kanban'" />
-          <app-calendar *ngIf="currentView === 'calendar'" [projectOrTaskId]="taskResponse.id" [isTask]="true"/>
-          <app-roadmap *ngIf="currentView === 'roadmap'" />
+          <div class="flex flex-row items-center gap-5">
+            <div class="flex flex-row items-center gap-1">
+              <input
+                [disabled]="store.loadingSubtasks"
+                type="checkbox"
+                id="showAssigned"
+                name="showAssigned"
+                class="h-5 w-5 text-devotionSecondary"
+                (change)="store.showAssignedTasks = !store.showAssignedTasks"
+              />
+              <label for="showAssigned" class="font-robotoCondensed">Asignado a mí</label>
+            </div>
+            <div class="flex flex-row items-center gap-1">
+              <input
+                [disabled]="store.loadingSubtasks"
+                type="checkbox"
+                id="showSubtree"
+                name="showSubtree"
+                class="h-5 w-5 text-devotionSecondary"
+                (change)="store.showSubtreeTasks = !store.showSubtreeTasks"
+              />
+              <label for="showSubtree" class="font-robotoCondensed">Subtareas</label>
+            </div>
+          </div>
         </div>
       </div>
+
+      <app-table
+        *ngIf="currentView === 'table'"
+        [defaultTasks]="task.tasks"
+        [projectOrTaskId]="task.id"
+        [isTask]="true"
+      />
+      <app-kanban
+        *ngIf="currentView === 'kanban'"
+        [projectOrTaskId]="task.id"
+        [isTask]="true"
+      />
+      <app-calendar
+        *ngIf="currentView === 'calendar'"
+        [projectOrTaskId]="task.id"
+        [isTask]="true"
+      />
+      <app-roadmap *ngIf="currentView === 'roadmap'"/>
     </div>
   `
 })
 export class TaskMainPageComponent implements OnInit {
-  constructor(private api: ApiService, private store: StoreService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private api: ApiService, protected store: StoreService, private route: ActivatedRoute, private router: Router) {}
 
-  taskResponse?: TaskData;
+  @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
+
+  task?: TaskResponse;
   currentView = "table";
   dropdownOpen = false;
   showWarning = false;
   warningMessage = "";
 
+  @Input() taskId?: string;
+
   ngOnInit() {
     this.route.params
       .pipe(
         switchMap((params) => {
-          this.taskResponse = undefined;
+          this.task = undefined;
           return this.api.get(`tasks/${params["id"]}/`);
         })
       )
       .subscribe((response) => {
         this.store.updateTaskFromResponse(response)
-        this.taskResponse = response;
+        this.task = response;
       });
-
   }
 
   statusName(status: number) {
@@ -194,10 +231,10 @@ export class TaskMainPageComponent implements OnInit {
 
   updateStatus(status: number) {
     this.api
-      .put(`tasks/${this.taskResponse!.id}/status/`, { status: status })
+      .put(`tasks/${this.task!.id}/status/`, { status: status })
       .subscribe(
         () => {
-          this.taskResponse!.status = status;
+          this.task!.status = status;
           this.dropdownOpen = false;
         },
         (error) => {
@@ -213,6 +250,6 @@ export class TaskMainPageComponent implements OnInit {
 
   newTask() {
     this.store.clearTask(this.store.task.parentProject, this.store.task.id);
-    this.router.navigateByUrl("/new/task");
+    void this.router.navigateByUrl("/new/task");
   }
 }

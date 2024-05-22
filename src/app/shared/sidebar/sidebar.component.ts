@@ -10,33 +10,51 @@ import { Component } from "@angular/core";
     >
       <div>
         <div class="flex flex-col py-3">
-          <a href="" class="flex flex-col place-items-center mt-16">
-            <app-dashboard-icon fill="#FFFFFF" height="30" width="30" />
-            <p class="text-white" style="font-size:0.6rem">
-              Dashboard
-            </p>
+          <a href="/dashboard" class="flex flex-col place-items-center mt-16">
+            <app-icon-sidebar
+              iconType="dashboard"
+              [selectedIcon]="currentView"
+              (selectedIconChange)="onTabClick($event)"
+            >
+              <app-dashboard-icon
+                class="col-start-1 row-start-1" height="30" width="30"
+                [fill]="currentView === 'dashboard' ? '#2A4365' : '#FFFFFF'"
+              />
+            </app-icon-sidebar>
           </a>
         </div>
         <div class="py-3">
           <a href="/home" class="flex flex-col place-items-center">
-            <app-projects-icon fill="#FFFFFF" height="30" width="30" />
-            <p class="text-white py-1.5" style="font-size:0.6rem">
-              Proyectos
-            </p>
+            <app-icon-sidebar
+              iconType="projects"
+              [selectedIcon]="currentView"
+              (selectedIconChange)="onTabClick($event)"
+            >
+              <app-projects-icon
+                class="col-start-1 row-start-1" height="30" width="30"
+                [fill]="currentView === 'projects' ? '#2A4365' : '#FFFFFF'"
+              />
+            </app-icon-sidebar>
           </a>
         </div>
         <div class="py-3">
-          <a href="" class="flex flex-col place-items-center">
-            <app-files-icon fill="#FFFFFF" height="30" width="30" />
-            <p class="text-white py-1.5" style="font-size:0.6rem">
-              Archivos
-            </p>
+          <a href="/files" class="flex flex-col place-items-center">
+            <app-icon-sidebar
+              iconType="files"
+              [selectedIcon]="currentView"
+              (selectedIconChange)="onTabClick($event)"
+            >
+              <app-files-icon
+                class="col-start-1 row-start-1" height="30" width="30"
+                [fill]="currentView === 'files' ? '#2A4365' : '#FFFFFF'"
+              />
+            </app-icon-sidebar>
           </a>
         </div>
       </div>
 
       <div class="flex flex-col items-center gap-2 px-2 py-7">
-        <app-devotion-iso fill="#FFFFFF" />
+        <app-devotion-iso fill="#FFFFFF"/>
         <p class="text-white text-center" style="font-size:0.4rem">
           Powered by SALAD.
         </p>
@@ -44,4 +62,10 @@ import { Component } from "@angular/core";
     </aside>
   `,
 })
-export class SidebarComponent {}
+export class SidebarComponent {
+  currentView: string = "projects";
+
+  onTabClick(selectedIcon: string) {
+    this.currentView = selectedIcon;
+  }
+}

@@ -74,7 +74,7 @@ import { StoreService } from "../../store.service";
 export class ProjectMembersPageComponent implements OnInit{
   constructor(private route: ActivatedRoute, private router: Router, protected store: StoreService) { }
 
-  filteredMembers: MinimalUser[] = [];
+  filteredMembers: User[] = [];
   selectedRole : string = "Todos los roles";
   searchQuery: string = "";
   backButtonLink = "/home";
