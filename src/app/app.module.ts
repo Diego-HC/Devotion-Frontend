@@ -10,7 +10,6 @@ import { AppComponent } from "./app.component";
 import { SidebarComponent } from "./shared/sidebar/sidebar.component";
 import { NavbarComponent } from "./shared/navbar/navbar.component";
 
-import { SubprojectsComponent } from "./projects/subprojects/subprojects.component";
 import { SubprojectCardComponent } from "./projects/subproject-card/subproject-card.component";
 import { BreadcrumbsComponent } from "./shared/breadcrumbs/breadcrumbs.component";
 import { ViewPageComponent } from "./projects/view-page/view-page.component";
@@ -73,7 +72,6 @@ import { TaskPreviewInfoComponent } from './tasks/task-preview-info/task-preview
     AppComponent,
     SidebarComponent,
     NavbarComponent,
-    SubprojectsComponent,
     SubprojectCardComponent,
     BreadcrumbsComponent,
     ViewPageComponent,

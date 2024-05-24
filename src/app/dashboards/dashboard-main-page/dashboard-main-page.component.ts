@@ -15,7 +15,7 @@ import { Subject } from "rxjs";
           {{ projectName }}
         </h1>
         <button class="mr-6" (click)="changeMode()">
-          <app-projects-icon fill="#000000" width="60" height="60" />
+          <app-pencil-icon fill="#000000" width="30" height="30" />
         </button>
       </div>
       <div class="flex items-center gap-4">
