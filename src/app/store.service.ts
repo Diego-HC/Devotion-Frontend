@@ -11,7 +11,7 @@ export class StoreService {
 
   project!: Project;
   task!: Task;
-  membersPool: User[] = [];
+  userPool: User[] = [];
   pageWasReloaded = true;
   showConfirmDeletion = false;
   showConfirmGoBack = false;
@@ -90,7 +90,7 @@ export class StoreService {
 
   updateProjectFromResponse(projectResponse: ProjectResponse) {
     this.pageWasReloaded = false;
-    this.membersPool = [...projectResponse.members, ...projectResponse.leaders];
+    this.userPool = [...projectResponse.members, ...projectResponse.leaders];
     this.project = {
       ...projectResponse,
     }
