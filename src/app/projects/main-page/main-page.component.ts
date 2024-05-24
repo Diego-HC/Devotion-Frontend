@@ -255,11 +255,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   editProject() {
-    // Si es un proyecto top level, todos los usuarios de devotion
-    // deberán poder ser agregados.
-    if ((this.project?.breadcrumbs.length ?? 0) < 2) {
-      this.store.membersPool = [];
-    }
+    this.store.userPool = [];
     void this.router.navigateByUrl("/edit/project");
   }
 

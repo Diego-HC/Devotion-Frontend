@@ -6,49 +6,49 @@ type SelectionType = 'leaders' | 'members' | 'assignee';
 @Component({
   selector: "app-search-select",
   template: `
-    <div class="form-control md:mt-4 md:mb-4">
-      <div class="input-group flex items-center">
-        <div
-          class="flex flex-row flex-wrap py-2 gap-y-1 input input-bordered md:w-full shadow-md items-center h-fit min-h-12 relative"
-          *ngIf="store.membersPool.length > 0"
-        >
-          @for (member of selection(); track $index) {
-            <span class="box-content bg-gray-200 font-robotoCondensed font-bold px-1 mx-1 text-s items-center">
+      <div class="form-control md:mt-4 md:mb-4">
+          <div class="input-group flex items-center">
+              <div
+                      class="flex flex-row flex-wrap py-2 gap-y-1 input input-bordered md:w-full shadow-md items-center h-fit min-h-12 relative"
+                      *ngIf="store.userPool.length > 0"
+              >
+                  @for (member of selection(); track $index) {
+                      <span class="box-content bg-gray-200 font-robotoCondensed font-bold px-1 mx-1 text-s items-center">
               {{ member.name }}
-              <button (click)="deselectMember(member)" class="md:gap-2 ">×</button>
+                          <button (click)="deselectMember(member)" class="md:gap-2 ">×</button>
             </span>
-          }
-          <input
-            class="flex-grow h-full"
-            type="search"
-            [(ngModel)]="searchInput"
-            (keyup)="updateSuggestions($event)"
-            (focusin)="showSuggestions = true"
-            (focusout)="showSuggestions = false"
-          />
-          @if (showSuggestions && suggestions.length > 0) {
-            <dialog
-              class="absolute top-16 left-0 z-10 w-10/12 h-fit max-h-72 overflow-y-scroll p-4 bg-white shadow-lg rounded-md"
-              open
-            >
-              <ul class="list-none flex flex-wrap gap-2">
-                @for (suggestion of suggestions; track $index) {
-                  <li class="">
-                    <button
-                      class="btn btn-xs w-full py-2 h-fit"
-                      (mousedown)="selectSuggestionMouseDown($event)"
-                      (click)="selectSuggestion(suggestion)"
-                    >
-                      {{ suggestion.name }}
-                    </button>
-                  </li>
-                }
-              </ul>
-            </dialog>
-          }
-        </div>
+                  }
+                  <input
+                          class="flex-grow h-full"
+                          type="search"
+                          [(ngModel)]="searchInput"
+                          (keyup)="updateSuggestions($event)"
+                          (focusin)="showSuggestions = true"
+                          (focusout)="showSuggestions = false"
+                  />
+                  @if (showSuggestions && suggestions.length > 0) {
+                      <dialog
+                              class="absolute top-16 left-0 z-10 w-10/12 h-fit max-h-72 overflow-y-scroll p-4 bg-white shadow-lg rounded-md"
+                              open
+                      >
+                          <ul class="list-none flex flex-wrap gap-2">
+                              @for (suggestion of suggestions; track $index) {
+                                  <li class="">
+                                      <button
+                                              class="btn btn-xs w-full py-2 h-fit"
+                                              (mousedown)="selectSuggestionMouseDown($event)"
+                                              (click)="selectSuggestion(suggestion)"
+                                      >
+                                          {{ suggestion.name }}
+                                      </button>
+                                  </li>
+                              }
+                          </ul>
+                      </dialog>
+                  }
+              </div>
+          </div>
       </div>
-    </div>
   `,
 })
 export class SearchSelectComponent {
@@ -108,7 +108,7 @@ export class SearchSelectComponent {
       return;
     }
 
-    this.suggestions = this.store.membersPool.filter((member) => {
+    this.suggestions = this.store.userPool.filter((member) => {
       return !this.selection().includes(member) &&
         member.name.toLowerCase().includes(this.searchInput.toLowerCase());
     });
