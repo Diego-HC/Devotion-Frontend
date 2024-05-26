@@ -8,37 +8,41 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
 @Component({
   selector: "app-main-page",
   template: `
-    <app-loading *ngIf="response === undefined"/>
+    <app-loading *ngIf="project === undefined"/>
     <app-breadcrumbs
-      *ngIf="response !== undefined"
-      [breadcrumbs]="response.breadcrumbs"
+      *ngIf="project !== undefined"
+      [breadcrumbs]="project.breadcrumbs"
     />
-    <div class="overflow-x-auto mx-20 my-4" *ngIf="response !== undefined">
+    <div class="overflow-x-auto mx-20 my-4" *ngIf="project !== undefined">
       <div class="bg-white py-6 rounded-lg">
         <div class="flex flex-row justify-between gap-20">
           <div class="flex flex-col mb-7">
             <div class="flex flex-row gap-6">
               <h1 class="text-4xl font-helvetica">
-                {{ response.name }}
+                {{ project.name }}
               </h1>
               <div
                 class="radial-progress bg-devotionSecondary text-devotionPrimary"
-                [style]="{'--value':response.progress, '--size':'2rem', '--thickness': '0.5rem'}"
+                [style]="{'--value':project.progress, '--size':'2rem', '--thickness': '0.5rem'}"
                 role="progressbar"
               ></div>
             </div>
             <div class="flex flex-row items-center gap-4">
-              <a href="/dashboard" class="flex flex-row items-center gap-2">
+              <a
+                href="{{ '/dashboard/' + project.id }}"
+                class="flex flex-row items-center gap-2"
+              >
                 <app-dashboard-icon
                   fill="#5CCEFF"
                   width="25"
                   height="25"
                 ></app-dashboard-icon>
-                <span class="font-bold hover:underline text-base text-devotionAccent"
-                >Ir a dashboard</span
+                <span
+                  class="font-bold hover:underline text-base text-devotionAccent"
+                  >Ir a dashboard</span
                 >
               </a>
-              <a routerLink="/project/{{ response.id }}/members">
+              <a routerLink="/project/{{ project.id }}/members">
                 <span class="font-bold hover:underline text-base text-devotionAccent">Ver miembros</span>
               </a>
               <div class="dropdown dropdown-right">
@@ -57,7 +61,7 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
             <p
               class="font-robotoCondensed text-lg my-4 max-w-3xl text-[#5E6377] font-normal"
             >
-              {{ response.description }}
+              {{ project.description }}
             </p>
           </div>
 
@@ -66,7 +70,7 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
             <div
               class="flex flex-col flex-wrap content-start gap-4 ml-2 mt-2 h-60 overflow-x-scroll"
             >
-              @for (subproject of response.projects; track $index) {
+              @for (subproject of project.projects; track $index) {
                 <app-subproject-card
                   [subproject]="subproject"
                   [colors]="cardColors[$index % cardColors.length]"
@@ -75,6 +79,7 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
               <button
                 (click)="newSubproject()"
                 class="place-self-center w-[12.375rem] h-24"
+                id="newSubprojectButton"
               >
                 <div
                   class="flex flex-col place-items-center justify-center h-full"
@@ -183,17 +188,24 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
 
       <app-table
         *ngIf="currentView === 'table'"
-        [defaultTasks]="response.tasks"
-        [projectOrTaskId]="response.id"
+        [defaultTasks]="project.tasks"
+        [projectOrTaskId]="project.id"
         [isTask]="false"
       />
-      <app-kanban *ngIf="currentView === 'kanban'" [projectOrTaskId]="response.id" />
+      <app-kanban
+        *ngIf="currentView === 'kanban'"
+        [projectOrTaskId]="project.id"
+        [isTask]="false"
+      />
       <app-calendar
         *ngIf="currentView === 'calendar'"
-        [projectOrTaskId]="response.id"
+        [projectOrTaskId]="project.id"
         [isTask]="false"
       />
-      <app-roadmap *ngIf="currentView === 'roadmap'"/>
+      <app-roadmap *ngIf="currentView === 'roadmap'"
+                   [defaultTasks]="project.tasks"
+                   [projectOrTaskId]="project.id"
+                   [isTask]="false"/>
     </div>
   `,
 })
@@ -207,7 +219,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
 
-  response: MainPageProject | undefined;
+  project?: ProjectResponse;
   cardColors = cardColors;
   currentView: string = "table";
 
@@ -217,7 +229,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
     this.route.params.subscribe((params) => {
       this.api.get(`projects/${params["id"]}/`).subscribe((response) => {
         this.store.updateProjectFromResponse(response);
-        this.response = response;
+        this.project = response;
       });
     });
     // Se necesita para actualizar la gráfica de progreso
@@ -229,9 +241,9 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   updateProjectInfo() {
-    this.api.get(`projects/${this.response!.id}/?get=info`).subscribe((response) => {
-      this.response = {
-        ...this.response!,
+    this.api.get(`projects/${this.project!.id}/?get=info`).subscribe((response) => {
+      this.project = {
+        ...this.project!,
         ...response,
       };
       this.store.disableButton = false;
@@ -243,11 +255,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   editProject() {
-    // Si es un proyecto top level, todos los usuarios de devotion
-    // deberán poder ser agregados.
-    if ((this.response?.breadcrumbs.length ?? 0) < 2) {
-      this.store.membersPool = [];
-    }
+    this.store.userPool = [];
     void this.router.navigateByUrl("/edit/project");
   }
 

@@ -7,11 +7,13 @@ import { MainPageComponent } from "./projects/main-page/main-page.component";
 import { TaskMainPageComponent } from "./tasks/task-main-page/task-main-page.component";
 import { CreateEditPageComponent } from "./projects/create-edit-page/create-edit-page.component";
 import { TaskCreateEditPageComponent } from "./tasks/task-create-edit-page/task-create-edit-page.component";
+import { DashboardMainPageComponent } from "./dashboards/dashboard-main-page/dashboard-main-page.component";
+import { DataSourcesMainPageComponent } from "./dashboards/dataSources/data-sources-main-page/data-sources-main-page.component";
 import { ProjectMembersPageComponent } from "./projects/project-members-page/project-members-page.component";
 
 const routes: Routes = [
-  { path: '', component: LandingPageComponent },
-  { path: 'login', component: LoginComponent },
+  { path: "", component: LandingPageComponent },
+  { path: "login", component: LoginComponent },
   {
     path: "login",
     component: LoginComponent,
@@ -23,6 +25,14 @@ const routes: Routes = [
   {
     path: "project/:id",
     component: MainPageComponent,
+  },
+  {
+    path: "dashboard/:id",
+    component: DashboardMainPageComponent,
+  },
+  {
+    path: "dashboard/:id/dataSources",
+    component: DataSourcesMainPageComponent,
   },
   {
     path: "task/:id",

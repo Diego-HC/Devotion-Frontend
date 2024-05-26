@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubprojectsComponent } from './subprojects.component';
+import { WidgetNumberComponent } from './widget-number.component';
 
-describe('SubprojectsComponent', () => {
-  let component: SubprojectsComponent;
-  let fixture: ComponentFixture<SubprojectsComponent>;
+describe('WidgetNumberComponent', () => {
+  let component: WidgetNumberComponent;
+  let fixture: ComponentFixture<WidgetNumberComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SubprojectsComponent]
+      declarations: [WidgetNumberComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(SubprojectsComponent);
+    fixture = TestBed.createComponent(WidgetNumberComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

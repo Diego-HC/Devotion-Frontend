@@ -1,24 +1,92 @@
+import { WidgetDisplayType } from "./app/dashboards/widgets/widget-display-type";
+
 declare global {
-  interface Project {
+  // Usuarios
+  // --------
+
+  // Universal en todos los serializers
+  interface BasicUser {
+    id: string;
+    name: string;
+  }
+
+  // Usuario
+  interface User extends BasicUser {
+    email: string;
+    isLeader: boolean;
+    profilePicture?: string;
+  }
+
+  // Proyectos
+  // ---------
+
+  // Universal en todos los serializers
+  interface BasicProject {
     id: string;
     name: string;
     description: string;
   }
 
-  interface ProjectView extends Project {
+  // Usado en la vista de los proyectos del usuario
+  interface BasicProjectWithRole extends BasicProject {
     isLeader: boolean;
   }
 
-  interface ProjectData extends Project {
-    parent: string;
-    members: MinimalUser[];
-    leaders: MinimalUser[];
+  // Almacenado en el store
+  interface Project extends BasicProject {
+    parent?: string;
+    leaders: User[];
+    members: User[];
   }
 
-  interface TaskPostBody {
+  // Usado en la página de un proyecto
+  interface ProjectResponse extends Project {
+    breadcrumbs: (string | boolean)[][];
+    progress: number;
+    projects: BasicProject[];
+    tasks: TableTask[];
+  }
+
+  // Para crear y editar proyectos
+  interface ProjectRequestBody extends Project {
+    leaders: string;
+    members: string;
+  }
+
+  // Tareas
+  // ------
+
+  // Universal en todos los serializers
+  interface BasicTask {
     id: string;
     name: string;
-    description?: string;
+    description: string;
+  }
+
+  // Almacenado en el store
+  interface Task extends BasicTask {
+    startDate: string;
+    dueDate: string;
+    assignee: User;
+    priority: number;
+    status: number;
+    parentProject: string;
+    parentTask?: string;
+  }
+
+  // Usado en la vista de tabla
+  interface TableTask extends Task {
+    assignee: string;
+  }
+
+  // Usado en la página de una tarea
+  interface TaskResponse extends Task {
+    tasks: TableTask[];
+    breadcrumbs: (string | boolean)[][];
+  }
+
+  // Para crear y editar tareas
+  interface TaskRequestBody extends BasicTask {
     start_date: string;
     due_date: string;
     assignee: string;
@@ -28,90 +96,82 @@ declare global {
     parent_task?: string;
   }
 
-  interface Task {
+  // Vistas adicionales
+  // ------------------
+
+  interface CalendarTask {
     id: string;
     name: string;
-    description: string;
-    startDate: string;
-    dueDate: string;
-    assignee: MinimalUser;
-    priority: number;
     status: number;
-    parentProject: string;
-    parentTask?: string;
+    priority: number;
   }
 
-  interface TaskData extends Task {
-    tasks: Task[];
-    breadcrumbs: (string | boolean)[][];
-  }
-
-  interface MainPageProject extends ProjectData {
-    breadcrumbs: (string | boolean)[][];
-    progress: number;
-    projects: Project[];
-    tasks: Task[];
-  }
-
-  interface ProjectPostBody extends Project {
-    parent?: string;
-    leaders: string;
-    members: string;
-  }
-
-  interface RawCalendarCellData {
+  interface RawCalendarCell {
     date: number[];
-    tasks: Task[];
+    tasks: CalendarTask[];
   }
 
-  interface CalendarCellData {
+  // Usado en generateCalendarMatrix()
+  interface CalendarCell {
     date?: Date;
-    tasks: Task[];
+    tasks: CalendarTask[];
   }
 
-  interface MainPageProjectCalendarView {
-    tasks: RawCalendarCellData[];
+  // Asume que se pasó get=tasks en el endpoint
+  interface CalendarResponse {
+    tasks: RawCalendarCell[];
     today: number[];
   }
 
-  interface User {
-    id: string;
-    email: string;
-    firstNames: string;
-    lastNames: string;
-  }
-
-  interface MinimalUser {
-    id: string;
-    name: string;
-    email: string;
-    isLeader: boolean;
-    profilePicture?: string;
-  }
-
-  interface UserWithRole {
-    email: string;
-    name: string;
-    isLeader: boolean;
-    profilePicture?: string;
-  }
-  interface TaskKanban {
+  interface KanbanTask {
     id: string;
     name: string;
     description: string;
     priority: number;
-    assignee : MinimalUser;
+    assignee: BasicUser;
   }
 
-  interface Tasks {
-    notStarted : TaskKanban[];
-    inProgress : TaskKanban[];
-    inReview : TaskKanban[];
-    done : TaskKanban[];
+  interface KanbanLists {
+    notStarted: KanbanTask[];
+    inProgress: KanbanTask[];
+    inReview: KanbanTask[];
+    done: KanbanTask[];
   }
 
-  interface KanbanView {
-    tasks : Tasks;
+  // Asume que se pasó get=tasks en el endpoint
+  interface KanbanResponse {
+    tasks: KanbanLists;
+  }
+
+  // Dashboard
+  // ---------
+
+  type DashboardTask = Omit<Task, "startDate" | "assignee" | "status"> & {
+    parentProject: string;
+  };
+
+  interface DataSource {
+    id: string;
+    name: string;
+    mqttTopic: string;
+  }
+
+  interface Widget {
+    id: string;
+    name: string;
+    displayType: WidgetDisplayType;
+    dataSource: DataSource;
+    position: number;
+    unit: string;
+  }
+
+  interface Dashboard {
+    projectName: string;
+    tasksToDo: DashboardTask[];
+    tasksToVerify: DashboardTask[];
+
+    widgets: Widget[];
+    dataSources: DataSource[];
   }
 }
 

@@ -63,11 +63,11 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('headerTable') headerTable!: ElementRef;
   @ViewChild('bodyTable') bodyTable!: ElementRef;
 
-  @Input() defaultTasks?: Task[];
+  @Input() defaultTasks?: TableTask[];
   @Input() projectOrTaskId = ""
   @Input() isTask = false;
 
-  tasks?: Task[];
+  tasks?: TableTask[];
   selectedTaskId: string | null = null;
 
   private subscriptions = new Subscription();
