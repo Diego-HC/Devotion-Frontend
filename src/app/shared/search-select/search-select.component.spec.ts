@@ -5,6 +5,8 @@ import {StoreService} from "../../store.service";
 import { ReactiveFormsModule} from "@angular/forms";
 import { FormsModule } from "@angular/forms";
 
+// Autor: Andrea Guadalupe Badillo Ibarra - A00833511
+
 describe('SearchSelectComponent', () => {
   let component: SearchSelectComponent;
   let fixture: ComponentFixture<SearchSelectComponent>;
