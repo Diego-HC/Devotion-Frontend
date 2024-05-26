@@ -1,18 +1,18 @@
 import {Component, OnInit, Input, ViewChild, OnDestroy} from '@angular/core';
-import { ApiService } from "../../api.service";
-import { Subscription} from "rxjs";
+import {ApiService } from "../../api.service";
+import {Subscription} from "rxjs";
 import {TaskPreviewComponent} from "../task-preview/task-preview.component";
-import { StoreService} from "../../store.service";
+import {StoreService} from "../../store.service";
 
 @Component({
   selector: 'app-kanban',
   template: `
     <app-tasks-loading *ngIf="store.loadingSubtasks" />
-    <div class = "grid grid-cols-4">
-      <app-kanban-card [tasks]="response?.tasks?.notStarted" taskStatus="notStarted"/>
-      <app-kanban-card [tasks]="response?.tasks?.inProgress" taskStatus="inProgress"/>
-      <app-kanban-card [tasks]="response?.tasks?.inReview" taskStatus="inReview"/>
-      <app-kanban-card [tasks]="response?.tasks?.done" taskStatus="done"/>
+    <div class = "grid grid-cols-4" cdkDropListGroup>
+      <app-kanban-section id="notStarted" [tasks]="response?.tasks?.notStarted" taskStatus="notStarted" />
+      <app-kanban-section id= "inProgress" [tasks]="response?.tasks?.inProgress" taskStatus="inProgress"/>
+      <app-kanban-section id = "inReview" [tasks]="response?.tasks?.inReview" taskStatus="inReview" />
+      <app-kanban-section id = "done" [tasks]="response?.tasks?.done" taskStatus="done" />
     </div>
   `
 })

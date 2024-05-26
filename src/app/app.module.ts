@@ -3,6 +3,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { OAuthModule } from "angular-oauth2-oidc";
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -67,6 +68,7 @@ import { PencilIconComponent } from './shared/icons/pencil-icon/pencil-icon.comp
 import { IconSidebarComponent } from './shared/icon-sidebar/icon-sidebar.component';
 import { TaskPreviewComponent} from "./tasks/task-preview/task-preview.component";
 import { TaskPreviewInfoComponent } from './tasks/task-preview-info/task-preview-info.component';
+import { KanbanSectionComponent } from './kanban-section/kanban-section.component';
 
 @NgModule({
   declarations: [
@@ -125,7 +127,8 @@ import { TaskPreviewInfoComponent } from './tasks/task-preview-info/task-preview
     PencilIconComponent,
     IconSidebarComponent,
     TaskPreviewComponent,
-    TaskPreviewInfoComponent
+    TaskPreviewInfoComponent,
+    KanbanSectionComponent
   ],
   imports: [
     BrowserModule,
@@ -135,6 +138,7 @@ import { TaskPreviewInfoComponent } from './tasks/task-preview-info/task-preview
     HttpClientModule,
     NgOptimizedImage,
     ReactiveFormsModule,
+    DragDropModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
