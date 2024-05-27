@@ -255,7 +255,6 @@ export class TaskCreateEditPageComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-
     this.taskForm.patchValue({
       assignee: this.store.task.assignee
     });
