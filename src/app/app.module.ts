@@ -68,6 +68,7 @@ import { IconSidebarComponent } from './shared/icon-sidebar/icon-sidebar.compone
 import { TaskPreviewComponent} from "./tasks/task-preview/task-preview.component";
 import { TaskPreviewInfoComponent } from './tasks/task-preview-info/task-preview-info.component';
 import { KanbanSectionComponent } from './kanban-section/kanban-section.component';
+import { FullscreenIconComponent } from './shared/icons/fullscreen-icon/fullscreen-icon.component';
 
 @NgModule({
   declarations: [
@@ -126,7 +127,8 @@ import { KanbanSectionComponent } from './kanban-section/kanban-section.componen
     IconSidebarComponent,
     TaskPreviewComponent,
     TaskPreviewInfoComponent,
-    KanbanSectionComponent
+    KanbanSectionComponent,
+    FullscreenIconComponent
   ],
   imports: [
     BrowserModule,
