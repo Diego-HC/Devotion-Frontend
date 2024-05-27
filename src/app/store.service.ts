@@ -9,9 +9,9 @@ export class StoreService {
     this.clear();
   }
 
-  project!: ProjectData;
+  project!: Project;
   task!: Task;
-  membersPool: MinimalUser[] = [];
+  userPool: User[] = [];
   pageWasReloaded = true;
   showConfirmDeletion = false;
   showConfirmGoBack = false;
@@ -47,6 +47,10 @@ export class StoreService {
   get showSubtreeTasks() {
     return this._showSubtreeTasks.getValue();
   }
+
+  // dashboard data
+  dataSources?: DataSource[];
+  widget?: Widget;
 
   clearProject(parent = "") {
     this.project = {
@@ -84,31 +88,31 @@ export class StoreService {
     this.clearTask();
   }
 
-  updateProjectFromResponse(projectResponse: MainPageProject) {
+  updateProjectFromResponse(projectResponse: ProjectResponse) {
     this.pageWasReloaded = false;
-    this.membersPool = [...projectResponse.members, ...projectResponse.leaders];
+    this.userPool = [...projectResponse.members, ...projectResponse.leaders];
     this.project = {
       ...projectResponse,
     }
   }
 
-  updateTaskFromResponse(taskResponse: TaskData) {
+  updateTaskFromResponse(taskResponse: TaskResponse) {
     this.pageWasReloaded = false;
     this.task = {
       ...taskResponse,
     }
   }
 
-  projectPostBody(): ProjectPostBody {
+  projectRequestBody(): ProjectRequestBody {
     return {
       ...this.project,
       parent: this.project.parent || undefined,
       leaders: this.project.leaders.map(leader => leader.id).join(','),
-      members: this.project.members.map(member => member.id).join(',')
+      members: this.project.members.map(member => member.id).join(','),
     }
   }
 
-  taskPostBody(): TaskPostBody {
+  taskRequestBody(): TaskRequestBody {
     return {
       ...this.task,
       description: this.task.description,

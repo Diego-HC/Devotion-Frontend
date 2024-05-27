@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
   selector: "app-create-edit-page",
   template: `
     <app-loading *ngIf="showLoading" [message]="loadingMessage"/>
-    <div class="px-16" *ngIf="!showLoading && (store.membersPool.length > 0)">
+    <div class="px-16" *ngIf="!showLoading && (store.userPool.length > 0)">
       <a
         (click)="backPage()"
         class="flex flex-row items-center gap-3 text-devotionPrimary text-lg font-semibold">
@@ -114,7 +114,7 @@ export class CreateEditPageComponent implements OnInit, OnDestroy {
   showBackWarning = false;
   initialFormValue : any;
 
-  private formChangesSubscription: Subscription | undefined;
+  private formChangesSubscription?: Subscription;
 
   projectForm: FormGroup = this.formBuilder.group({
     name: ['', Validators.required],
@@ -128,9 +128,10 @@ export class CreateEditPageComponent implements OnInit, OnDestroy {
       void this.router.navigateByUrl("/home");
       return;
     }
-    if (this.store.membersPool.length == 0) {
-      this.api.get("users/").subscribe((users) => {
-        this.store.membersPool = users;
+    if (this.store.userPool.length == 0) {
+      const projectId = this.store.project.id ? this.store.project.id : "none";
+      this.api.get(`users/pool/?project=${projectId}`).subscribe((users) => {
+        this.store.userPool = users;
       });
     }
     if (this.store.project.parent) {
@@ -202,7 +203,6 @@ export class CreateEditPageComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-
     this.projectForm.patchValue({
       leaders: this.store.project.leaders,
       members: this.store.project.members,
@@ -232,7 +232,7 @@ export class CreateEditPageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const onResponse = (response: Project) => {
+    const onResponse = (response: BasicProject) => {
       void this.router.navigateByUrl(`/project/${response.id}`);
     };
 
@@ -240,7 +240,10 @@ export class CreateEditPageComponent implements OnInit, OnDestroy {
     const onError = (errorResponse: any) => {
       if (errorResponse.error && errorResponse.error.message) {
         this.warningMessage = errorResponse.error.message;
-      } else {
+      } else if (errorResponse.error.non_field_errors) {
+        this.warningMessage = errorResponse.error.non_field_errors[0];
+      }
+      else {
         this.warningMessage = "Error al realizar la solicitud. Por favor, inténtelo de nuevo.";
       }
       this.showWarning = true;
@@ -258,14 +261,14 @@ export class CreateEditPageComponent implements OnInit, OnDestroy {
         }, 2500);
       }
       this.showLoading = true;
-      this.api.post("projects/", this.store.projectPostBody()).subscribe(onResponse, onError);
+      this.api.post("projects/", this.store.projectRequestBody()).subscribe(onResponse, onError);
 
     // Editar proyecto
     } else {
       this.loadingMessage = "Actualizando datos...";
       this.showLoading = true;
 
-      this.api.put(`projects/${this.store.project.id}/`, this.store.projectPostBody()).subscribe(onResponse, onError);
+      this.api.put(`projects/${this.store.project.id}/`, this.store.projectRequestBody()).subscribe(onResponse, onError);
     }
   }
 }

@@ -19,12 +19,12 @@ export class CalendarService {
     return this.normalizedDate(lastSunday)
   }
 
-  generateCalendarMatrix(): {matrix: CalendarCellData[][], today: number[]} {
+  generateCalendarMatrix(): {matrix: CalendarCell[][], today: number[]} {
     const today = new Date();
     const lastSunday = this.lastLastSunday();
-    const matrix: CalendarCellData[][] = [];
+    const matrix: CalendarCell[][] = [];
     for (let i = 0; i < 5; i++) {
-      const week: CalendarCellData[] = [];
+      const week: CalendarCell[] = [];
       for (let j = 0; j < 7; j++) {
         const date = new Date(
           lastSunday.getTime() + (i * 7 + j) * CalendarService.dayMilliseconds);

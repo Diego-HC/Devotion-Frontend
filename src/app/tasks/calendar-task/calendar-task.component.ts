@@ -22,7 +22,7 @@ import { Component, Input } from '@angular/core';
   `
 })
 export class CalendarTaskComponent {
-  @Input() task?: Task;
+  @Input() task?: CalendarTask;
   selectedTaskId: string | null = null;
 
   showTaskPreview(taskId: string) {

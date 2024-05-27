@@ -21,5 +21,5 @@ export class CalendarCellComponent {
 
   @Input() date?: Date;
   @Input() isToday: boolean = false;
-  @Input() tasks: Task[] = [];
+  @Input() tasks: CalendarTask[] = [];
 }

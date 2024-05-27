@@ -49,8 +49,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
   @Input() projectOrTaskId: string = '';
   @Input() isTask: boolean = false;
 
-  calendar?: {matrix: CalendarCellData[][], today: number[]};
-  response?: MainPageProjectCalendarView;
+  calendar?: {matrix: CalendarCell[][], today: number[]};
+  response?: CalendarResponse;
   title: string = '';
 
   private subscriptions = new Subscription();
@@ -75,7 +75,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
     this.store.loadingSubtasks = true;
     const endpoint = `${this.isTask ? "tasks" : "projects"}/${this.projectOrTaskId}/?get=tasks&view=calendar&assigned=${this.store.showAssignedTasks}&subtree=${this.store.showSubtreeTasks}`;
-    this.api.get(endpoint).subscribe((response: MainPageProjectCalendarView) => {
+    this.api.get(endpoint).subscribe((response: CalendarResponse) => {
       this.response = response;
       for (const taskData of response.tasks) {
         const [calendarRow, calendarCol] = taskData.date;
