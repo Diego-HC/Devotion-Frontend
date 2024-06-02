@@ -205,7 +205,10 @@ export class TaskMainPageComponent implements OnInit {
       .pipe(
         switchMap((params) => {
           this.task = undefined;
-          return this.api.get(`tasks/${params["id"]}/`);
+          if (params["id"]) {
+            return this.api.get(`tasks/${params["id"]}/`);
+          }
+          return this.api.get(`tasks/${this.taskId}/`);
         })
       )
       .subscribe((response) => {

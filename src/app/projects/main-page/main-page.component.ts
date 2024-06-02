@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import { Component, Input, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
 import { cardColors } from "../../shared/cardColors";
 import { Subscription} from "rxjs";
 import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.component";
+
 @Component({
   selector: "app-main-page",
   template: `
@@ -219,6 +220,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
 
+  @Input() projectId?: string;
+
   project?: ProjectResponse;
   cardColors = cardColors;
   currentView: string = "table";
@@ -226,12 +229,21 @@ export class MainPageComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
 
   ngOnInit() {
-    this.route.params.subscribe((params) => {
-      this.api.get(`projects/${params["id"]}/`).subscribe((response) => {
+    const getProject = (id: string) => {
+      this.api.get(`projects/${id}/`).subscribe((response) => {
         this.store.updateProjectFromResponse(response);
         this.project = response;
       });
+    };
+
+    this.route.params.subscribe((params) => {
+      if (params["id"]) {
+        getProject(params["id"]);
+      } else if (this.projectId) {
+        getProject(this.projectId);
+      }
     });
+
     // Se necesita para actualizar la gráfica de progreso
     this.subscription = this.store.needsUpdate$.subscribe(() => this.updateProjectInfo());
   }
