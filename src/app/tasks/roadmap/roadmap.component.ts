@@ -10,9 +10,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 @Component({
   selector: 'app-roadmap',
   template: `
-    <p>
-      roadmap works!
-    </p>
     <app-tasks-loading *ngIf="store.loadingSubtasks" />
     <div *ngIf="tasks !== undefined">
       <table class="w-full mt-5" #headerTable>
@@ -135,7 +132,7 @@ export class RoadmapComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.headerTable?.nativeElement && this.bodyTable?.nativeElement) {
       const headerRows = this.headerTable.nativeElement.rows;
       const bodyRows = this.bodyTable.nativeElement.rows;
-  
+
       if (bodyRows.length > 0) {
         for (let i = 0; i < headerRows[0].cells.length; i++) {
           const bodyWidth = bodyRows[0].cells[i].offsetWidth;

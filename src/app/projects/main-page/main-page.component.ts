@@ -1,10 +1,12 @@
-import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import { Component, Input, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
 import { cardColors } from "../../shared/cardColors";
 import { Subscription} from "rxjs";
 import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.component";
+import { Clipboard } from "@angular/cdk/clipboard";
+
 @Component({
   selector: "app-main-page",
   template: `
@@ -29,7 +31,7 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
             </div>
             <div class="flex flex-row items-center gap-4">
               <a
-                href="{{ '/dashboard/' + project.id }}"
+                href="{{ inviteId ? ('/invite/' + inviteId + '/dashboard') : ('/dashboard/' + project.id) }}"
                 class="flex flex-row items-center gap-2"
               >
                 <app-dashboard-icon
@@ -39,20 +41,28 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
                 ></app-dashboard-icon>
                 <span
                   class="font-bold hover:underline text-base text-devotionAccent"
-                  >Ir a dashboard</span
+                >Ir a dashboard</span
                 >
               </a>
-              <a routerLink="/project/{{ project.id }}/members">
+              <a routerLink="{{ inviteId ? ('/invite/' + inviteId) : ('/projects/' + project.id) }}/members">
                 <span class="font-bold hover:underline text-base text-devotionAccent">Ver miembros</span>
               </a>
-              <div class="dropdown dropdown-right">
-                <div tabindex="0" role="button" class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••
-                </div>
+              <div
+                *ngIf="!inviteId"
+                class="dropdown dropdown-right"
+              >
+                <div tabindex="0" role="button" class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••</div>
                 <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                   <li>
                     <button (click)="editProject()" class="flex flex-row gap-2">
                       <app-pencil-icon [detailed]="false" fill="#2A4365" width="15" height="15"/>
                       Editar
+                    </button>
+                  </li>
+                  <li>
+                    <button (click)="shareLink()" class="flex flex-row gap-2">
+                      <app-link-icon fill="#2A4365" width="15" height="15"/>
+                      {{ shareButtonText }}
                     </button>
                   </li>
                 </ul>
@@ -77,6 +87,7 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
                 />
               }
               <button
+                *ngIf="!inviteId"
                 (click)="newSubproject()"
                 class="place-self-center w-[12.375rem] h-24"
                 id="newSubprojectButton"
@@ -144,7 +155,10 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
                 [fill]="currentView === 'roadmap' ? '#FFFFFF' : '#2A4365'"
               />
             </app-icon>
-            <button (click)="newTask()">
+            <button
+              *ngIf="!inviteId"
+              (click)="newTask()"
+            >
               <div class="flex flex-col place-items-center justify-center">
                 <div
                   class="grid grid-cols-1 grid-rows-1 place-items-center border-2 border-gray-200 rounded-full p-2.5 box-shadow"
@@ -160,7 +174,10 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
             </button>
           </div>
           <div class="flex flex-row items-center gap-5">
-            <div class="flex flex-row items-center gap-1">
+            <div
+              *ngIf="!inviteId"
+              class="flex flex-row items-center gap-1"
+            >
               <input
                 [disabled]="store.loadingSubtasks"
                 type="checkbox"
@@ -214,24 +231,40 @@ export class MainPageComponent implements OnInit, OnDestroy {
     protected api: ApiService,
     private route: ActivatedRoute,
     private router: Router,
-    protected store: StoreService
+    protected store: StoreService,
+    private clipboard: Clipboard
   ) {}
 
   @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
 
+  @Input() projectId?: string;
+
   project?: ProjectResponse;
+  inviteId = ""
   cardColors = cardColors;
   currentView: string = "table";
+  isCopied = false;
+  shareButtonText = "Compartir";
 
   private subscription: Subscription = new Subscription();
 
   ngOnInit() {
-    this.route.params.subscribe((params) => {
-      this.api.get(`projects/${params["id"]}/`).subscribe((response) => {
+    const getProject = (id: string) => {
+      this.api.get(`projects/${id}/`).subscribe((response) => {
         this.store.updateProjectFromResponse(response);
         this.project = response;
       });
+    };
+
+    this.route.params.subscribe((params) => {
+      if (params["id"]) {
+        getProject(params["id"]);
+      } else if (this.projectId) {
+        this.inviteId = params["inviteId"];
+        getProject(this.projectId);
+      }
     });
+
     // Se necesita para actualizar la gráfica de progreso
     this.subscription = this.store.needsUpdate$.subscribe(() => this.updateProjectInfo());
   }
@@ -267,5 +300,23 @@ export class MainPageComponent implements OnInit, OnDestroy {
   newSubproject() {
     this.store.clearProject(this.store.project.id);
     void this.router.navigateByUrl("/new/project");
+  }
+
+  shareLink() {
+    this.api.post(`invites/`, {
+      project: this.project!.id,
+    }).subscribe((response) => {
+      const inviteLink = window.location.origin + "/invite/" + response.id;
+
+      this.clipboard.copy(inviteLink);
+
+      this.isCopied = true;
+      this.shareButtonText = "¡Copiado!";
+
+      setTimeout(() => {
+        this.isCopied = false;
+        this.shareButtonText = "Compartir";
+      }, 1000);
+    });
   }
 }

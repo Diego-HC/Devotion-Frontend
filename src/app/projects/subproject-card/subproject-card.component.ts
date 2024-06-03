@@ -5,7 +5,7 @@ import { Component, Input } from "@angular/core";
   template: `
     <div class="flex flex-row h-24">
       <span class="w-1.5 rounded-l-md" [ngClass]="this.colors.normal"></span>
-      <a href="/project/{{ this.id }}">
+      <app-protected-link href="/project/{{ this.id }}">
         <div
           [ngClass]="this.colors.light"
           class="flex flex-row items-center px-3 gap-2 card card-compact rounded-l-none rounded-md w-48 h-full"
@@ -22,7 +22,7 @@ import { Component, Input } from "@angular/core";
             role="progressbar"
           ></div>
         </div>
-      </a>
+      </app-protected-link>
     </div>
   `,
 })

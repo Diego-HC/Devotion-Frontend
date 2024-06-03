@@ -69,6 +69,12 @@ import { TaskPreviewComponent} from "./tasks/task-preview/task-preview.component
 import { TaskPreviewInfoComponent } from './tasks/task-preview-info/task-preview-info.component';
 import { KanbanSectionComponent } from './kanban-section/kanban-section.component';
 import { FullscreenIconComponent } from './shared/icons/fullscreen-icon/fullscreen-icon.component';
+import { InvitePageComponent } from './shared/invite-page/invite-page.component';
+import { ProtectedLinkComponent } from './shared/protected-link/protected-link.component';
+import { InviteDashboardComponent } from './shared/invite-dashboard/invite-dashboard.component';
+import { InviteMembersComponent } from './shared/invite-members/invite-members.component';
+import { LinkIconComponent } from './shared/icons/link-icon/link-icon.component';
+import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -128,7 +134,12 @@ import { FullscreenIconComponent } from './shared/icons/fullscreen-icon/fullscre
     TaskPreviewComponent,
     TaskPreviewInfoComponent,
     KanbanSectionComponent,
-    FullscreenIconComponent
+    FullscreenIconComponent,
+    InvitePageComponent,
+    ProtectedLinkComponent,
+    InviteDashboardComponent,
+    InviteMembersComponent,
+    LinkIconComponent
   ],
   imports: [
     BrowserModule,
@@ -139,6 +150,7 @@ import { FullscreenIconComponent } from './shared/icons/fullscreen-icon/fullscre
     NgOptimizedImage,
     ReactiveFormsModule,
     DragDropModule,
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

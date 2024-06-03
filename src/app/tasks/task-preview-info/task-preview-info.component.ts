@@ -23,13 +23,14 @@ import { switchMap } from "rxjs";
         </div>
       </div>
       <div class="w-full flex flex-row items-center gap-4">
-        <div class="dropdown dropdown-bottom">
+        <div [ngClass]="isInvite ? 'cursor-default' : 'dropdown dropdown-bottom'">
           <app-badge
             [status]="statusName(task.status)"
             tabindex="0"
             role="button"
           ></app-badge>
           <ul
+            *ngIf="!isInvite"
             tabindex="0"
             class="dropdown-content z-[1] menu p-2 bg-base-100 rounded-box w-52"
           >
@@ -39,7 +40,10 @@ import { switchMap } from "rxjs";
             <li><a (click)="updateStatus(3)">Completado</a></li>
           </ul>
         </div>
-        <div class="dropdown dropdown-right">
+        <div
+          *ngIf="!isInvite"
+          class="dropdown dropdown-right"
+        >
           <div tabindex="0" role="button" class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••</div>
           <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
             <li><a class="flex flex-row gap-2" routerLink="/edit/task">
@@ -92,6 +96,7 @@ export class TaskPreviewInfoComponent implements OnInit {
   dropdownOpen = false;
   showWarning = false;
   warningMessage = "";
+  isInvite = window.location.pathname.includes('invite');
 
   ngOnInit() {
     this.route.params
