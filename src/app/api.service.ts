@@ -7,7 +7,11 @@ import { AuthGoogleService } from "./auth-google.service";
   providedIn: 'root'
 })
 export class ApiService {
+<<<<<<< Updated upstream
   // private baseUrl = "http://localhost:8000/";
+=======
+  //private baseUrl = "http://localhost:8000/";
+>>>>>>> Stashed changes
   private baseUrl = "https://api.umm-actually.com/";
 
   constructor(private http: HttpClient, private auth: AuthGoogleService) { }

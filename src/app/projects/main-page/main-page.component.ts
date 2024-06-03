@@ -5,6 +5,7 @@ import { StoreService } from "../../store.service";
 import { cardColors } from "../../shared/cardColors";
 import { Subscription} from "rxjs";
 import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.component";
+import { Clipboard } from "@angular/cdk/clipboard";
 
 @Component({
   selector: "app-main-page",
@@ -40,7 +41,7 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
                 ></app-dashboard-icon>
                 <span
                   class="font-bold hover:underline text-base text-devotionAccent"
-                  >Ir a dashboard</span
+                >Ir a dashboard</span
                 >
               </a>
               <a routerLink="{{ inviteId ? ('/invite/' + inviteId) : ('/projects/' + project.id) }}/members">
@@ -50,13 +51,18 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
                 *ngIf="!inviteId"
                 class="dropdown dropdown-right"
               >
-                <div tabindex="0" role="button" class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••
-                </div>
+                <div tabindex="0" role="button" class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••</div>
                 <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                   <li>
                     <button (click)="editProject()" class="flex flex-row gap-2">
                       <app-pencil-icon [detailed]="false" fill="#2A4365" width="15" height="15"/>
                       Editar
+                    </button>
+                  </li>
+                  <li>
+                    <button (click)="shareLink()" class="flex flex-row gap-2">
+                      <app-pencil-icon fill="#2A4365" width="15" height="15"/>
+                      {{ shareButtonText }}
                     </button>
                   </li>
                 </ul>
@@ -225,7 +231,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
     protected api: ApiService,
     private route: ActivatedRoute,
     private router: Router,
-    protected store: StoreService
+    protected store: StoreService,
+    private clipboard: Clipboard
   ) {}
 
   @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
@@ -236,6 +243,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
   inviteId = ""
   cardColors = cardColors;
   currentView: string = "table";
+  isCopied = false;
+  shareButtonText = "Compartir";
 
   private subscription: Subscription = new Subscription();
 
@@ -291,5 +300,24 @@ export class MainPageComponent implements OnInit, OnDestroy {
   newSubproject() {
     this.store.clearProject(this.store.project.id);
     void this.router.navigateByUrl("/new/project");
+  }
+
+  shareLink() {
+    this.api.post(`invites/`, {
+      project: this.project!.id,
+    }).subscribe((response) => {
+      this.inviteId = response.id;
+      const inviteLink = window.location.origin + "/invite/" + response.id;
+
+      this.clipboard.copy(inviteLink);
+
+      this.isCopied = true;
+      this.shareButtonText = "¡Copiado!";
+
+      setTimeout(() => {
+        this.isCopied = false;
+        this.shareButtonText = "Compartir";
+      }, 1000);
+    });
   }
 }

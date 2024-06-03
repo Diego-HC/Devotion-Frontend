@@ -73,7 +73,12 @@ import { InvitePageComponent } from './shared/invite-page/invite-page.component'
 import { ProtectedLinkComponent } from './shared/protected-link/protected-link.component';
 import { InviteDashboardComponent } from './shared/invite-dashboard/invite-dashboard.component';
 import { InviteMembersComponent } from './shared/invite-members/invite-members.component';
+<<<<<<< Updated upstream
 import { LinkIconComponent } from './shared/icons/link-icon/link-icon.component';
+=======
+import { CopiedLinkComponent } from './shared/copied-link/copied-link.component';
+import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
+>>>>>>> Stashed changes
 
 @NgModule({
   declarations: [
@@ -138,7 +143,11 @@ import { LinkIconComponent } from './shared/icons/link-icon/link-icon.component'
     ProtectedLinkComponent,
     InviteDashboardComponent,
     InviteMembersComponent,
+<<<<<<< Updated upstream
     LinkIconComponent
+=======
+    CopiedLinkComponent
+>>>>>>> Stashed changes
   ],
   imports: [
     BrowserModule,
@@ -149,6 +158,7 @@ import { LinkIconComponent } from './shared/icons/link-icon/link-icon.component'
     NgOptimizedImage,
     ReactiveFormsModule,
     DragDropModule,
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
