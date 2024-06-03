@@ -61,7 +61,7 @@ import { Clipboard } from "@angular/cdk/clipboard";
                   </li>
                   <li>
                     <button (click)="shareLink()" class="flex flex-row gap-2">
-                      <app-pencil-icon fill="#2A4365" width="15" height="15"/>
+                      <app-link-icon fill="#2A4365" width="15" height="15"/>
                       {{ shareButtonText }}
                     </button>
                   </li>
@@ -306,7 +306,6 @@ export class MainPageComponent implements OnInit, OnDestroy {
     this.api.post(`invites/`, {
       project: this.project!.id,
     }).subscribe((response) => {
-      this.inviteId = response.id;
       const inviteLink = window.location.origin + "/invite/" + response.id;
 
       this.clipboard.copy(inviteLink);
