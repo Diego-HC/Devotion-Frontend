@@ -73,6 +73,7 @@ import { InvitePageComponent } from './shared/invite-page/invite-page.component'
 import { ProtectedLinkComponent } from './shared/protected-link/protected-link.component';
 import { InviteDashboardComponent } from './shared/invite-dashboard/invite-dashboard.component';
 import { InviteMembersComponent } from './shared/invite-members/invite-members.component';
+import { LinkIconComponent } from './shared/icons/link-icon/link-icon.component';
 
 @NgModule({
   declarations: [
@@ -136,7 +137,8 @@ import { InviteMembersComponent } from './shared/invite-members/invite-members.c
     InvitePageComponent,
     ProtectedLinkComponent,
     InviteDashboardComponent,
-    InviteMembersComponent
+    InviteMembersComponent,
+    LinkIconComponent
   ],
   imports: [
     BrowserModule,
