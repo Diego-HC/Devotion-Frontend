@@ -70,6 +70,9 @@ import { TaskPreviewInfoComponent } from './tasks/task-preview-info/task-preview
 import { KanbanSectionComponent } from './kanban-section/kanban-section.component';
 import { FullscreenIconComponent } from './shared/icons/fullscreen-icon/fullscreen-icon.component';
 import { InvitePageComponent } from './shared/invite-page/invite-page.component';
+import { ProtectedLinkComponent } from './shared/protected-link/protected-link.component';
+import { InviteDashboardComponent } from './shared/invite-dashboard/invite-dashboard.component';
+import { InviteMembersComponent } from './shared/invite-members/invite-members.component';
 
 @NgModule({
   declarations: [
@@ -130,7 +133,10 @@ import { InvitePageComponent } from './shared/invite-page/invite-page.component'
     TaskPreviewInfoComponent,
     KanbanSectionComponent,
     FullscreenIconComponent,
-    InvitePageComponent
+    InvitePageComponent,
+    ProtectedLinkComponent,
+    InviteDashboardComponent,
+    InviteMembersComponent
   ],
   imports: [
     BrowserModule,

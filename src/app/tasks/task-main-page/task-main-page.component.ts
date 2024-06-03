@@ -44,13 +44,14 @@ import { TaskPreviewComponent} from "../task-preview/task-preview.component";
           </div>
         </div>
         <div class="flex flex-row items-center gap-4">
-          <div class="dropdown dropdown-bottom">
+          <div [ngClass]="isInvite ? '' : 'dropdown dropdown-bottom'">
             <app-badge
               [status]="statusName(task.status)"
               tabindex="0"
               role="button"
             ></app-badge>
             <ul
+              *ngIf="!isInvite"
               tabindex="0"
               class="dropdown-content z-[1] menu p-2 bg-base-100 rounded-box w-52"
             >
@@ -60,7 +61,10 @@ import { TaskPreviewComponent} from "../task-preview/task-preview.component";
               <li><a (click)="updateStatus(3)">Completado</a></li>
             </ul>
           </div>
-          <div class="dropdown dropdown-right">
+          <div
+            *ngIf="!isInvite"
+            class="dropdown dropdown-right"
+          >
             <div tabindex="0" role="button" class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••</div>
             <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
               <li><a class="flex flex-row gap-2" routerLink="/edit/task">
@@ -125,7 +129,10 @@ import { TaskPreviewComponent} from "../task-preview/task-preview.component";
                 [fill]="currentView === 'roadmap' ? '#FFFFFF' : '#2A4365'"
               />
             </app-icon>
-            <button (click)="newTask()">
+            <button
+              *ngIf="!isInvite"
+              (click)="newTask()"
+            >
               <div class="flex flex-col place-items-center justify-center">
                 <div
                   class="grid grid-cols-1 grid-rows-1 place-items-center border-2 border-gray-200 rounded-full p-2.5 box-shadow"
@@ -141,7 +148,10 @@ import { TaskPreviewComponent} from "../task-preview/task-preview.component";
             </button>
           </div>
           <div class="flex flex-row items-center gap-5">
-            <div class="flex flex-row items-center gap-1">
+            <div
+              *ngIf="!isInvite"
+              class="flex flex-row items-center gap-1"
+            >
               <input
                 [disabled]="store.loadingSubtasks"
                 type="checkbox"
@@ -197,6 +207,7 @@ export class TaskMainPageComponent implements OnInit {
   dropdownOpen = false;
   showWarning = false;
   warningMessage = "";
+  isInvite = window.location.pathname.includes("invite");
 
   @Input() taskId?: string;
 

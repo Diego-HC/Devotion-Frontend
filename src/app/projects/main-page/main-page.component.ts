@@ -30,7 +30,7 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
             </div>
             <div class="flex flex-row items-center gap-4">
               <a
-                href="{{ '/dashboard/' + project.id }}"
+                href="{{ inviteId ? ('/invite/' + inviteId + '/dashboard') : ('/dashboard/' + project.id) }}"
                 class="flex flex-row items-center gap-2"
               >
                 <app-dashboard-icon
@@ -43,10 +43,13 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
                   >Ir a dashboard</span
                 >
               </a>
-              <a routerLink="/project/{{ project.id }}/members">
+              <a routerLink="{{ inviteId ? ('/invite/' + inviteId) : ('/projects/' + project.id) }}/members">
                 <span class="font-bold hover:underline text-base text-devotionAccent">Ver miembros</span>
               </a>
-              <div class="dropdown dropdown-right">
+              <div
+                *ngIf="!inviteId"
+                class="dropdown dropdown-right"
+              >
                 <div tabindex="0" role="button" class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••
                 </div>
                 <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
@@ -78,6 +81,7 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
                 />
               }
               <button
+                *ngIf="!inviteId"
                 (click)="newSubproject()"
                 class="place-self-center w-[12.375rem] h-24"
                 id="newSubprojectButton"
@@ -145,7 +149,10 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
                 [fill]="currentView === 'roadmap' ? '#FFFFFF' : '#2A4365'"
               />
             </app-icon>
-            <button (click)="newTask()">
+            <button
+              *ngIf="!inviteId"
+              (click)="newTask()"
+            >
               <div class="flex flex-col place-items-center justify-center">
                 <div
                   class="grid grid-cols-1 grid-rows-1 place-items-center border-2 border-gray-200 rounded-full p-2.5 box-shadow"
@@ -161,7 +168,10 @@ import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.compon
             </button>
           </div>
           <div class="flex flex-row items-center gap-5">
-            <div class="flex flex-row items-center gap-1">
+            <div
+              *ngIf="!inviteId"
+              class="flex flex-row items-center gap-1"
+            >
               <input
                 [disabled]="store.loadingSubtasks"
                 type="checkbox"
@@ -223,6 +233,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
   @Input() projectId?: string;
 
   project?: ProjectResponse;
+  inviteId = ""
   cardColors = cardColors;
   currentView: string = "table";
 
@@ -240,6 +251,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
       if (params["id"]) {
         getProject(params["id"]);
       } else if (this.projectId) {
+        this.inviteId = params["inviteId"];
         getProject(this.projectId);
       }
     });

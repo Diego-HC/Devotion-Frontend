@@ -11,10 +11,10 @@ import { DashboardMainPageComponent } from "./dashboards/dashboard-main-page/das
 import { DataSourcesMainPageComponent } from "./dashboards/dataSources/data-sources-main-page/data-sources-main-page.component";
 import { ProjectMembersPageComponent } from "./projects/project-members-page/project-members-page.component";
 import { InvitePageComponent } from "./shared/invite-page/invite-page.component";
+import { InviteDashboardComponent } from "./shared/invite-dashboard/invite-dashboard.component";
 
 const routes: Routes = [
   { path: "", component: LandingPageComponent },
-  { path: "login", component: LoginComponent },
   {
     path: "login",
     component: LoginComponent,
@@ -64,8 +64,12 @@ const routes: Routes = [
     component: InvitePageComponent,
   },
   {
-    path: "",
-    component: LandingPageComponent,
+    path: "invite/:inviteId/dashboard",
+    component: InviteDashboardComponent,
+  },
+  {
+    path: "invite/:inviteId/members",
+    component: ProjectMembersPageComponent,
   },
   {
     path: "**",
