@@ -19,7 +19,7 @@ import { ApiService } from '../api.service';
             {{ tasks?.length }}
           </div>
         </div>
-        <div class= "min-h-5" cdkDropList [cdkDropListData]="tasks" (cdkDropListDropped)="drop($event)">
+        <div class= "min-h-20" cdkDropList [cdkDropListData]="tasks" (cdkDropListDropped)="drop($event)">
           <div *ngFor="let task of tasks">
             <app-kanban-card id= "task.name" [task]="task" [color] = "color" cdkDrag [cdkDragData]="task"></app-kanban-card>
           </div>
