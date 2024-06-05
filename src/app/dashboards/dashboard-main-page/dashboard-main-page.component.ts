@@ -10,128 +10,122 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
 @Component({
   selector: "app-dashboard-main-page",
   template: `
-    <!--    @if (tasksToDo && tasksToVerify && widgets) {-->
-    <div class="ml-20 mr-10">
-      <!--      <div class="flex justify-between items-center">-->
-      <!--        <h1 class="text-3xl font-semibold text-gray-800">-->
-      <!--          {{ projectName }}-->
-      <!--        </h1>-->
-      <!--        <button class="mr-6" (click)="changeMode()">-->
-      <!--          <app-pencil-icon fill="#000000" width="30" height="30" />-->
-      <!--        </button>-->
-      <!--      </div>-->
-      <!--      <div class="flex items-center gap-4">-->
-      <!--        <a-->
-      <!--          href="{{ inviteId ? ('/invite/' + inviteId) : ('/project/' + id) }}"-->
-      <!--          class="flex flex-row items-center gap-2"-->
-      <!--        >-->
-      <!--          <app-projects-icon fill="#5CCEFF" width="25" height="25" />-->
-      <!--          <span class="font-bold hover:underline text-base text-devotionAccent"-->
-      <!--            >Ir a proyecto</span-->
-      <!--          >-->
-      <!--        </a>-->
-      <!--        <button (click)="viewDataSources()">-->
-      <!--          <span class="font-bold hover:underline text-base text-devotionAccent"-->
-      <!--            >Ver entradas de datos</span-->
-      <!--          >-->
-      <!--        </button>-->
-      <!--      </div>-->
+    @if (tasksToDo && tasksToVerify) {
+      <div class="ml-20 mr-10">
+        <div class="flex justify-between items-center">
+          <h1 class="text-3xl font-semibold text-gray-800">
+            {{ projectName }}
+          </h1>
+          <button class="mr-6" (click)="changeMode()">
+            <app-pencil-icon fill="#000000" width="30" height="30"/>
+          </button>
+        </div>
+        <div class="flex items-center gap-4">
+          <a
+            href="{{ inviteId ? ('/invite/' + inviteId) : ('/project/' + id) }}"
+            class="flex flex-row items-center gap-2"
+          >
+            <app-projects-icon fill="#5CCEFF" width="25" height="25"/>
+            <span class="font-bold hover:underline text-base text-devotionAccent"
+            >Ir a proyecto</span
+            >
+          </a>
+        </div>
 
-      <!--      <div class="grid grid-cols-2 gap-4 w-full mt-2 mb-6">-->
-      <!--        <div>-->
-      <!--          <h3 class="font-bold mb-1.5">Tus tareas por completar</h3>-->
-      <!--          <app-dashboard-task-list [tasks]="tasksToDo" />-->
-      <!--        </div>-->
-      <!--        <div>-->
-      <!--          <h3 class="font-bold mb-1.5">Tus tareas en verificación</h3>-->
-      <!--          <app-dashboard-task-list [tasks]="tasksToVerify" />-->
-      <!--        </div>-->
-      <!--      </div>-->
+        <div class="grid grid-cols-2 gap-4 w-full mt-2 mb-6">
+          <div>
+            <h3 class="font-bold mb-1.5">Tus tareas por completar</h3>
+            <app-dashboard-task-list [tasks]="tasksToDo"/>
+          </div>
+          <div>
+            <h3 class="font-bold mb-1.5">Tus tareas en verificación</h3>
+            <app-dashboard-task-list [tasks]="tasksToVerify"/>
+          </div>
+        </div>
 
-      <!--      <div class="flex flex-wrap gap-x-8 gap-y-6 mb-10">-->
-      <!--        @for(widget of widgets; track $index) {-->
-      <!--        <div class="grid grid-cols-1 grid-rows-1 relative">-->
-      <!--          <app-widget [widget]="widget" class="row-start-1 col-start-1" />-->
-      <!--          @if (isEditing) {-->
-      <!--          <button-->
-      <!--            class="btn btn-sm row-start-1 col-start-1 absolute top-2 right-2"-->
-      <!--            (click)="startChange(widget.id)"-->
-      <!--          >-->
-      <!--            Edit-->
-      <!--          </button>-->
-      <!--          }-->
-      <!--        </div>-->
-      <!--        }-->
-      <!--        <div class="w-52 h-52 grid" [ngClass]="{ hidden: !isEditing }">-->
-      <!--          <div-->
-      <!--            class="grid place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow place-self-center size-24 hover:cursor-pointer"-->
-      <!--            (click)="startChange()"-->
-      <!--          >-->
-      <!--            <app-plus-icon-->
-      <!--              fill="#2A4365"-->
-      <!--              [width]="'45'"-->
-      <!--              [height]="'45'"-->
-      <!--            ></app-plus-icon>-->
-      <!--          </div>-->
-      <!--        </div>-->
-      <!--      </div>-->
+        <div class="flex flex-wrap gap-x-8 gap-y-6 mb-10">
+          @for (widget of widgets; track $index) {
+            <div class="grid grid-cols-1 grid-rows-1 relative">
+              <app-widget [widget]="widget" class="row-start-1 col-start-1"/>
+              @if (isEditing) {
+                <button
+                  class="btn btn-sm row-start-1 col-start-1 absolute top-2 right-2"
+                  (click)="startChange(widget.id)"
+                >
+                  Edit
+                </button>
+              }
+            </div>
+          }
+          <div class="w-52 h-52 grid" [ngClass]="{ hidden: !isEditing }">
+            <div
+              class="grid place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow place-self-center size-24 hover:cursor-pointer"
+              (click)="startChange()"
+            >
+              <app-plus-icon
+                fill="#2A4365"
+                [width]="'45'"
+                [height]="'45'"
+              ></app-plus-icon>
+            </div>
+          </div>
+        <div class="flex flex-row flex-wrap">
+          <ngx-charts-pie-chart
+            [view]="[400,200]"
+            [results]="infoTasks"
+            [doughnut]="false"
+            [labels]="true"
+            [maxLabelLength]="15"
+            [scheme]="colorScheme"
+          />
 
-      <div class="flex flex-row flex-wrap">
-        <p>hola</p>
-        <ngx-charts-pie-chart
-          [view]="[400,400]"
-          [results]="infoTasks"
-          [doughnut]="true"
-          [labels]="true"
-          [maxLabelLength]="15"
-          [scheme]="colorScheme"
-        />
+          <ngx-charts-advanced-pie-chart
+            [view]="[400,200]"
+            [results]="infoTasks"
+            [scheme]="colorScheme"
+            [gradient]="true"
+            [animations]="true"
+          />
 
-        <ngx-charts-advanced-pie-chart
-          [view]="[700,400]"
-          [results]="infoTasks"
-          [scheme]="colorScheme"
-          [gradient]="true"
-          [animations]="true"
-        />
+          <ngx-charts-bar-vertical
+            [view]="[400,200]"
+            [results]="infoTasks"
+            [scheme]="colorScheme"
+            [xAxis]="true"
+          />
 
-        <ngx-charts-bar-vertical
-          [view]="[400,400]"
-          [results]="infoTasks"
-          [scheme]="colorScheme"
-          [xAxis]="true"
-        />
+          <ngx-charts-bar-horizontal
+            [view]="[200,400]"
+            [results]="infoTasks"
+            [scheme]="colorScheme"
+            [yAxis]="true"
+          />
 
-        <ngx-charts-bar-horizontal
-          [view]="[400,400]"
-          [results]="infoTasks"
-          [scheme]="colorScheme"
-          [yAxis]="true"
-        />
+          <ngx-charts-heat-map
+            [view]="[200,200]"
+            [results]="prueba"
+            [scheme]="colorScheme"
+            [xAxis]="true"
+            [yAxis]="true"
+          >
+          </ngx-charts-heat-map>
 
-        <ngx-charts-heat-map
-          [view]="[400,400]"
-          [results]="prueba"
-          [scheme]="colorScheme"
-          [xAxis]="true"
-          [yAxis]="true"
-        >
-        </ngx-charts-heat-map>
+        </div>
+        </div>
 
+
+        <!--      <app-create-widget-->
+        <!--        [modal]="modal"-->
+        <!--        [projectId]="id"-->
+        <!--        [position]="widgets.length"-->
+        <!--        [dataSources]="dataSources"-->
+        <!--        [fetchApi]="fetchApi"-->
+        <!--        [startChange$]="startChange$"-->
+        <!--      />-->
       </div>
-
-      <!--      <app-create-widget-->
-      <!--        [modal]="modal"-->
-      <!--        [projectId]="id"-->
-      <!--        [position]="widgets.length"-->
-      <!--        [dataSources]="dataSources"-->
-      <!--        [fetchApi]="fetchApi"-->
-      <!--        [startChange$]="startChange$"-->
-      <!--      />-->
-    </div>
-    <!--    } @else {-->
-    <!--    <app-loading />-->
-    <!--    }-->
+    } @else {
+      <app-loading/>
+    }
   `,
 })
 export class DashboardMainPageComponent implements OnInit, DoCheck {
@@ -144,14 +138,79 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
   ) {}
 
   @Input() projectId = "";
-  colourr = "red";
 
-  tasksToDo?: DashboardTask[];
-  tasksToVerify?: DashboardTask[];
+  tasksToDo?: DashboardTask[] = [
+    {
+      id: "1",
+      name: "Tarea 1",
+      description: "Esta es la tarea 1",
+      parentProject: "FSAE 2024",
+      dueDate: "2021-06-30",
+      priority: 1,
+    },
+    {
+      id: "2",
+      name: "Tarea 2",
+      description: "Esta es la tarea 2",
+      parentProject: "FSAE 2024",
+      dueDate: "2021-06-30",
+      priority: 1,
+    },
+    {
+      id: "3",
+      name: "Tarea 3",
+      description: "Esta es la tarea 3",
+      parentProject: "FSAE 2024",
+      dueDate: "2021-06-30",
+      priority: 1,
+    },
+    {
+      id: "4",
+      name: "Tarea 4",
+      description: "Esta es la tarea 4",
+      parentProject: "FSAE 2024",
+      dueDate: "2021-06-30",
+      priority: 1,
+    }
+  ]
+  tasksToVerify?: DashboardTask[] = [
+    {
+      id: "5",
+      name: "Tarea 5",
+      description: "Esta es la tarea 5",
+      parentProject: "FSAE 2024",
+      dueDate: "2021-06-30",
+      priority: 1,
+    },
+    {
+      id: "6",
+      name: "Tarea 6",
+      description: "Esta es la tarea 6",
+      parentProject: "FSAE 2024",
+      dueDate: "2021-06-30",
+      priority: 1,
+    },
+    {
+      id: "7",
+      name: "Tarea 7",
+      description: "Esta es la tarea 7",
+      parentProject: "FSAE 2024",
+      dueDate: "2021-06-30",
+      priority: 1,
+    },
+    {
+      id: "8",
+      name: "Tarea 8",
+      description: "Esta es la tarea 8",
+      parentProject: "FSAE 2024",
+      dueDate: "2021-06-30",
+      priority: 1,
+    }
+  ];
   widgets?: Widget[];
   id = "";
   inviteId = "";
-  projectName = "";
+  projectName = "Hola";
   dataSources: DataSource[] = [];
   modal: HTMLDialogElement | null = null;
   infoTasks: any;
@@ -225,6 +284,7 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
         this.inviteId = params["inviteId"];
       }
       this.fetchApi();
+      console.log(this.tasksToDo);
     });
   }
 
@@ -235,13 +295,6 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
   changeMode = () => {
     this.isEditing = !this.isEditing;
   };
-
-  viewDataSources() {
-    this.store.dataSources = this.dataSources;
-    this.store.project.id = this.id;
-    console.log("View members", this.store.dataSources, this.store.project.id);
-    void this.router.navigateByUrl(`/dashboard/${this.id}/dataSources`);
-  }
 
   startChange(id?: string) {
     this.store.widget = this.widgets?.find((widget) => widget.id === id);
