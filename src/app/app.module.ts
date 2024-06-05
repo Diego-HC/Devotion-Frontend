@@ -75,6 +75,7 @@ import { InviteDashboardComponent } from './shared/invite-dashboard/invite-dashb
 import { InviteMembersComponent } from './shared/invite-members/invite-members.component';
 import { LinkIconComponent } from './shared/icons/link-icon/link-icon.component';
 import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {BarChartModule, HeatMapModule, PieChartModule} from "@swimlane/ngx-charts";
 
 @NgModule({
   declarations: [
@@ -151,6 +152,9 @@ import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
     ReactiveFormsModule,
     DragDropModule,
     BrowserAnimationsModule,
+    PieChartModule,
+    BarChartModule,
+    HeatMapModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
