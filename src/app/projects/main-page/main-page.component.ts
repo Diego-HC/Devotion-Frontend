@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
 import { cardColors } from "../../shared/cardColors";
-import { Subscription} from "rxjs";
+import { Subscription, switchMap } from "rxjs";
 import {TaskPreviewComponent} from "../../tasks/task-preview/task-preview.component";
 import { Clipboard } from "@angular/cdk/clipboard";
 
@@ -44,7 +44,7 @@ import { Clipboard } from "@angular/cdk/clipboard";
                 >Ir a dashboard</span
                 >
               </a>
-              <a routerLink="{{ inviteId ? ('/invite/' + inviteId) : ('/projects/' + project.id) }}/members">
+              <a routerLink="{{ inviteId ? ('/invite/' + inviteId) : ('/project/' + project.id) }}/members">
                 <span class="font-bold hover:underline text-base text-devotionAccent">Ver miembros</span>
               </a>
               <div
@@ -249,21 +249,21 @@ export class MainPageComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
 
   ngOnInit() {
-    const getProject = (id: string) => {
-      this.api.get(`projects/${id}/`).subscribe((response) => {
-        this.store.updateProjectFromResponse(response);
+    this.route.params
+      .pipe(
+        switchMap((params) => {
+          this.project = undefined;
+          if (params["id"]) {
+            return this.api.get(`projects/${params["id"]}/`);
+          }
+          this.inviteId = params["inviteId"];
+          return this.api.get(`projects/${this.projectId}/`);
+        })
+      )
+      .subscribe((response) => {
+        this.store.updateProjectFromResponse(response)
         this.project = response;
       });
-    };
-
-    this.route.params.subscribe((params) => {
-      if (params["id"]) {
-        getProject(params["id"]);
-      } else if (this.projectId) {
-        this.inviteId = params["inviteId"];
-        getProject(this.projectId);
-      }
-    });
 
     // Se necesita para actualizar la gráfica de progreso
     this.subscription = this.store.needsUpdate$.subscribe(() => this.updateProjectInfo());
@@ -317,6 +317,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
         this.isCopied = false;
         this.shareButtonText = "Compartir";
       }, 1000);
+    }, (_) => {
+      alert("Error al compartir. Asegúrate de que eres líder del proyecto.");
     });
   }
 }
