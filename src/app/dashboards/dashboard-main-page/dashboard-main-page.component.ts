@@ -57,7 +57,7 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
           </div>
         </div>
 
-        <div class="grid grid-cols-4 gap-4 w-full mt-2 mb-6">
+        <div class="grid grid-cols-4 md:w-full md:mt-2 md:mb-6">
 
           <!--          <div-->
           <!--            className="grid grid-cols-3 gap-4"-->
@@ -112,7 +112,7 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
           <!--              />-->
           <!--            </app-widget>-->
           <div class="col-span-2">
-            <div class="w-full">
+            <div class="md:w-full">
               <app-widget>
                 <h3 class="font-bold mb-1.5">Tareas completadas por fecha</h3>
                 <ngx-charts-line-chart
