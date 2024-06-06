@@ -4,11 +4,9 @@ import { Component, Input } from "@angular/core";
 @Component({
   selector: "app-widget",
   template: `
-    <div class="widget p-4 m-2 bg-white border border-gray-200 rounded-lg shadow flex flex-col justify-start items-center">
+    <div class="flex flex-col justify-center items-center gap-2 m-2 p-2 bg-white border border-gray-200 rounded-lg shadow">
       <h3 class="text-lg font-bold text-center mb-2">{{ widgetName }}</h3>
-      <div class="w-full h-full flex justify-center items-center">
-        <ng-content></ng-content>
-      </div>
+      <ng-content></ng-content>
     </div>
   `,
 })

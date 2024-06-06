@@ -57,25 +57,13 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
           </div>
         </div>
 
-        <div class="grid grid-cols-4 md:w-full md:mt-2 md:mb-6">
-
-          <!--          <div-->
-          <!--            className="grid grid-cols-3 gap-4"-->
-          <!--            style={{ gridTemplateColumns:-->
-          <!--          "repeat(auto-fill, minmax(400px, 1fr))" }}-->
-          <!--    >-->
-          <!--    {publications?.map(publication => (-->
-          <!--    <div key={publication.id} className="transform transition-transform duration-200 hover:scale-[101%]">-->
-          <!--    <RecentlyPublishedCard {...publication}/>-->
-          <!--    </div>-->
-          <!--    ))}-->
-          <!--    </div>-->
-          <!--          <div class="flex flex-wrap justify-content">-->
-          <!--            <div class="col-span-2">-->
-          <!--            <div class="w-1/2">-->
+        <div
+          class="grid gap-4 mt-4 mb-8"
+          style="grid-template-columns: repeat(auto-fill, minmax(400px, 1fr))"
+        >
           <app-widget widgetName="Progreso del proyecto">
             <ngx-charts-gauge
-              [view]="pieChartView"
+              [view]="view"
               [results]="projectProgress"
               [scheme]="colorScheme"
               [max]="100"
@@ -83,14 +71,9 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
             >
             </ngx-charts-gauge>
           </app-widget>
-          <!--            </div>-->
-          <!--          </div>-->
-
-          <!--            <div class="col-span-2">-->
-          <!--            <div class="w-1/2">-->
           <app-widget widgetName="Tareas por estado">
             <ngx-charts-pie-chart
-              [view]="pieChartView"
+              [view]="view"
               [results]="tasksByStatus"
               [doughnut]="false"
               [labels]="true"
@@ -98,74 +81,39 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
               [scheme]="colorScheme"
             />
           </app-widget>
-          <!--          </div>-->
-          <!--          </div>-->
-
-
-          <!--            <app-widget>-->
-          <!--              <ngx-charts-number-card-->
-          <!--                [view]="view"-->
-          <!--                [results]="allDoneTasksCount"-->
-          <!--                [scheme]="colorScheme"-->
-          <!--              />-->
-          <!--            </app-widget>-->
-          <div class="col-span-2">
-            <div class="md:w-full">
-              <app-widget widgetName="Tareas completadas por fecha">
-                <ngx-charts-line-chart
-                  [view]="view"
-                  [results]="doneTasksByDate"
-                  [scheme]="colorScheme"
-                  [xAxis]="true"
-                  [yAxis]="true"
-                >
-                </ngx-charts-line-chart>
-              </app-widget>
-            </div>
-          </div>
-
-          <div class="col-span-2">
-            <app-widget widgetName="Tareas existentes por prioridad">
-              <ngx-charts-bar-horizontal
-                [view]="view"
-                [results]="tasksByPriority"
-                [scheme]="colorScheme"
-                [yAxis]="true"
-              />
-            </app-widget>
-          </div>
-
-          <!--          </div>-->
-          <!--            <app-widget>-->
-          <!--              <ngx-charts-advanced-pie-chart-->
-          <!--                [view]="view"-->
-          <!--                [results]="infoTasks"-->
-          <!--                [scheme]="colorScheme"-->
-          <!--                [gradient]="true"-->
-          <!--                [animations]="true"-->
-          <!--              />-->
-          <!--            </app-widget>-->
-
-          <div class="col-span-2">
-            <app-widget widgetName="Carga de trabajo por usuario">
-              <ngx-charts-heat-map
-                [view]="view"
-                [results]="userWorkload"
-                [scheme]="colorScheme"
-                [xAxis]="true"
-                [showYAxisLabel]="true"
-                [showXAxisLabel]="true"
-                [xAxisLabel]="xAxisLabel"
-                [yAxisLabel]="yAxisLabel"
-                [yAxis]="true"
-                [legend]="true"
-              >
-              </ngx-charts-heat-map>
-            </app-widget>
-          </div>
-
-          <p>hardcoded number cards de número de tareas completadas del proyecto y arbol de tareas done</p>
-
+          <app-widget widgetName="Tareas completadas por fecha">
+            <ngx-charts-line-chart
+              [view]="view"
+              [results]="doneTasksByDate"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [yAxis]="true"
+            >
+            </ngx-charts-line-chart>
+          </app-widget>
+          <app-widget widgetName="Tareas existentes por prioridad">
+            <ngx-charts-bar-horizontal
+              [view]="view"
+              [results]="tasksByPriority"
+              [scheme]="colorScheme"
+              [yAxis]="true"
+            />
+          </app-widget>
+          <app-widget widgetName="Carga de trabajo por usuario">
+            <ngx-charts-heat-map
+              [view]="view"
+              [results]="userWorkload"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [showYAxisLabel]="true"
+              [showXAxisLabel]="true"
+              [xAxisLabel]="xAxisLabel"
+              [yAxisLabel]="yAxisLabel"
+              [yAxis]="true"
+              [legend]="true"
+            >
+            </ngx-charts-heat-map>
+          </app-widget>
         </div>
       </div>
       <!--      <app-create-widget-->
@@ -329,15 +277,14 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
   }
 
   private setViewDimensions(): void {
-    // General view settings for larger charts
-    const generalWidth = window.innerWidth * 0.4;
-    const generalHeight = window.innerHeight * 0.2;
-    this.view = [generalWidth, generalHeight];
+    const windowWidth = window.innerWidth;
+    const minColumnWidth = 400; // Minimum column width as per your grid style
+    const numberOfColumns = Math.floor(windowWidth / minColumnWidth);
+    const actualColumnWidth = windowWidth / numberOfColumns;
 
-    // Settings for pie charts to maintain a square and responsive
-    const smallerDimension = Math.min(window.innerWidth, window.innerHeight);
-    const pieSize = smallerDimension * 0.35; // 25% of the smaller viewport dimension
-    this.pieChartView = [pieSize, pieSize];
+    // Set the width and height for the view
+    this.view = [actualColumnWidth - 100, actualColumnWidth * 0.6 - 50]; // You can replace 200 with the desired height
+    this.pieChartView = [actualColumnWidth, actualColumnWidth]; // If you want the height to be equal to the width
   }
 
   ngDoCheck(): void {
