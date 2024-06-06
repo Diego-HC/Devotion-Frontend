@@ -3,6 +3,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { OAuthModule } from "angular-oauth2-oidc";
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -66,6 +67,14 @@ import { PencilIconComponent } from './shared/icons/pencil-icon/pencil-icon.comp
 import { IconSidebarComponent } from './shared/icon-sidebar/icon-sidebar.component';
 import { TaskPreviewComponent} from "./tasks/task-preview/task-preview.component";
 import { TaskPreviewInfoComponent } from './tasks/task-preview-info/task-preview-info.component';
+import { KanbanSectionComponent } from './kanban-section/kanban-section.component';
+import { FullscreenIconComponent } from './shared/icons/fullscreen-icon/fullscreen-icon.component';
+import { InvitePageComponent } from './shared/invite-page/invite-page.component';
+import { ProtectedLinkComponent } from './shared/protected-link/protected-link.component';
+import { InviteDashboardComponent } from './shared/invite-dashboard/invite-dashboard.component';
+import { InviteMembersComponent } from './shared/invite-members/invite-members.component';
+import { LinkIconComponent } from './shared/icons/link-icon/link-icon.component';
+import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -123,7 +132,14 @@ import { TaskPreviewInfoComponent } from './tasks/task-preview-info/task-preview
     PencilIconComponent,
     IconSidebarComponent,
     TaskPreviewComponent,
-    TaskPreviewInfoComponent
+    TaskPreviewInfoComponent,
+    KanbanSectionComponent,
+    FullscreenIconComponent,
+    InvitePageComponent,
+    ProtectedLinkComponent,
+    InviteDashboardComponent,
+    InviteMembersComponent,
+    LinkIconComponent
   ],
   imports: [
     BrowserModule,
@@ -133,6 +149,8 @@ import { TaskPreviewInfoComponent } from './tasks/task-preview-info/task-preview
     HttpClientModule,
     NgOptimizedImage,
     ReactiveFormsModule,
+    DragDropModule,
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

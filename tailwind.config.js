@@ -32,6 +32,7 @@ module.exports = {
         done: "#00D387",
         doneLight: "#e8ffee",
         ludicrousSpeed: "#FE57E6",
+        altBreadcrumbs: "#dcecf6",
       }
     },
   },

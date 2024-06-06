@@ -86,7 +86,11 @@ export class ProjectMembersPageComponent implements OnInit{
       return;
     }
     this.route.params.subscribe(params => {
-      this.backButtonLink = `/project/${params["id"]}`;
+      if (params["id"]) {
+        this.backButtonLink = `/project/${params["id"]}`;
+      } else if (params["inviteId"]) {
+        this.backButtonLink = `/invite/${params["inviteId"]}`;
+      }
     });
     this.filteredMembers = [...this.store.project.leaders, ...this.store.project.members];
   }

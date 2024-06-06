@@ -1,4 +1,4 @@
-import { Component, DoCheck, OnInit } from "@angular/core";
+import { Component, Input, DoCheck, OnInit } from "@angular/core";
 import { SessionStorageService } from "../../session-storage.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ApiService } from "../../api.service";
@@ -20,7 +20,7 @@ import { Subject } from "rxjs";
       </div>
       <div class="flex items-center gap-4">
         <a
-          href="{{ '/project/' + id }}"
+          href="{{ inviteId ? ('/invite/' + inviteId) : ('/project/' + id) }}"
           class="flex flex-row items-center gap-2"
         >
           <app-projects-icon fill="#5CCEFF" width="25" height="25" />
@@ -97,10 +97,13 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
     private router: Router
   ) {}
 
+  @Input() projectId = "";
+
   tasksToDo?: DashboardTask[];
   tasksToVerify?: DashboardTask[];
   widgets?: Widget[];
   id = "";
+  inviteId = "";
   projectName = "";
   dataSources: DataSource[] = [];
   modal: HTMLDialogElement | null = null;
@@ -129,7 +132,12 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      this.id = params["id"];
+      if (params["id"]) {
+        this.id = params["id"];
+      } else {
+        this.id = this.projectId;
+        this.inviteId = params["inviteId"];
+      }
 
       this.fetchApi();
     });
