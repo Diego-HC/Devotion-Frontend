@@ -1,4 +1,4 @@
-import { Component, Input, DoCheck, OnInit } from "@angular/core";
+import {Component, Input, DoCheck, OnInit, HostListener, HostBinding} from "@angular/core";
 import { SessionStorageService } from "../../session-storage.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ApiService } from "../../api.service";
@@ -43,20 +43,20 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
           </div>
         </div>
 
-        <div class="flex flex-wrap gap-x-8 gap-y-6 mb-10">
-          @for (widget of widgets; track $index) {
-            <div class="grid grid-cols-1 grid-rows-1 relative">
-              <app-widget [widget]="widget" class="row-start-1 col-start-1"/>
-              @if (isEditing) {
-                <button
-                  class="btn btn-sm row-start-1 col-start-1 absolute top-2 right-2"
-                  (click)="startChange(widget.id)"
-                >
-                  Edit
-                </button>
-              }
-            </div>
-          }
+<!--        <div class="flex flex-wrap gap-x-8 gap-y-6 mb-10">-->
+<!--          @for (widget of widgets; track $index) {-->
+<!--            <div class="grid grid-cols-1 grid-rows-1 relative">-->
+<!--              <app-widget [widget]="widget" class="row-start-1 col-start-1"/>-->
+<!--              @if (isEditing) {-->
+<!--                <button-->
+<!--                  class="btn btn-sm row-start-1 col-start-1 absolute top-2 right-2"-->
+<!--                  (click)="startChange(widget.id)"-->
+<!--                >-->
+<!--                  Edit-->
+<!--                </button>-->
+<!--              }-->
+<!--            </div>-->
+<!--          }-->
           <div class="w-52 h-52 grid" [ngClass]="{ hidden: !isEditing }">
             <div
               class="grid place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow place-self-center size-24 hover:cursor-pointer"
@@ -69,51 +69,65 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
               ></app-plus-icon>
             </div>
           </div>
-        <div class="flex flex-row flex-wrap">
-          <ngx-charts-pie-chart
-            [view]="[400,200]"
-            [results]="infoTasks"
-            [doughnut]="false"
-            [labels]="true"
-            [maxLabelLength]="15"
-            [scheme]="colorScheme"
-          />
 
-          <ngx-charts-advanced-pie-chart
-            [view]="[400,200]"
-            [results]="infoTasks"
-            [scheme]="colorScheme"
-            [gradient]="true"
-            [animations]="true"
-          />
+          <div class="flex flex-row flex-wrap">
+            <!--          <div class="flex flex-wrap justify-content">-->
+            <app-widget>
+              <ngx-charts-pie-chart
+                [view]="pieChartView"
+                [results]="infoTasks"
+                [doughnut]="false"
+                [labels]="true"
+                [maxLabelLength]="15"
+                [scheme]="colorScheme"
+              />
+            </app-widget>
+            <!--          </div>-->
+            <app-widget>
+              <ngx-charts-advanced-pie-chart
+                [view]="view"
+                [results]="infoTasks"
+                [scheme]="colorScheme"
+                [gradient]="true"
+                [animations]="true"
+              />
+            </app-widget>
 
-          <ngx-charts-bar-vertical
-            [view]="[400,200]"
-            [results]="infoTasks"
-            [scheme]="colorScheme"
-            [xAxis]="true"
-          />
+            <app-widget>
+              <ngx-charts-bar-vertical
+                [view]="view"
+                [results]="infoTasks"
+                [scheme]="colorScheme"
+                [xAxis]="true"
+              />
+            </app-widget>
 
-          <ngx-charts-bar-horizontal
-            [view]="[200,400]"
-            [results]="infoTasks"
-            [scheme]="colorScheme"
-            [yAxis]="true"
-          />
+            <app-widget>
+              <ngx-charts-bar-horizontal
+                [view]="view"
+                [results]="infoTasks"
+                [scheme]="colorScheme"
+                [yAxis]="true"
+              />
+            </app-widget>
 
-          <ngx-charts-heat-map
-            [view]="[200,200]"
-            [results]="prueba"
-            [scheme]="colorScheme"
-            [xAxis]="true"
-            [yAxis]="true"
-          >
-          </ngx-charts-heat-map>
-
+            <app-widget>
+              <ngx-charts-heat-map
+                [view]="view"
+                [results]="prueba"
+                [scheme]="colorScheme"
+                [xAxis]="true"
+                [showYAxisLabel]="true"
+                [showXAxisLabel]="true"
+                [xAxisLabel]="xAxisLabel"
+                [yAxisLabel]="yAxisLabel"
+                [yAxis]="true"
+                [legend]="true"
+              >
+              </ngx-charts-heat-map>
+            </app-widget>
+          </div>
         </div>
-        </div>
-
-
         <!--      <app-create-widget-->
         <!--        [modal]="modal"-->
         <!--        [projectId]="id"-->
@@ -122,7 +136,7 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
         <!--        [fetchApi]="fetchApi"-->
         <!--        [startChange$]="startChange$"-->
         <!--      />-->
-      </div>
+<!--      </div>-->
     } @else {
       <app-loading/>
     }
@@ -211,10 +225,11 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
   id = "";
   inviteId = "";
   projectName = "Hola";
-  dataSources: DataSource[] = [];
   modal: HTMLDialogElement | null = null;
   infoTasks: any;
   private startEditSubject = new Subject<void>();
+  xAxisLabel = "Estados";
+  yAxisLabel = "Semanas";
 
   startChange$ = this.startEditSubject.asObservable();
 
@@ -227,29 +242,53 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
     domain: ['#363636', "#FFC700", "#0094D3", "#00D387"]
   };
 
+  view: [number, number] = [400, 200]; // Default dimensions
+  pieChartView: [number, number] = [350, 300];
+
   prueba = [
     {
-      "name": "Tareas",
+      "name": "No Iniciada",
       "series": [
         {
-          "name": "No iniciadas",
+          "name": "Semana 1",
           "value": 4
         },
         {
-          "name": "En progreso",
+          "name": "Semana 2",
           "value": 23
         },
         {
-          "name": "En revisión",
+          "name": "Semana 3",
           "value": 12
         },
         {
-          "name": "Completadas",
+          "name": "Semana 4",
           "value": 45
         }
       ]
     },
-]
+    {
+      "name": "En progreso",
+      "series": [
+        {
+          "name": "Semana 1",
+          "value": 10
+        },
+        {
+          "name": "Semana 2",
+          "value": 3
+        },
+        {
+          "name": "Semana 3",
+          "value": 30
+        },
+        {
+          "name": "Semana 4",
+          "value": 4
+        }
+      ]
+    },
+  ]
 
   // fetchApi1 = (onResponse?: () => void) => {
   //   this.api.get(`dashboards/${this.id}/`).subscribe((response: Dashboard) => {
@@ -271,7 +310,7 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
   fetchApi = (onResponse?: () => void) => {
     this.api.get(`projects/${this.id}/dashboard/`).subscribe((response: any) => {
       console.log(response);
-      this.infoTasks = response.tasks_by_status;
+      this.infoTasks = response.tasksByStatus;
     });
   }
 
@@ -286,6 +325,22 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
       this.fetchApi();
       console.log(this.tasksToDo);
     });
+    this.setViewDimensions();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    this.setViewDimensions();
+  }
+
+  private setViewDimensions(): void {
+    const width = window.innerWidth * 0.4;
+    const height = window.innerHeight * 0.2;
+    this.view = [width, height];
+
+    // Optional: Adjust pieChartView dimensions based on window size if needed
+    // const pieSize = Math.min(window.innerWidth * 0.2, window.innerHeight * 0.2);
+    // this.pieChartView = [pieSize, pieSize];
   }
 
   ngDoCheck(): void {

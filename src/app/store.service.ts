@@ -49,7 +49,6 @@ export class StoreService {
   }
 
   // dashboard data
-  dataSources?: DataSource[];
   widget?: Widget;
 
   clearProject(parent = "") {

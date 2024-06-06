@@ -154,7 +154,7 @@ export class CreateWidgetComponent implements OnInit {
   @Input() startChange$!: Observable<void>;
 
   widgetDisplayType = WidgetDisplayType;
-  mode: "create" | "edit" = "create";
+  mode = "edit";
 
   displayTypeOptions = Object.keys(this.widgetDisplayType)
     .filter((option) => isNaN(Number(option)))

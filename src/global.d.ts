@@ -150,19 +150,43 @@ declare global {
     parentProject: string;
   };
 
-  interface DataSource {
-    id: string;
+
+  interface TaskByStatus {
     name: string;
-    mqttTopic: string;
+    value: number;
+  }
+
+  interface TaskByPriority {
+    name: string;
+    value: number;
+  }
+
+  interface DoneTasksByDate {
+    name: string;
+    value: number;
+  }
+
+  interface UserWorkload {
+    name: string;
+    series: { name: string; value: number }[];
+  }
+
+  interface DashboardData {
+    id: string;
+    doneTasksCount: number;
+    allDoneTasksCount: number;
+    tasksByStatus: TaskByStatus[];
+    tasksByPriority: TaskByPriority[];
+    doneTasksByDate: DoneTasksByDate[];
+    userWorkload: UserWorkload[];
   }
 
   interface Widget {
     id: string;
     name: string;
     displayType: WidgetDisplayType;
-    dataSource: DataSource;
-    position: number;
-    unit: string;
+    dataSource: DashboardData;
+    validDisplayTypes: WidgetDisplayType[];
   }
 
   interface Dashboard {

@@ -31,7 +31,6 @@ import {
 import { WidgetComponent } from "./dashboards/widgets/widget/widget.component";
 import { WidgetNumberComponent } from "./dashboards/widgets/widget-number/widget-number.component";
 import { CreateWidgetComponent } from "./dashboards/widgets/create-widget/create-widget.component";
-import { DataSourcesMainPageComponent } from './dashboards/dataSources/data-sources-main-page/data-sources-main-page.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginComponent } from './login/login.component';
 import { BadgeComponent } from './shared/badge/badge.component';
@@ -76,6 +75,8 @@ import { InviteMembersComponent } from './shared/invite-members/invite-members.c
 import { LinkIconComponent } from './shared/icons/link-icon/link-icon.component';
 import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {BarChartModule, HeatMapModule, PieChartModule} from "@swimlane/ngx-charts";
+import { WidgetPieChartComponent } from './dashboards/widgets/widget-pie-chart/widget-pie-chart.component';
+import { WidgetVerticalBarChartComponent } from './dashboards/widgets/widget-vertical-bar-chart/widget-vertical-bar-chart.component';
 
 @NgModule({
   declarations: [
@@ -127,7 +128,6 @@ import {BarChartModule, HeatMapModule, PieChartModule} from "@swimlane/ngx-chart
     WidgetComponent,
     WidgetNumberComponent,
     CreateWidgetComponent,
-    DataSourcesMainPageComponent,
     ConfirmGoBackComponent,
     NewProjectIconComponent,
     PencilIconComponent,
@@ -140,7 +140,9 @@ import {BarChartModule, HeatMapModule, PieChartModule} from "@swimlane/ngx-chart
     ProtectedLinkComponent,
     InviteDashboardComponent,
     InviteMembersComponent,
-    LinkIconComponent
+    LinkIconComponent,
+    WidgetPieChartComponent,
+    WidgetVerticalBarChartComponent
   ],
   imports: [
     BrowserModule,
