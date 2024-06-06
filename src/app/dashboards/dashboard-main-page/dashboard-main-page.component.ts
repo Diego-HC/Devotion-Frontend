@@ -73,8 +73,7 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
           <!--          <div class="flex flex-wrap justify-content">-->
           <!--            <div class="col-span-2">-->
           <!--            <div class="w-1/2">-->
-          <app-widget>
-            <h3 class="font-bold mb-1.5">Progreso del proyecto</h3>
+          <app-widget widgetName="Progreso del proyecto">
             <ngx-charts-gauge
               [view]="pieChartView"
               [results]="projectProgress"
@@ -89,8 +88,7 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
 
           <!--            <div class="col-span-2">-->
           <!--            <div class="w-1/2">-->
-          <app-widget>
-            <h3 class="font-bold mb-1.5">Tareas por estado</h3>
+          <app-widget widgetName="Tareas por estado">
             <ngx-charts-pie-chart
               [view]="pieChartView"
               [results]="tasksByStatus"
@@ -113,8 +111,7 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
           <!--            </app-widget>-->
           <div class="col-span-2">
             <div class="md:w-full">
-              <app-widget>
-                <h3 class="font-bold mb-1.5">Tareas completadas por fecha</h3>
+              <app-widget widgetName="Tareas completadas por fecha">
                 <ngx-charts-line-chart
                   [view]="view"
                   [results]="doneTasksByDate"
@@ -128,8 +125,7 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
           </div>
 
           <div class="col-span-2">
-            <app-widget>
-              <h3 class="font-bold mb-1.5">Tareas existentes por prioridad</h3>
+            <app-widget widgetName="Tareas existentes por prioridad">
               <ngx-charts-bar-horizontal
                 [view]="view"
                 [results]="tasksByPriority"
@@ -151,8 +147,7 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
           <!--            </app-widget>-->
 
           <div class="col-span-2">
-            <app-widget>
-              <h3 class="font-bold mb-1.5">Carga de trabajo por usuario</h3>
+            <app-widget widgetName="Carga de trabajo por usuario">
               <ngx-charts-heat-map
                 [view]="view"
                 [results]="userWorkload"
