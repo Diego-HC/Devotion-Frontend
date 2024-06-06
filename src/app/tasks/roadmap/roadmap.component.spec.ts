@@ -47,4 +47,26 @@ describe('RoadmapComponent', () => {
     component.ngAfterViewInit();
     expect(component.applyColumnWidths).toHaveBeenCalled();
   });
+
+  it('should format dates correctly', () => {
+    const startDate = '2023-01-02';
+    const endDate = '2023-01-02';
+    const formattedDates = component.getFormattedDates(startDate, endDate);
+    expect(formattedDates).toBe('1 Enero 2023');
+  });
+  
+  it('should open and close task preview', () => {
+    component.showTaskPreview('1');
+    expect(component.selectedTaskId).toBe('1');
+    component.closeTaskPreview();
+    expect(component.selectedTaskId).toBeNull();
+  });
+  
+  it('should open and close task preview', () => {
+    component.showTaskPreview('1');
+    expect(component.selectedTaskId).toBe('1');
+    component.closeTaskPreview();
+    expect(component.selectedTaskId).toBeNull();
+  });
+  
 });
