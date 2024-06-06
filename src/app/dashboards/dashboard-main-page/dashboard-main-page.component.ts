@@ -73,13 +73,16 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
         <div class="flex flex-row flex-wrap">
           <!--          <div class="flex flex-wrap justify-content">-->
 
-          <!--            <app-widget>-->
-          <!--              <ngx-charts-number-card-->
-          <!--                [view]="view"-->
-          <!--                [results]="doneTasksCount"-->
-          <!--                [scheme]="colorScheme"-->
-          <!--              />-->
-          <!--            </app-widget>-->
+                      <app-widget>
+                        <ngx-charts-linear-gauge
+                          [view]="view"
+                          [scheme]="colorScheme"
+                          [value]="doneTasksCount"
+                          [min]="0"
+                          [max]="100"
+                          [animations]="true"
+                        />
+                      </app-widget>
 
           <!--            <app-widget>-->
           <!--              <ngx-charts-number-card-->
@@ -206,7 +209,7 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
 
   modal: HTMLDialogElement | null = null;
   projectName = "";
-  doneTasksCount?: number = 0;
+  doneTasksCount: number = 0;
   allDoneTasksCount?: number = 0;
   doneTasksByDate?: DoneTasksByDate[] = [];
   tasksByStatus?: TaskByStatus[] = [];
@@ -296,6 +299,17 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
   // };
 
   fetchApi = (onResponse?: () => void) => {
+  }
+
+  ngOnInit(): void {
+    this.route.params.subscribe((params) => {
+      if (params["id"]) {
+        this.id = params["id"];
+      } else {
+        this.id = this.projectId;
+        this.inviteId = params["inviteId"];
+      }
+      this.projectName = this.store.project.name;
     this.api.get(`projects/${this.id}/dashboard/`).subscribe((response: any) => {
       console.log(response);
       this.tasksToDo = response.tasksToDo;
@@ -309,18 +323,7 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
       this.projectProgress = response.projectProgress;
       this.allProjectProgress = response.allProjectProgress;
     });
-  }
-
-  ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      if (params["id"]) {
-        this.id = params["id"];
-      } else {
-        this.id = this.projectId;
-        this.inviteId = params["inviteId"];
-      }
-      this.projectName = this.store.project.name;
-      this.fetchApi();
+      // this.fetchApi();
     });
     this.setViewDimensions();
   }
