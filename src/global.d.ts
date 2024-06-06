@@ -179,6 +179,8 @@ declare global {
     tasksByPriority: TaskByPriority[];
     doneTasksByDate: DoneTasksByDate[];
     userWorkload: UserWorkload[];
+    projectProgress: number;
+    allProjectProgress: number;
   }
 
   interface Widget {

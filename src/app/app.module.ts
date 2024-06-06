@@ -74,7 +74,7 @@ import { InviteDashboardComponent } from './shared/invite-dashboard/invite-dashb
 import { InviteMembersComponent } from './shared/invite-members/invite-members.component';
 import { LinkIconComponent } from './shared/icons/link-icon/link-icon.component';
 import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {BarChartModule, HeatMapModule, PieChartModule} from "@swimlane/ngx-charts";
+import {BarChartModule, HeatMapModule, NgxChartsModule, PieChartModule} from "@swimlane/ngx-charts";
 import { WidgetPieChartComponent } from './dashboards/widgets/widget-pie-chart/widget-pie-chart.component';
 import { WidgetVerticalBarChartComponent } from './dashboards/widgets/widget-vertical-bar-chart/widget-vertical-bar-chart.component';
 
@@ -157,6 +157,7 @@ import { WidgetVerticalBarChartComponent } from './dashboards/widgets/widget-ver
     PieChartModule,
     BarChartModule,
     HeatMapModule,
+    NgxChartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

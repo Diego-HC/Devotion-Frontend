@@ -43,92 +43,137 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
           </div>
         </div>
 
-<!--        <div class="flex flex-wrap gap-x-8 gap-y-6 mb-10">-->
-<!--          @for (widget of widgets; track $index) {-->
-<!--            <div class="grid grid-cols-1 grid-rows-1 relative">-->
-<!--              <app-widget [widget]="widget" class="row-start-1 col-start-1"/>-->
-<!--              @if (isEditing) {-->
-<!--                <button-->
-<!--                  class="btn btn-sm row-start-1 col-start-1 absolute top-2 right-2"-->
-<!--                  (click)="startChange(widget.id)"-->
-<!--                >-->
-<!--                  Edit-->
-<!--                </button>-->
-<!--              }-->
-<!--            </div>-->
-<!--          }-->
-          <div class="w-52 h-52 grid" [ngClass]="{ hidden: !isEditing }">
-            <div
-              class="grid place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow place-self-center size-24 hover:cursor-pointer"
-              (click)="startChange()"
-            >
-              <app-plus-icon
-                fill="#2A4365"
-                [width]="'45'"
-                [height]="'45'"
-              ></app-plus-icon>
-            </div>
-          </div>
-
-          <div class="flex flex-row flex-wrap">
-            <!--          <div class="flex flex-wrap justify-content">-->
-            <app-widget>
-              <ngx-charts-pie-chart
-                [view]="pieChartView"
-                [results]="infoTasks"
-                [doughnut]="false"
-                [labels]="true"
-                [maxLabelLength]="15"
-                [scheme]="colorScheme"
-              />
-            </app-widget>
-            <!--          </div>-->
-            <app-widget>
-              <ngx-charts-advanced-pie-chart
-                [view]="view"
-                [results]="infoTasks"
-                [scheme]="colorScheme"
-                [gradient]="true"
-                [animations]="true"
-              />
-            </app-widget>
-
-            <app-widget>
-              <ngx-charts-bar-vertical
-                [view]="view"
-                [results]="infoTasks"
-                [scheme]="colorScheme"
-                [xAxis]="true"
-              />
-            </app-widget>
-
-            <app-widget>
-              <ngx-charts-bar-horizontal
-                [view]="view"
-                [results]="infoTasks"
-                [scheme]="colorScheme"
-                [yAxis]="true"
-              />
-            </app-widget>
-
-            <app-widget>
-              <ngx-charts-heat-map
-                [view]="view"
-                [results]="prueba"
-                [scheme]="colorScheme"
-                [xAxis]="true"
-                [showYAxisLabel]="true"
-                [showXAxisLabel]="true"
-                [xAxisLabel]="xAxisLabel"
-                [yAxisLabel]="yAxisLabel"
-                [yAxis]="true"
-                [legend]="true"
-              >
-              </ngx-charts-heat-map>
-            </app-widget>
+        <!--        <div class="flex flex-wrap gap-x-8 gap-y-6 mb-10">-->
+        <!--          @for (widget of widgets; track $index) {-->
+        <!--            <div class="grid grid-cols-1 grid-rows-1 relative">-->
+        <!--              <app-widget [widget]="widget" class="row-start-1 col-start-1"/>-->
+        <!--              @if (isEditing) {-->
+        <!--                <button-->
+        <!--                  class="btn btn-sm row-start-1 col-start-1 absolute top-2 right-2"-->
+        <!--                  (click)="startChange(widget.id)"-->
+        <!--                >-->
+        <!--                  Edit-->
+        <!--                </button>-->
+        <!--              }-->
+        <!--            </div>-->
+        <!--          }-->
+        <div class="w-52 h-52 grid" [ngClass]="{ hidden: !isEditing }">
+          <div
+            class="grid place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow place-self-center size-24 hover:cursor-pointer"
+            (click)="startChange()"
+          >
+            <app-plus-icon
+              fill="#2A4365"
+              [width]="'45'"
+              [height]="'45'"
+            ></app-plus-icon>
           </div>
         </div>
-        <!--      <app-create-widget-->
+
+        <div class="flex flex-row flex-wrap">
+          <!--          <div class="flex flex-wrap justify-content">-->
+
+          <!--            <app-widget>-->
+          <!--              <ngx-charts-number-card-->
+          <!--                [view]="view"-->
+          <!--                [results]="doneTasksCount"-->
+          <!--                [scheme]="colorScheme"-->
+          <!--              />-->
+          <!--            </app-widget>-->
+
+          <!--            <app-widget>-->
+          <!--              <ngx-charts-number-card-->
+          <!--                [view]="view"-->
+          <!--                [results]="allDoneTasksCount"-->
+          <!--                [scheme]="colorScheme"-->
+          <!--              />-->
+          <!--            </app-widget>-->
+
+          <app-widget>
+            <h3 class="font-bold mb-1.5">Tareas completadas por fecha</h3>
+            <ngx-charts-line-chart
+              [view]="view"
+              [results]="doneTasksByDate"
+              [scheme]="colorScheme"
+            >
+            </ngx-charts-line-chart>
+          </app-widget>
+
+          <!--            <app-widget>-->
+          <!--              <ngx-charts-bar-vertical-->
+          <!--                [view]="view"-->
+          <!--                [results]="tasksByStatus"-->
+          <!--                [scheme]="colorScheme"-->
+          <!--                [xAxis]="true"-->
+          <!--              />-->
+          <!--            </app-widget>-->
+
+          <app-widget>
+            <h3 class="font-bold mb-1.5">Tareas existentes por prioridad</h3>
+            <ngx-charts-bar-horizontal
+              [view]="view"
+              [results]="tasksByPriority"
+              [scheme]="colorScheme"
+              [yAxis]="true"
+            />
+          </app-widget>
+
+          <app-widget>
+            <h3 class="font-bold mb-1.5">Tareas por estado</h3>
+            <ngx-charts-pie-chart
+              [view]="pieChartView"
+              [results]="tasksByStatus"
+              [doughnut]="false"
+              [labels]="true"
+              [maxLabelLength]="15"
+              [scheme]="colorScheme"
+            />
+          </app-widget>
+
+
+          <!--          </div>-->
+          <!--            <app-widget>-->
+          <!--              <ngx-charts-advanced-pie-chart-->
+          <!--                [view]="view"-->
+          <!--                [results]="infoTasks"-->
+          <!--                [scheme]="colorScheme"-->
+          <!--                [gradient]="true"-->
+          <!--                [animations]="true"-->
+          <!--              />-->
+          <!--            </app-widget>-->
+
+          <app-widget>
+            <h3 class="font-bold mb-1.5">Carga de trabajo por usuario</h3>
+            <ngx-charts-heat-map
+              [view]="view"
+              [results]="userWorkload"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [showYAxisLabel]="true"
+              [showXAxisLabel]="true"
+              [xAxisLabel]="xAxisLabel"
+              [yAxisLabel]="yAxisLabel"
+              [yAxis]="true"
+              [legend]="true"
+            >
+            </ngx-charts-heat-map>
+          </app-widget>
+
+          <app-widget>
+            <ngx-charts-gauge
+              [view]="view"
+              [results]="projectProgress"
+              [scheme]="colorScheme"
+              [max]="100"
+              [min]="0"
+            >
+            </ngx-charts-gauge>
+          </app-widget>
+
+
+        </div>
+      </div>
+      <!--      <app-create-widget-->
         <!--        [modal]="modal"-->
         <!--        [projectId]="id"-->
         <!--        [position]="widgets.length"-->
@@ -136,7 +181,7 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
         <!--        [fetchApi]="fetchApi"-->
         <!--        [startChange$]="startChange$"-->
         <!--      />-->
-<!--      </div>-->
+        <!--      </div>-->
     } @else {
       <app-loading/>
     }
@@ -153,80 +198,23 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
 
   @Input() projectId = "";
 
-  tasksToDo?: DashboardTask[] = [
-    {
-      id: "1",
-      name: "Tarea 1",
-      description: "Esta es la tarea 1",
-      parentProject: "FSAE 2024",
-      dueDate: "2021-06-30",
-      priority: 1,
-    },
-    {
-      id: "2",
-      name: "Tarea 2",
-      description: "Esta es la tarea 2",
-      parentProject: "FSAE 2024",
-      dueDate: "2021-06-30",
-      priority: 1,
-    },
-    {
-      id: "3",
-      name: "Tarea 3",
-      description: "Esta es la tarea 3",
-      parentProject: "FSAE 2024",
-      dueDate: "2021-06-30",
-      priority: 1,
-    },
-    {
-      id: "4",
-      name: "Tarea 4",
-      description: "Esta es la tarea 4",
-      parentProject: "FSAE 2024",
-      dueDate: "2021-06-30",
-      priority: 1,
-    }
-  ]
-  tasksToVerify?: DashboardTask[] = [
-    {
-      id: "5",
-      name: "Tarea 5",
-      description: "Esta es la tarea 5",
-      parentProject: "FSAE 2024",
-      dueDate: "2021-06-30",
-      priority: 1,
-    },
-    {
-      id: "6",
-      name: "Tarea 6",
-      description: "Esta es la tarea 6",
-      parentProject: "FSAE 2024",
-      dueDate: "2021-06-30",
-      priority: 1,
-    },
-    {
-      id: "7",
-      name: "Tarea 7",
-      description: "Esta es la tarea 7",
-      parentProject: "FSAE 2024",
-      dueDate: "2021-06-30",
-      priority: 1,
-    },
-    {
-      id: "8",
-      name: "Tarea 8",
-      description: "Esta es la tarea 8",
-      parentProject: "FSAE 2024",
-      dueDate: "2021-06-30",
-      priority: 1,
-    }
-  ];
+  tasksToDo?: DashboardTask[] = [];
+  tasksToVerify?: DashboardTask[] = [];
   widgets?: Widget[];
   id = "";
   inviteId = "";
-  projectName = "Hola";
+
   modal: HTMLDialogElement | null = null;
-  infoTasks: any;
+  projectName = "";
+  doneTasksCount?: number = 0;
+  allDoneTasksCount?: number = 0;
+  doneTasksByDate?: DoneTasksByDate[] = [];
+  tasksByStatus?: TaskByStatus[] = [];
+  tasksByPriority?: TaskByPriority[] = [];
+  userWorkload?: UserWorkload[] = [];
+  projectProgress: any;
+  allProjectProgress: any;
+
   private startEditSubject = new Subject<void>();
   xAxisLabel = "Estados";
   yAxisLabel = "Semanas";
@@ -310,7 +298,16 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
   fetchApi = (onResponse?: () => void) => {
     this.api.get(`projects/${this.id}/dashboard/`).subscribe((response: any) => {
       console.log(response);
-      this.infoTasks = response.tasksByStatus;
+      this.tasksToDo = response.tasksToDo;
+      this.tasksToVerify = response.tasksToVerify;
+      this.doneTasksCount = response.doneTasksCount;
+      this.allDoneTasksCount = response.allDoneTasksCount;
+      this.doneTasksByDate = response.doneTasksByDate;
+      this.tasksByStatus = response.tasksByStatus;
+      this.tasksByPriority = response.tasksByPriority;
+      this.userWorkload = response.userWorkload;
+      this.projectProgress = response.projectProgress;
+      this.allProjectProgress = response.allProjectProgress;
     });
   }
 
@@ -322,8 +319,8 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
         this.id = this.projectId;
         this.inviteId = params["inviteId"];
       }
+      this.projectName = this.store.project.name;
       this.fetchApi();
-      console.log(this.tasksToDo);
     });
     this.setViewDimensions();
   }
