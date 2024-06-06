@@ -231,7 +231,7 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
   };
 
   view: [number, number] = [400, 200]; // Default dimensions
-  pieChartView: [number, number] = [350, 300];
+  pieChartView: [number, number] = [400, 400];
 
   prueba = [
     {
@@ -334,13 +334,15 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
   }
 
   private setViewDimensions(): void {
-    const width = window.innerWidth * 0.4;
-    const height = window.innerHeight * 0.2;
-    this.view = [width, height];
+    // General view settings for larger charts
+    const generalWidth = window.innerWidth * 0.4;
+    const generalHeight = window.innerHeight * 0.2;
+    this.view = [generalWidth, generalHeight];
 
-    // Optional: Adjust pieChartView dimensions based on window size if needed
-    // const pieSize = Math.min(window.innerWidth * 0.2, window.innerHeight * 0.2);
-    // this.pieChartView = [pieSize, pieSize];
+    // Settings for pie charts to maintain a square and responsive
+    const smallerDimension = Math.min(window.innerWidth, window.innerHeight);
+    const pieSize = smallerDimension * 0.35; // 25% of the smaller viewport dimension
+    this.pieChartView = [pieSize, pieSize];
   }
 
   ngDoCheck(): void {
