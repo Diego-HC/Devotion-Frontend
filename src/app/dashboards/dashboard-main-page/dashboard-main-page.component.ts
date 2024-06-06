@@ -43,20 +43,7 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
           </div>
         </div>
 
-        <!--        <div class="flex flex-wrap gap-x-8 gap-y-6 mb-10">-->
-        <!--          @for (widget of widgets; track $index) {-->
-        <!--            <div class="grid grid-cols-1 grid-rows-1 relative">-->
-        <!--              <app-widget [widget]="widget" class="row-start-1 col-start-1"/>-->
-        <!--              @if (isEditing) {-->
-        <!--                <button-->
-        <!--                  class="btn btn-sm row-start-1 col-start-1 absolute top-2 right-2"-->
-        <!--                  (click)="startChange(widget.id)"-->
-        <!--                >-->
-        <!--                  Edit-->
-        <!--                </button>-->
-        <!--              }-->
-        <!--            </div>-->
-        <!--          }-->
+
         <div class="w-52 h-52 grid" [ngClass]="{ hidden: !isEditing }">
           <div
             class="grid place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow place-self-center size-24 hover:cursor-pointer"
@@ -70,57 +57,38 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
           </div>
         </div>
 
-        <div class="flex flex-row flex-wrap">
+        <div class="grid grid-cols-4 gap-4 w-full mt-2 mb-6">
+
+          <!--          <div-->
+          <!--            className="grid grid-cols-3 gap-4"-->
+          <!--            style={{ gridTemplateColumns:-->
+          <!--          "repeat(auto-fill, minmax(400px, 1fr))" }}-->
+          <!--    >-->
+          <!--    {publications?.map(publication => (-->
+          <!--    <div key={publication.id} className="transform transition-transform duration-200 hover:scale-[101%]">-->
+          <!--    <RecentlyPublishedCard {...publication}/>-->
+          <!--    </div>-->
+          <!--    ))}-->
+          <!--    </div>-->
           <!--          <div class="flex flex-wrap justify-content">-->
-
-                      <app-widget>
-                        <ngx-charts-linear-gauge
-                          [view]="view"
-                          [scheme]="colorScheme"
-                          [value]="doneTasksCount"
-                          [min]="0"
-                          [max]="100"
-                          [animations]="true"
-                        />
-                      </app-widget>
-
-          <!--            <app-widget>-->
-          <!--              <ngx-charts-number-card-->
-          <!--                [view]="view"-->
-          <!--                [results]="allDoneTasksCount"-->
-          <!--                [scheme]="colorScheme"-->
-          <!--              />-->
-          <!--            </app-widget>-->
-
+          <!--            <div class="col-span-2">-->
+          <!--            <div class="w-1/2">-->
           <app-widget>
-            <h3 class="font-bold mb-1.5">Tareas completadas por fecha</h3>
-            <ngx-charts-line-chart
-              [view]="view"
-              [results]="doneTasksByDate"
+            <h3 class="font-bold mb-1.5">Progreso del proyecto</h3>
+            <ngx-charts-gauge
+              [view]="pieChartView"
+              [results]="projectProgress"
               [scheme]="colorScheme"
+              [max]="100"
+              [min]="0"
             >
-            </ngx-charts-line-chart>
+            </ngx-charts-gauge>
           </app-widget>
+          <!--            </div>-->
+          <!--          </div>-->
 
-          <!--            <app-widget>-->
-          <!--              <ngx-charts-bar-vertical-->
-          <!--                [view]="view"-->
-          <!--                [results]="tasksByStatus"-->
-          <!--                [scheme]="colorScheme"-->
-          <!--                [xAxis]="true"-->
-          <!--              />-->
-          <!--            </app-widget>-->
-
-          <app-widget>
-            <h3 class="font-bold mb-1.5">Tareas existentes por prioridad</h3>
-            <ngx-charts-bar-horizontal
-              [view]="view"
-              [results]="tasksByPriority"
-              [scheme]="colorScheme"
-              [yAxis]="true"
-            />
-          </app-widget>
-
+          <!--            <div class="col-span-2">-->
+          <!--            <div class="w-1/2">-->
           <app-widget>
             <h3 class="font-bold mb-1.5">Tareas por estado</h3>
             <ngx-charts-pie-chart
@@ -132,7 +100,44 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
               [scheme]="colorScheme"
             />
           </app-widget>
+          <!--          </div>-->
+          <!--          </div>-->
 
+
+          <!--            <app-widget>-->
+          <!--              <ngx-charts-number-card-->
+          <!--                [view]="view"-->
+          <!--                [results]="allDoneTasksCount"-->
+          <!--                [scheme]="colorScheme"-->
+          <!--              />-->
+          <!--            </app-widget>-->
+          <div class="col-span-2">
+            <div class="w-full">
+              <app-widget>
+                <h3 class="font-bold mb-1.5">Tareas completadas por fecha</h3>
+                <ngx-charts-line-chart
+                  [view]="view"
+                  [results]="doneTasksByDate"
+                  [scheme]="colorScheme"
+                  [xAxis]="true"
+                  [yAxis]="true"
+                >
+                </ngx-charts-line-chart>
+              </app-widget>
+            </div>
+          </div>
+
+          <div class="col-span-2">
+            <app-widget>
+              <h3 class="font-bold mb-1.5">Tareas existentes por prioridad</h3>
+              <ngx-charts-bar-horizontal
+                [view]="view"
+                [results]="tasksByPriority"
+                [scheme]="colorScheme"
+                [yAxis]="true"
+              />
+            </app-widget>
+          </div>
 
           <!--          </div>-->
           <!--            <app-widget>-->
@@ -145,34 +150,26 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
           <!--              />-->
           <!--            </app-widget>-->
 
-          <app-widget>
-            <h3 class="font-bold mb-1.5">Carga de trabajo por usuario</h3>
-            <ngx-charts-heat-map
-              [view]="view"
-              [results]="userWorkload"
-              [scheme]="colorScheme"
-              [xAxis]="true"
-              [showYAxisLabel]="true"
-              [showXAxisLabel]="true"
-              [xAxisLabel]="xAxisLabel"
-              [yAxisLabel]="yAxisLabel"
-              [yAxis]="true"
-              [legend]="true"
-            >
-            </ngx-charts-heat-map>
-          </app-widget>
+          <div class="col-span-2">
+            <app-widget>
+              <h3 class="font-bold mb-1.5">Carga de trabajo por usuario</h3>
+              <ngx-charts-heat-map
+                [view]="view"
+                [results]="userWorkload"
+                [scheme]="colorScheme"
+                [xAxis]="true"
+                [showYAxisLabel]="true"
+                [showXAxisLabel]="true"
+                [xAxisLabel]="xAxisLabel"
+                [yAxisLabel]="yAxisLabel"
+                [yAxis]="true"
+                [legend]="true"
+              >
+              </ngx-charts-heat-map>
+            </app-widget>
+          </div>
 
-          <app-widget>
-            <ngx-charts-gauge
-              [view]="view"
-              [results]="projectProgress"
-              [scheme]="colorScheme"
-              [max]="100"
-              [min]="0"
-            >
-            </ngx-charts-gauge>
-          </app-widget>
-
+          <p>hardcoded number cards de número de tareas completadas del proyecto y arbol de tareas done</p>
 
         </div>
       </div>
@@ -211,10 +208,10 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
   projectName = "";
   doneTasksCount: number = 0;
   allDoneTasksCount?: number = 0;
-  doneTasksByDate?: DoneTasksByDate[] = [];
-  tasksByStatus?: TaskByStatus[] = [];
-  tasksByPriority?: TaskByPriority[] = [];
-  userWorkload?: UserWorkload[] = [];
+  doneTasksByDate?: any;
+  tasksByStatus?: any;
+  tasksByPriority?: any;
+  userWorkload?: any;
   projectProgress: any;
   allProjectProgress: any;
 
@@ -301,6 +298,8 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
   fetchApi = (onResponse?: () => void) => {
   }
 
+
+
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       if (params["id"]) {
@@ -309,9 +308,10 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
         this.id = this.projectId;
         this.inviteId = params["inviteId"];
       }
-      this.projectName = this.store.project.name;
+        this.projectName = this.store.project.name;
     this.api.get(`projects/${this.id}/dashboard/`).subscribe((response: any) => {
       console.log(response);
+      this.projectName = response.name;
       this.tasksToDo = response.tasksToDo;
       this.tasksToVerify = response.tasksToVerify;
       this.doneTasksCount = response.doneTasksCount;

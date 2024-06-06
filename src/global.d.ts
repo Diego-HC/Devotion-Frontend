@@ -151,22 +151,12 @@ declare global {
   };
 
 
-  interface TaskByStatus {
+  interface NormalWidget {
     name: string;
     value: number;
   }
 
-  interface TaskByPriority {
-    name: string;
-    value: number;
-  }
-
-  interface DoneTasksByDate {
-    name: string;
-    value: number;
-  }
-
-  interface UserWorkload {
+  interface WidgetsBySeries {
     name: string;
     series: { name: string; value: number }[];
   }
@@ -175,10 +165,10 @@ declare global {
     id: string;
     doneTasksCount: number;
     allDoneTasksCount: number;
-    tasksByStatus: TaskByStatus[];
-    tasksByPriority: TaskByPriority[];
-    doneTasksByDate: DoneTasksByDate[];
-    userWorkload: UserWorkload[];
+    tasksByStatus: NormalWidget[];
+    tasksByPriority: NormalWidget[];
+    doneTasksByDate: WidgetsBySeries[];
+    userWorkload: WidgetsBySeries[];
     projectProgress: number;
     allProjectProgress: number;
   }
