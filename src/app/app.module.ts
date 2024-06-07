@@ -28,9 +28,7 @@ import {
   DashboardTaskListComponent,
   DashboardTaskComponent,
 } from "./dashboards/dashboard-task-list/dashboard-task-list.component";
-import { WidgetComponent } from "./dashboards/widgets/widget/widget.component";
-import { WidgetNumberComponent } from "./dashboards/widgets/widget-number/widget-number.component";
-import { CreateWidgetComponent } from "./dashboards/widgets/create-widget/create-widget.component";
+import { WidgetComponent } from "./dashboards/widget/widget.component";
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginComponent } from './login/login.component';
 import { BadgeComponent } from './shared/badge/badge.component';
@@ -75,9 +73,6 @@ import { InviteMembersComponent } from './shared/invite-members/invite-members.c
 import { LinkIconComponent } from './shared/icons/link-icon/link-icon.component';
 import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {BarChartModule, HeatMapModule, NgxChartsModule, PieChartModule} from "@swimlane/ngx-charts";
-import { WidgetPieChartComponent } from './dashboards/widgets/widget-pie-chart/widget-pie-chart.component';
-import { WidgetVerticalBarChartComponent } from './dashboards/widgets/widget-vertical-bar-chart/widget-vertical-bar-chart.component';
-import { EditWidgetComponent } from './dashboards/widgets/edit-widget/edit-widget.component';
 
 @NgModule({
   declarations: [
@@ -127,8 +122,6 @@ import { EditWidgetComponent } from './dashboards/widgets/edit-widget/edit-widge
     DashboardTaskListComponent,
     DashboardTaskComponent,
     WidgetComponent,
-    WidgetNumberComponent,
-    CreateWidgetComponent,
     ConfirmGoBackComponent,
     NewProjectIconComponent,
     PencilIconComponent,
@@ -142,9 +135,6 @@ import { EditWidgetComponent } from './dashboards/widgets/edit-widget/edit-widge
     InviteDashboardComponent,
     InviteMembersComponent,
     LinkIconComponent,
-    WidgetPieChartComponent,
-    WidgetVerticalBarChartComponent,
-    EditWidgetComponent
   ],
   imports: [
     BrowserModule,

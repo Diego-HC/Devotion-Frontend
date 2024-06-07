@@ -1,5 +1,3 @@
-import { WidgetDisplayType } from "./app/dashboards/widgets/widget-display-type";
-
 declare global {
   // Usuarios
   // --------
@@ -150,7 +148,6 @@ declare global {
     parentProject: string;
   };
 
-
   interface NormalWidget {
     name: string;
     value: number;
@@ -161,33 +158,18 @@ declare global {
     series: { name: string; value: number }[];
   }
 
-  interface DashboardData {
-    id: string;
-    doneTasksCount: NormalWidget[];
-    allDoneTasksCount: NormalWidget[];
-    tasksByStatus: NormalWidget[] | WidgetsBySeries[];
-    tasksByPriority: NormalWidget[] | WidgetsBySeries[];
-    doneTasksByDate: WidgetsBySeries[] | NormalWidget[];
-    userWorkload: WidgetsBySeries[] | NormalWidget[];
-    projectProgress: NormalWidget[];
-    allProjectProgress: NormalWidget[];
-  }
-
-  interface Widget {
-    id: string;
+  interface DashboardResponse {
     name: string;
-    displayType: WidgetDisplayType;
-    dataSource: DashboardData;
-    validDisplayTypes: WidgetDisplayType[];
-  }
-
-  interface Dashboard {
-    projectName: string;
     tasksToDo: DashboardTask[];
     tasksToVerify: DashboardTask[];
-
-    widgets: Widget[];
-    dataSources: DataSource[];
+    doneTasksCount: NormalWidget[];
+    allDoneTasksCount: NormalWidget[];
+    doneTasksByDate: NormalWidget[] | WidgetsBySeries[];
+    tasksByStatus: NormalWidget[] | WidgetsBySeries[];
+    tasksByPriority: NormalWidget[] | WidgetsBySeries[];
+    userWorkload: NormalWidget[] | WidgetsBySeries[];
+    projectProgress: NormalWidget[];
+    allProjectProgress: NormalWidget[];
   }
 }
 

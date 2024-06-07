@@ -48,9 +48,6 @@ export class StoreService {
     return this._showSubtreeTasks.getValue();
   }
 
-  // dashboard data
-  widget?: Widget;
-
   clearProject(parent = "") {
     this.project = {
       id: "",
