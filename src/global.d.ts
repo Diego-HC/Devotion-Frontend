@@ -163,14 +163,14 @@ declare global {
 
   interface DashboardData {
     id: string;
-    doneTasksCount: number;
-    allDoneTasksCount: number;
-    tasksByStatus: NormalWidget[];
-    tasksByPriority: NormalWidget[];
-    doneTasksByDate: WidgetsBySeries[];
-    userWorkload: WidgetsBySeries[];
-    projectProgress: number;
-    allProjectProgress: number;
+    doneTasksCount: NormalWidget[];
+    allDoneTasksCount: NormalWidget[];
+    tasksByStatus: NormalWidget[] | WidgetsBySeries[];
+    tasksByPriority: NormalWidget[] | WidgetsBySeries[];
+    doneTasksByDate: WidgetsBySeries[] | NormalWidget[];
+    userWorkload: WidgetsBySeries[] | NormalWidget[];
+    projectProgress: NormalWidget[];
+    allProjectProgress: NormalWidget[];
   }
 
   interface Widget {

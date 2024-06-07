@@ -77,6 +77,7 @@ import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {BarChartModule, HeatMapModule, NgxChartsModule, PieChartModule} from "@swimlane/ngx-charts";
 import { WidgetPieChartComponent } from './dashboards/widgets/widget-pie-chart/widget-pie-chart.component';
 import { WidgetVerticalBarChartComponent } from './dashboards/widgets/widget-vertical-bar-chart/widget-vertical-bar-chart.component';
+import { EditWidgetComponent } from './dashboards/widgets/edit-widget/edit-widget.component';
 
 @NgModule({
   declarations: [
@@ -142,7 +143,8 @@ import { WidgetVerticalBarChartComponent } from './dashboards/widgets/widget-ver
     InviteMembersComponent,
     LinkIconComponent,
     WidgetPieChartComponent,
-    WidgetVerticalBarChartComponent
+    WidgetVerticalBarChartComponent,
+    EditWidgetComponent
   ],
   imports: [
     BrowserModule,

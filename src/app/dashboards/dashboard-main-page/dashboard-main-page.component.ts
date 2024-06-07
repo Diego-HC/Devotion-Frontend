@@ -44,24 +44,15 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
         </div>
 
 
-        <div class="w-52 h-52 grid" [ngClass]="{ hidden: !isEditing }">
-          <div
-            class="grid place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow place-self-center size-24 hover:cursor-pointer"
-            (click)="startChange()"
-          >
-            <app-plus-icon
-              fill="#2A4365"
-              [width]="'45'"
-              [height]="'45'"
-            ></app-plus-icon>
-          </div>
-        </div>
+<!--        <div class="w-52 h-52 grid" [ngClass]="{ hidden: !isEditing }">-->
+<!--          <p>ola</p>-->
+<!--        </div>-->
 
         <div
           class="grid gap-4 mt-4 mb-8"
           style="grid-template-columns: repeat(auto-fill, minmax(400px, 1fr))"
         >
-          <app-widget widgetName="Progreso del proyecto">
+          <app-widget [isEditing]="isEditing" widgetName="Progreso del proyecto">
             <ngx-charts-gauge
               [view]="view"
               [results]="projectProgress"
@@ -71,7 +62,7 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
             >
             </ngx-charts-gauge>
           </app-widget>
-          <app-widget widgetName="Tareas por estado">
+          <app-widget [isEditing]="isEditing" widgetName="Tareas por estado">
             <ngx-charts-pie-chart
               [view]="view"
               [results]="tasksByStatus"
@@ -81,7 +72,7 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
               [scheme]="colorScheme"
             />
           </app-widget>
-          <app-widget widgetName="Tareas completadas por fecha">
+          <app-widget [isEditing]="isEditing" widgetName="Tareas completadas por fecha">
             <ngx-charts-line-chart
               [view]="view"
               [results]="doneTasksByDate"
@@ -91,7 +82,7 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
             >
             </ngx-charts-line-chart>
           </app-widget>
-          <app-widget widgetName="Tareas existentes por prioridad">
+          <app-widget [isEditing]="isEditing" widgetName="Tareas existentes por prioridad">
             <ngx-charts-bar-horizontal
               [view]="view"
               [results]="tasksByPriority"
@@ -99,7 +90,7 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
               [yAxis]="true"
             />
           </app-widget>
-          <app-widget widgetName="Carga de trabajo por usuario">
+          <app-widget [isEditing]="isEditing" widgetName="Carga de trabajo por usuario">
             <ngx-charts-heat-map
               [view]="view"
               [results]="userWorkload"
@@ -110,9 +101,16 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
               [xAxisLabel]="xAxisLabel"
               [yAxisLabel]="yAxisLabel"
               [yAxis]="true"
-              [legend]="true"
             >
             </ngx-charts-heat-map>
+          </app-widget>
+          <app-widget [isEditing]="isEditing">
+            <ngx-charts-number-card
+              [view]="view"
+              [results]="doneTasksCount"
+              [scheme]="cardColorScheme"
+            >
+            </ngx-charts-number-card>
           </app-widget>
         </div>
       </div>
@@ -149,14 +147,14 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
 
   modal: HTMLDialogElement | null = null;
   projectName = "";
-  doneTasksCount: number = 0;
-  allDoneTasksCount?: number = 0;
-  doneTasksByDate?: any;
-  tasksByStatus?: any;
-  tasksByPriority?: any;
-  userWorkload?: any;
-  projectProgress: any;
-  allProjectProgress: any;
+  doneTasksCount?: NormalWidget[]; // number cards
+  allDoneTasksCount?: NormalWidget[]; // number cards
+  doneTasksByDate?: NormalWidget[] | WidgetsBySeries[]; // Line chart, vertical bar chart, horizontal bar chart, heat map
+  tasksByStatus?: NormalWidget[] | WidgetsBySeries[]; // Pie chart, vertical bar chart, horizontal bar chart, heat map
+  tasksByPriority?: NormalWidget[] | WidgetsBySeries[]; // Pie chart, vertical bar chart, horizontal bar chart, heat map
+  userWorkload?: NormalWidget[] | WidgetsBySeries[]; // heat map, pie chart, vertical bar chart, horizontal bar chart, number cards
+  projectProgress?: any // gauge
+  allProjectProgress?: NormalWidget[]; // pendiente este rollito
 
   private startEditSubject = new Subject<void>();
   xAxisLabel = "Estados";
@@ -173,75 +171,22 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
     domain: ['#363636', "#FFC700", "#0094D3", "#00D387"]
   };
 
+  cardColorScheme: Color = {
+    name: 'custom',
+    selectable: true,
+    group: ScaleType.Ordinal,
+    domain: ["#C7FFCD"]
+  }
+
   view: [number, number] = [400, 200]; // Default dimensions
   pieChartView: [number, number] = [400, 400];
 
   prueba = [
     {
-      "name": "No Iniciada",
-      "series": [
-        {
-          "name": "Semana 1",
-          "value": 4
-        },
-        {
-          "name": "Semana 2",
-          "value": 23
-        },
-        {
-          "name": "Semana 3",
-          "value": 12
-        },
-        {
-          "name": "Semana 4",
-          "value": 45
-        }
-      ]
-    },
-    {
-      "name": "En progreso",
-      "series": [
-        {
-          "name": "Semana 1",
-          "value": 10
-        },
-        {
-          "name": "Semana 2",
-          "value": 3
-        },
-        {
-          "name": "Semana 3",
-          "value": 30
-        },
-        {
-          "name": "Semana 4",
-          "value": 4
-        }
-      ]
-    },
+      "name": "Tareas completadas",
+      "value": 1
+    }
   ]
-
-  // fetchApi1 = (onResponse?: () => void) => {
-  //   this.api.get(`dashboards/${this.id}/`).subscribe((response: Dashboard) => {
-  //     console.log(response);
-  //
-  //     this.projectName = response.projectName;
-  //     this.tasksToDo = response.tasksToDo;
-  //     this.tasksToVerify = response.tasksToVerify;
-  //     this.widgets = response.widgets;
-  //     this.widgets.sort((a, b) => a.position - b.position);
-  //     this.dataSources = response.dataSources;
-  //
-  //     if (onResponse) {
-  //       onResponse();
-  //     }
-  //   });
-  // };
-
-  fetchApi = (onResponse?: () => void) => {
-  }
-
-
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -257,7 +202,7 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
       this.projectName = response.name;
       this.tasksToDo = response.tasksToDo;
       this.tasksToVerify = response.tasksToVerify;
-      this.doneTasksCount = response.doneTasksCount;
+      this.doneTasksCount = this.prueba // response.doneTasksCount;
       this.allDoneTasksCount = response.allDoneTasksCount;
       this.doneTasksByDate = response.doneTasksByDate;
       this.tasksByStatus = response.tasksByStatus;
