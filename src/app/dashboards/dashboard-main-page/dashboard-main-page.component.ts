@@ -112,6 +112,14 @@ import { calculateViewDimensions, ColorHelper, BaseChartComponent, DataItem, Leg
             >
             </ngx-charts-number-card>
           </app-widget>
+          <app-widget [isEditing]="isEditing">
+            <ngx-charts-number-card
+              [view]="view"
+              [results]="allDoneTasksCount"
+              [scheme]="cardColorScheme"
+            >
+            </ngx-charts-number-card>
+          </app-widget>
         </div>
       </div>
       <!--      <app-create-widget-->
@@ -181,12 +189,12 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
   view: [number, number] = [400, 200]; // Default dimensions
   pieChartView: [number, number] = [400, 400];
 
-  prueba = [
-    {
-      "name": "Tareas completadas",
-      "value": 1
-    }
-  ]
+  // prueba = [
+  //   {
+  //     "name": "Tareas completadas",
+  //     "value": 1
+  //   }
+  // ]
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -202,7 +210,7 @@ export class DashboardMainPageComponent implements OnInit, DoCheck {
       this.projectName = response.name;
       this.tasksToDo = response.tasksToDo;
       this.tasksToVerify = response.tasksToVerify;
-      this.doneTasksCount = this.prueba // response.doneTasksCount;
+      this.doneTasksCount = response.doneTasksCount // response.doneTasksCount;
       this.allDoneTasksCount = response.allDoneTasksCount;
       this.doneTasksByDate = response.doneTasksByDate;
       this.tasksByStatus = response.tasksByStatus;
