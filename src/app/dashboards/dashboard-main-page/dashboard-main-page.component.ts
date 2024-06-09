@@ -53,7 +53,7 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
           <app-widget
             metricId="tasks_by_status"
             metricName="Tareas por estado"
-            [displayTypes]="[W.pie, W.verticalBar, W.horizontalBar, W.heatMap]"
+            [displayTypes]="[W.pie, W.verticalBar, W.horizontalBar]"
             (onDisplayTypeChange)="refetch($event)"
           >
             <ngx-charts-pie-chart
@@ -78,18 +78,6 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
               [view]="view"
               [results]="response.tasksByStatus.data"
               [scheme]="colorScheme"
-              [yAxis]="true"
-            />
-            <ngx-charts-heat-map
-              *ngIf="response.tasksByStatus.displayType === W.heatMap.valueOf()"
-              [view]="view"
-              [results]="response.tasksByStatus.data"
-              [scheme]="colorScheme"
-              [xAxis]="true"
-              [showYAxisLabel]="true"
-              [showXAxisLabel]="true"
-              [xAxisLabel]="xAxisLabel"
-              [yAxisLabel]="yAxisLabel"
               [yAxis]="true"
             />
           </app-widget>
@@ -138,7 +126,7 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
           <app-widget
             metricId="tasks_by_priority"
             metricName="Tareas existentes por prioridad"
-            [displayTypes]="[W.pie, W.verticalBar, W.horizontalBar, W.heatMap]"
+            [displayTypes]="[W.pie, W.verticalBar, W.horizontalBar]"
             (onDisplayTypeChange)="refetch($event)"
           >
             <ngx-charts-bar-horizontal
@@ -164,18 +152,6 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
               [labels]="true"
               [maxLabelLength]="15"
               [scheme]="colorScheme"
-            />
-            <ngx-charts-heat-map
-              *ngIf="response.tasksByPriority.displayType === W.heatMap.valueOf()"
-              [view]="view"
-              [results]="response.tasksByPriority.data"
-              [scheme]="colorScheme"
-              [xAxis]="true"
-              [showYAxisLabel]="true"
-              [showXAxisLabel]="true"
-              [xAxisLabel]="xAxisLabel"
-              [yAxisLabel]="yAxisLabel"
-              [yAxis]="true"
             />
           </app-widget>
           <app-widget
