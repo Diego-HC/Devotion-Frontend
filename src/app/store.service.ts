@@ -21,6 +21,8 @@ export class StoreService {
   needsUpdateSubject = new Subject<void>();
   needsUpdate$ = this.needsUpdateSubject.asObservable();
 
+  updatingWidget: string | null = null;
+
   triggerUpdate() {
     this.disableButton = true;
     this.needsUpdateSubject.next();

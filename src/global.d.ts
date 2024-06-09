@@ -148,28 +148,33 @@ declare global {
     parentProject: string;
   };
 
-  interface NormalWidget {
+  interface WidgetElement {
     name: string;
     value: number;
   }
 
-  interface WidgetsBySeries {
+  interface SeriesWidgetElement {
     name: string;
     series: { name: string; value: number }[];
+  }
+
+  interface Widget {
+    displayType: number;
+    data: WidgetElement[] | SeriesWidgetElement[];
   }
 
   interface DashboardResponse {
     name: string;
     tasksToDo: DashboardTask[];
     tasksToVerify: DashboardTask[];
-    doneTasksCount: NormalWidget[];
-    allDoneTasksCount: NormalWidget[];
-    doneTasksByDate: NormalWidget[] | WidgetsBySeries[];
-    tasksByStatus: NormalWidget[] | WidgetsBySeries[];
-    tasksByPriority: NormalWidget[] | WidgetsBySeries[];
-    userWorkload: NormalWidget[] | WidgetsBySeries[];
-    projectProgress: NormalWidget[];
-    allProjectProgress: NormalWidget[];
+    doneTasksCount: Widget;
+    allDoneTasksCount: Widget;
+    doneTasksByDate: Widget;
+    tasksByStatus: Widget;
+    tasksByPriority: Widget;
+    userWorkload: Widget;
+    projectProgress: Widget;
+    allProjectProgress: Widget;
   }
 }
 

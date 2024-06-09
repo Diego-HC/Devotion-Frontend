@@ -1,6 +1,7 @@
 import {Component, Input, OnInit, HostListener} from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
+import { StoreService } from "../../store.service";
 import { ScaleType, Color } from "@swimlane/ngx-charts";
 import { WidgetDisplayType } from "../widget/widget-display-type";
 
@@ -42,7 +43,7 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
           >
             <ngx-charts-gauge
               [view]="view"
-              [results]="response.projectProgress"
+              [results]="response.projectProgress.data"
               [scheme]="colorScheme"
               [max]="100"
               [min]="0"
@@ -56,12 +57,40 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
             (onDisplayTypeChange)="refetch($event)"
           >
             <ngx-charts-pie-chart
+              *ngIf="response.tasksByStatus.displayType === W.pie.valueOf()"
               [view]="view"
-              [results]="response.tasksByStatus"
+              [results]="response.tasksByStatus.data"
               [doughnut]="false"
               [labels]="true"
               [maxLabelLength]="15"
               [scheme]="colorScheme"
+            />
+            <ngx-charts-bar-vertical
+              *ngIf="response.tasksByStatus.displayType === W.verticalBar.valueOf()"
+              [view]="view"
+              [results]="response.tasksByStatus.data"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [yAxis]="true"
+            />
+            <ngx-charts-bar-horizontal
+              *ngIf="response.tasksByStatus.displayType === W.horizontalBar.valueOf()"
+              [view]="view"
+              [results]="response.tasksByStatus.data"
+              [scheme]="colorScheme"
+              [yAxis]="true"
+            />
+            <ngx-charts-heat-map
+              *ngIf="response.tasksByStatus.displayType === W.heatMap.valueOf()"
+              [view]="view"
+              [results]="response.tasksByStatus.data"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [showYAxisLabel]="true"
+              [showXAxisLabel]="true"
+              [xAxisLabel]="xAxisLabel"
+              [yAxisLabel]="yAxisLabel"
+              [yAxis]="true"
             />
           </app-widget>
           <app-widget
@@ -71,13 +100,40 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
             (onDisplayTypeChange)="refetch($event)"
           >
             <ngx-charts-line-chart
+              *ngIf="response.doneTasksByDate.displayType === W.line.valueOf()"
               [view]="view"
-              [results]="response.doneTasksByDate"
+              [results]="response.doneTasksByDate.data"
               [scheme]="colorScheme"
               [xAxis]="true"
               [yAxis]="true"
-            >
-            </ngx-charts-line-chart>
+            />
+            <ngx-charts-bar-vertical
+              *ngIf="response.doneTasksByDate.displayType === W.verticalBar.valueOf()"
+              [view]="view"
+              [results]="response.doneTasksByDate.data"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [yAxis]="true"
+            />
+            <ngx-charts-bar-horizontal
+              *ngIf="response.doneTasksByDate.displayType === W.horizontalBar.valueOf()"
+              [view]="view"
+              [results]="response.doneTasksByDate.data"
+              [scheme]="colorScheme"
+              [yAxis]="true"
+            />
+            <ngx-charts-heat-map
+              *ngIf="response.doneTasksByDate.displayType === W.heatMap.valueOf()"
+              [view]="view"
+              [results]="response.doneTasksByDate.data"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [showYAxisLabel]="true"
+              [showXAxisLabel]="true"
+              [xAxisLabel]="xAxisLabel"
+              [yAxisLabel]="yAxisLabel"
+              [yAxis]="true"
+            />
           </app-widget>
           <app-widget
             metricId="tasks_by_priority"
@@ -86,9 +142,39 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
             (onDisplayTypeChange)="refetch($event)"
           >
             <ngx-charts-bar-horizontal
+              *ngIf="response.tasksByPriority.displayType === W.horizontalBar.valueOf()"
               [view]="view"
-              [results]="response.tasksByPriority"
+              [results]="response.tasksByPriority.data"
               [scheme]="colorScheme"
+              [yAxis]="true"
+            />
+            <ngx-charts-bar-vertical
+              *ngIf="response.tasksByPriority.displayType === W.verticalBar.valueOf()"
+              [view]="view"
+              [results]="response.tasksByPriority.data"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [yAxis]="true"
+            />
+            <ngx-charts-pie-chart
+              *ngIf="response.tasksByPriority.displayType === W.pie.valueOf()"
+              [view]="view"
+              [results]="response.tasksByPriority.data"
+              [doughnut]="false"
+              [labels]="true"
+              [maxLabelLength]="15"
+              [scheme]="colorScheme"
+            />
+            <ngx-charts-heat-map
+              *ngIf="response.tasksByPriority.displayType === W.heatMap.valueOf()"
+              [view]="view"
+              [results]="response.tasksByPriority.data"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [showYAxisLabel]="true"
+              [showXAxisLabel]="true"
+              [xAxisLabel]="xAxisLabel"
+              [yAxisLabel]="yAxisLabel"
               [yAxis]="true"
             />
           </app-widget>
@@ -99,8 +185,9 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
             (onDisplayTypeChange)="refetch($event)"
           >
             <ngx-charts-heat-map
+              *ngIf="response.userWorkload.displayType === W.heatMap.valueOf()"
               [view]="view"
-              [results]="response.userWorkload"
+              [results]="response.userWorkload.data"
               [scheme]="colorScheme"
               [xAxis]="true"
               [showYAxisLabel]="true"
@@ -108,28 +195,55 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
               [xAxisLabel]="xAxisLabel"
               [yAxisLabel]="yAxisLabel"
               [yAxis]="true"
-            >
-            </ngx-charts-heat-map>
+            />
+            <ngx-charts-pie-chart
+              *ngIf="response.userWorkload.displayType === W.pie.valueOf()"
+              [view]="view"
+              [results]="response.userWorkload.data"
+              [doughnut]="false"
+              [labels]="true"
+              [maxLabelLength]="15"
+              [scheme]="colorScheme"
+            />
+            <ngx-charts-bar-vertical
+              *ngIf="response.userWorkload.displayType === W.verticalBar.valueOf()"
+              [view]="view"
+              [results]="response.userWorkload.data"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [yAxis]="true"
+            />
+            <ngx-charts-bar-horizontal
+              *ngIf="response.userWorkload.displayType === W.horizontalBar.valueOf()"
+              [view]="view"
+              [results]="response.userWorkload.data"
+              [scheme]="colorScheme"
+              [yAxis]="true"
+            />
+            <ngx-charts-number-card
+              *ngIf="response.userWorkload.displayType === W.numbers.valueOf()"
+              [view]="view"
+              [results]="response.userWorkload.data"
+              [scheme]="cardColorScheme"
+            />
           </app-widget>
           <app-widget
             metricName="Tareas completadas"
           >
             <ngx-charts-number-card
               [view]="view"
-              [results]="response.doneTasksCount"
+              [results]="response.doneTasksCount.data"
               [scheme]="cardColorScheme"
-            >
-            </ngx-charts-number-card>
+            />
           </app-widget>
           <app-widget
             metricName="Tareas completadas en total"
           >
             <ngx-charts-number-card
               [view]="view"
-              [results]="response.allDoneTasksCount"
+              [results]="response.allDoneTasksCount.data"
               [scheme]="cardColorScheme"
-            >
-            </ngx-charts-number-card>
+            />
           </app-widget>
         </div>
       </div>
@@ -141,7 +255,8 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
 export class DashboardMainPageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
-    protected api: ApiService
+    private api: ApiService,
+    private store: StoreService
   ) {}
 
   @Input() projectId = "";
@@ -170,6 +285,7 @@ export class DashboardMainPageComponent implements OnInit {
   view: [number, number] = [400, 200];
 
   ngOnInit(): void {
+    this.setViewDimensions();
     this.route.params.subscribe((params) => {
       if (params["id"]) {
         this.id = params["id"];
@@ -181,7 +297,6 @@ export class DashboardMainPageComponent implements OnInit {
         this.response = response;
       });
     });
-    this.setViewDimensions();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -189,11 +304,13 @@ export class DashboardMainPageComponent implements OnInit {
     this.setViewDimensions();
   }
 
-  refetch({ metricName, displayType }: { metricName: string, displayType: number }) {
+  refetch({ metricId, displayType }: { metricId: string, displayType: number }) {
+    this.store.updatingWidget = metricId;
     this.api.put(`projects/${this.id}/dashboard/`, {
-      [metricName]: displayType,
-    }).subscribe((response: any) => {
+      [metricId]: displayType,
+    }).subscribe((response) => {
       this.response = response;
+      this.store.updatingWidget = null;
     });
   };
 
