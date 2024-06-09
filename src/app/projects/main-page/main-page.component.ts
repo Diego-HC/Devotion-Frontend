@@ -213,6 +213,7 @@ import { Clipboard } from "@angular/cdk/clipboard";
         *ngIf="currentView === 'kanban'"
         [projectOrTaskId]="project.id"
         [isTask]="false"
+        [inviteId]="inviteId"
       />
       <app-calendar
         *ngIf="currentView === 'calendar'"

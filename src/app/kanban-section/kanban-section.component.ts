@@ -5,6 +5,7 @@ import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-kanban-section',
+  styleUrls: ['./kanban-section.component.css'],
   template: `
     <div class="flex w-11/12">
       <div class="flex flex-col mb-3 w-full">
@@ -20,8 +21,9 @@ import { ApiService } from '../api.service';
           </div>
         </div>
         <div class= "min-h-20" cdkDropList [cdkDropListData]="tasks" (cdkDropListDropped)="drop($event)">
-          <div *ngFor="let task of tasks">
-            <app-kanban-card id= "task.name" [task]="task" [color] = "color" cdkDrag [cdkDragData]="task"></app-kanban-card>
+          <div *ngFor="let task of tasks"
+          [ngClass]="{'drag-enabled': !isDragDisabled, 'drag-disabled': isDragDisabled}">
+            <app-kanban-card id= "task.name" [task]="task" [color] = "color" cdkDrag [cdkDragData]="task" class="overflow-hidden"></app-kanban-card>
           </div>
         </div>
     </div>
@@ -33,6 +35,7 @@ export class KanbanSectionComponent implements OnInit {
 
   @Input() taskStatus: string = '';
   @Input() tasks? : KanbanTask[] = [];
+  @Input() isDragDisabled = false;
 
   selectedTaskId: string | null = null;
   color: string = '';

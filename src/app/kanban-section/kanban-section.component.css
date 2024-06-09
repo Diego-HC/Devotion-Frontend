@@ -1,0 +1,17 @@
+.drag-enabled {
+    cursor: grab;
+  }
+
+.drag-disabled {
+    cursor: default;
+  }
+  
+  .cdk-drag-preview {
+    cursor: grabbing !important; 
+    box-sizing: content-box;
+  }
+  
+  .kanban-card:hover {
+    background-color: #f0f0f0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+  }
