@@ -1,5 +1,3 @@
-import { WidgetDisplayType } from "./app/dashboards/widgets/widget-display-type";
-
 declare global {
   // Usuarios
   // --------
@@ -150,28 +148,33 @@ declare global {
     parentProject: string;
   };
 
-  interface DataSource {
-    id: string;
+  interface WidgetElement {
     name: string;
-    mqttTopic: string;
+    value: number;
+  }
+
+  interface SeriesWidgetElement {
+    name: string;
+    series: { name: string; value: number }[];
   }
 
   interface Widget {
-    id: string;
-    name: string;
-    displayType: WidgetDisplayType;
-    dataSource: DataSource;
-    position: number;
-    unit: string;
+    displayType: number;
+    data: WidgetElement[] | SeriesWidgetElement[];
   }
 
-  interface Dashboard {
-    projectName: string;
+  interface DashboardResponse {
+    name: string;
     tasksToDo: DashboardTask[];
     tasksToVerify: DashboardTask[];
-
-    widgets: Widget[];
-    dataSources: DataSource[];
+    doneTasksCount: Widget;
+    allDoneTasksCount: Widget;
+    doneTasksByDate: Widget;
+    tasksByStatus: Widget;
+    tasksByPriority: Widget;
+    userWorkload: Widget;
+    projectProgress: Widget;
+    allProjectProgress: Widget;
   }
 }
 
