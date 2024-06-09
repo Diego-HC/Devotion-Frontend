@@ -6,26 +6,28 @@ import { ApiService } from '../api.service';
 @Component({
   selector: 'app-kanban-section',
   template: `
-    <div class="flex w-11/12">
-      <div class="flex flex-col mb-3 w-full">
-        <div class="flex align-middle place-items-center mb-3">
-          <div class="shadow-sm w-2 h-2 rounded-full border-gray-500 border-solid mr-1"
-               [ngClass]="color"
-          ></div>
-          <h1 class="mx-1 align-middle font-bold font-roboto">{{ getStateTitle(taskStatus) }}</h1>
-          <div class="flex place-items-center justify-center h-4 w-4 text-xs rounded-sm text-white font-medium ml-2"
-               [ngClass]="color"
-          >
-            {{ tasks?.length }}
-          </div>
-        </div>
-        <div class= "min-h-20" cdkDropList [cdkDropListData]="tasks" (cdkDropListDropped)="drop($event)">
-          <div *ngFor="let task of tasks">
-            <app-kanban-card id= "task.name" [task]="task" [color] = "color" cdkDrag [cdkDragData]="task"></app-kanban-card>
-          </div>
-        </div>
+<div class="flex w-11/12">
+  <div class="flex flex-col mb-3 w-full">
+    <div class="flex align-middle place-items-center mb-3">
+      <div class="shadow-sm w-2 h-2 rounded-full border-gray-500 border-solid mr-1"
+           [ngClass]="color"
+      ></div>
+      <h1 class="mx-1 align-middle font-bold font-roboto">{{ getStateTitle(taskStatus) }}</h1>
+      <div class="flex place-items-center justify-center h-4 w-4 text-xs rounded-sm text-white font-medium ml-2"
+           [ngClass]="color"
+      >
+        {{ tasks?.length }}
+      </div>
+    </div>
+    <div class="min-h-20" cdkDropList [cdkDropListData]="tasks" (cdkDropListDropped)="drop($event)">
+      <div *ngFor="let task of tasks"
+           [ngClass]="{'cursor-grab': !isDragDisabled, 'cursor-default': isDragDisabled}">
+        <app-kanban-card id="task.name" [task]="task" [color]="color" cdkDrag [cdkDragData]="task" class="overflow-hidden"></app-kanban-card>
+      </div>
     </div>
   </div>
+</div>
+
   `
 })
 export class KanbanSectionComponent implements OnInit {
@@ -33,6 +35,7 @@ export class KanbanSectionComponent implements OnInit {
 
   @Input() taskStatus: string = '';
   @Input() tasks? : KanbanTask[] = [];
+  @Input() isDragDisabled = false;
 
   selectedTaskId: string | null = null;
   color: string = '';

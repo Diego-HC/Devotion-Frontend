@@ -8,11 +8,11 @@ import {StoreService} from "../../store.service";
   selector: 'app-kanban',
   template: `
     <app-tasks-loading *ngIf="store.loadingSubtasks" />
-    <div class = "grid grid-cols-4" cdkDropListGroup>
-      <app-kanban-section id="notStarted" [tasks]="response?.tasks?.notStarted" taskStatus="notStarted" />
-      <app-kanban-section id= "inProgress" [tasks]="response?.tasks?.inProgress" taskStatus="inProgress"/>
-      <app-kanban-section id = "inReview" [tasks]="response?.tasks?.inReview" taskStatus="inReview" />
-      <app-kanban-section id = "done" [tasks]="response?.tasks?.done" taskStatus="done" />
+    <div class = "grid grid-cols-4" cdkDropListGroup [cdkDropListGroupDisabled]="isDragDisabled">
+      <app-kanban-section id="notStarted" [tasks]="response?.tasks?.notStarted" taskStatus="notStarted" [isDragDisabled]="isDragDisabled"/>
+      <app-kanban-section id= "inProgress" [tasks]="response?.tasks?.inProgress" taskStatus="inProgress" [isDragDisabled]="isDragDisabled"/>
+      <app-kanban-section id = "inReview" [tasks]="response?.tasks?.inReview" taskStatus="inReview" [isDragDisabled]="isDragDisabled"/>
+      <app-kanban-section id = "done" [tasks]="response?.tasks?.done" taskStatus="done" [isDragDisabled]="isDragDisabled"/>
     </div>
   `
 })
@@ -25,6 +25,11 @@ export class KanbanComponent implements OnInit, OnDestroy {
   @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
   @Input() projectOrTaskId: string = '';
   @Input() isTask = false;
+  @Input() inviteId: string = '';
+
+  get isDragDisabled(): boolean {
+    return !!this.inviteId;
+  }
 
   response? : KanbanResponse;
   private subscriptions: Subscription = new Subscription();
