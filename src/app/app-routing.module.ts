@@ -8,7 +8,6 @@ import { TaskMainPageComponent } from "./tasks/task-main-page/task-main-page.com
 import { CreateEditPageComponent } from "./projects/create-edit-page/create-edit-page.component";
 import { TaskCreateEditPageComponent } from "./tasks/task-create-edit-page/task-create-edit-page.component";
 import { DashboardMainPageComponent } from "./dashboards/dashboard-main-page/dashboard-main-page.component";
-import { DataSourcesMainPageComponent } from "./dashboards/dataSources/data-sources-main-page/data-sources-main-page.component";
 import { ProjectMembersPageComponent } from "./projects/project-members-page/project-members-page.component";
 import { InvitePageComponent } from "./shared/invite-page/invite-page.component";
 import { InviteDashboardComponent } from "./shared/invite-dashboard/invite-dashboard.component";
@@ -30,10 +29,6 @@ const routes: Routes = [
   {
     path: "dashboard/:id",
     component: DashboardMainPageComponent,
-  },
-  {
-    path: "dashboard/:id/dataSources",
-    component: DataSourcesMainPageComponent,
   },
   {
     path: "task/:id",

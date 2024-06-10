@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, Output, EventEmitter} from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
 import { switchMap } from "rxjs";
@@ -23,14 +23,14 @@ import { switchMap } from "rxjs";
         </div>
       </div>
       <div class="w-full flex flex-row items-center gap-4">
-        <div [ngClass]="isInvite ? 'cursor-default' : 'dropdown dropdown-bottom'">
+        <div [ngClass]="allowNavigation ? 'dropdown dropdown-bottom' : 'cursor-default'">
           <app-badge
             [status]="statusName(task.status)"
             tabindex="0"
             role="button"
           ></app-badge>
           <ul
-            *ngIf="!isInvite"
+            *ngIf="allowNavigation"
             tabindex="0"
             class="dropdown-content z-[1] menu p-2 bg-base-100 rounded-box w-52"
           >
@@ -41,7 +41,7 @@ import { switchMap } from "rxjs";
           </ul>
         </div>
         <div
-          *ngIf="!isInvite"
+          *ngIf="allowNavigation"
           class="dropdown dropdown-right"
         >
           <div tabindex="0" role="button" class="text-lg cursor-pointer badge badge-outline text-[#5CCEFF]">•••</div>
@@ -87,31 +87,21 @@ import { switchMap } from "rxjs";
   `
 })
 export class TaskPreviewInfoComponent implements OnInit {
-  constructor(private api: ApiService, private store: StoreService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private api: ApiService, private store: StoreService, private route: ActivatedRoute) { }
 
   task?: TaskResponse;
   @Input() taskId?: string;
+  @Input() allowNavigation = true;
   @Output() taskUpdated = new EventEmitter<void>();
 
   dropdownOpen = false;
   showWarning = false;
   warningMessage = "";
-  isInvite = window.location.pathname.includes('invite');
 
   ngOnInit() {
-    this.route.params
-      .pipe(
-        switchMap((params) => {
-          this.task = undefined;
-          return this.api.get(`tasks/${this.taskId}/?get=info`);
-          // return this.api.get(`tasks/${params["id"]}/`);
-        })
-      )
-      .subscribe((response) => {
-        this.store.updateTaskFromResponse(response)
-        this.task = response;
-      });
-
+    return this.api.get(`tasks/${this.taskId}/?get=info`).subscribe((response) => {
+      this.task = response;
+    });
   }
 
   statusName(status: number) {

@@ -8,6 +8,7 @@ import { AuthGoogleService } from "./auth-google.service";
 })
 export class ApiService {
   private baseUrl = "https://api.umm-actually.com/";
+  // private baseUrl = "http://localhost:8000/";
 
   constructor(private http: HttpClient, private auth: AuthGoogleService) { }
 

@@ -31,7 +31,7 @@ import { Clipboard } from "@angular/cdk/clipboard";
             </div>
             <div class="flex flex-row items-center gap-4">
               <a
-                href="{{ inviteId ? ('/invite/' + inviteId + '/dashboard') : ('/dashboard/' + project.id) }}"
+                routerLink="{{ inviteId ? ('/invite/' + inviteId + '/dashboard') : ('/dashboard/' + project.id) }}"
                 class="flex flex-row items-center gap-2"
               >
                 <app-dashboard-icon
@@ -213,6 +213,7 @@ import { Clipboard } from "@angular/cdk/clipboard";
         *ngIf="currentView === 'kanban'"
         [projectOrTaskId]="project.id"
         [isTask]="false"
+        [inviteId]="inviteId"
       />
       <app-calendar
         *ngIf="currentView === 'calendar'"

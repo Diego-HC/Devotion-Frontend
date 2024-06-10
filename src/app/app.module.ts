@@ -28,10 +28,7 @@ import {
   DashboardTaskListComponent,
   DashboardTaskComponent,
 } from "./dashboards/dashboard-task-list/dashboard-task-list.component";
-import { WidgetComponent } from "./dashboards/widgets/widget/widget.component";
-import { WidgetNumberComponent } from "./dashboards/widgets/widget-number/widget-number.component";
-import { CreateWidgetComponent } from "./dashboards/widgets/create-widget/create-widget.component";
-import { DataSourcesMainPageComponent } from './dashboards/dataSources/data-sources-main-page/data-sources-main-page.component';
+import { WidgetComponent } from "./dashboards/widget/widget.component";
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginComponent } from './login/login.component';
 import { BadgeComponent } from './shared/badge/badge.component';
@@ -75,6 +72,7 @@ import { InviteDashboardComponent } from './shared/invite-dashboard/invite-dashb
 import { InviteMembersComponent } from './shared/invite-members/invite-members.component';
 import { LinkIconComponent } from './shared/icons/link-icon/link-icon.component';
 import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {BarChartModule, HeatMapModule, NgxChartsModule, PieChartModule} from "@swimlane/ngx-charts";
 
 @NgModule({
   declarations: [
@@ -124,9 +122,6 @@ import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
     DashboardTaskListComponent,
     DashboardTaskComponent,
     WidgetComponent,
-    WidgetNumberComponent,
-    CreateWidgetComponent,
-    DataSourcesMainPageComponent,
     ConfirmGoBackComponent,
     NewProjectIconComponent,
     PencilIconComponent,
@@ -139,7 +134,7 @@ import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
     ProtectedLinkComponent,
     InviteDashboardComponent,
     InviteMembersComponent,
-    LinkIconComponent
+    LinkIconComponent,
   ],
   imports: [
     BrowserModule,
@@ -151,6 +146,10 @@ import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
     ReactiveFormsModule,
     DragDropModule,
     BrowserAnimationsModule,
+    PieChartModule,
+    BarChartModule,
+    HeatMapModule,
+    NgxChartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

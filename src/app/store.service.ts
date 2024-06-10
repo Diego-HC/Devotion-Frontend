@@ -21,6 +21,8 @@ export class StoreService {
   needsUpdateSubject = new Subject<void>();
   needsUpdate$ = this.needsUpdateSubject.asObservable();
 
+  updatingWidget: string | null = null;
+
   triggerUpdate() {
     this.disableButton = true;
     this.needsUpdateSubject.next();
@@ -47,10 +49,6 @@ export class StoreService {
   get showSubtreeTasks() {
     return this._showSubtreeTasks.getValue();
   }
-
-  // dashboard data
-  dataSources?: DataSource[];
-  widget?: Widget;
 
   clearProject(parent = "") {
     this.project = {
