@@ -17,12 +17,19 @@ import { Component, Input } from '@angular/core';
           </div>
         </div>
       </a>
-      <app-task-preview *ngIf="selectedTaskId" [taskID]="task.id" (closePreview)="closeTaskPreview()"></app-task-preview>
+      <app-task-preview
+        *ngIf="selectedTaskId"
+        [taskID]="task.id"
+        [allowNavigation]="allowNavigation"
+        (closePreview)="closeTaskPreview()"
+      ></app-task-preview>
     </div>
   `
 })
 export class CalendarTaskComponent {
   @Input() task?: CalendarTask;
+  @Input() allowNavigation = true;
+
   selectedTaskId: string | null = null;
 
   showTaskPreview(taskId: string) {
