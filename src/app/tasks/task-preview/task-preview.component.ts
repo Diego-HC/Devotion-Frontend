@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
       <div class="bg-white rounded-lg shadow-lg w-1/2">
         <div class="flex justify-end items-center gap-4 mx-6 mt-4">
           <button
-            *ngIf="!isInvite"
+            *ngIf="allowNavigation"
             (click)="navigateToTask()"
             [disabled]="isUpdating"
             class="text-xl"
@@ -22,7 +22,10 @@ import { Subscription } from 'rxjs';
           </button>
         </div>
         <div class="w-full">
-          <app-task-preview-info [taskId]="taskID" (taskUpdated)="onTaskUpdated()"></app-task-preview-info>
+          <app-task-preview-info
+            [taskId]="taskID" (taskUpdated)="onTaskUpdated()"
+            [allowNavigation]="allowNavigation"
+          ></app-task-preview-info>
         </div>
       </div>
     </div>
@@ -30,10 +33,11 @@ import { Subscription } from 'rxjs';
 })
 export class TaskPreviewComponent implements OnDestroy {
   @Input() taskID!: string;
+  @Input() allowNavigation = !window.location.pathname.includes('invite');
   @Output() closePreview = new EventEmitter<void>();
+
   isUpdating = false;
-  isInvite = window.location.pathname.includes('invite');
-  private needsUpdateSubscription: Subscription = new Subscription();
+  needsUpdateSubscription: Subscription = new Subscription();
 
   constructor(private router: Router, private store: StoreService) {
     this.needsUpdateSubscription = this.store.needsUpdate$.subscribe(() => {
@@ -54,7 +58,7 @@ export class TaskPreviewComponent implements OnDestroy {
   }
 
   navigateToTask() {
-    this.router.navigate(['/task', this.taskID]);
+    void this.router.navigate(['/task', this.taskID]);
   }
 
   onTaskUpdated() {
