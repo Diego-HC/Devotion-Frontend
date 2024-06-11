@@ -2,14 +2,18 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {SearchSelectComponent} from './search-select.component';
 import {StoreService} from "../../store.service";
-import { ReactiveFormsModule} from "@angular/forms";
-import { FormsModule } from "@angular/forms";
+import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule} from "@angular/forms";
+
+// Autor: Andrea Badillo - A00833511
 
 describe('SearchSelectComponent', () => {
   let component: SearchSelectComponent;
   let fixture: ComponentFixture<SearchSelectComponent>;
+
   const assigneeToSearch = "Andrea Guadalupe Badillo Ibarra";
   const assigneeId = "c4c4d6d8-aeac-482b-9e15-4650b9be22f2";
+
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -57,12 +61,27 @@ describe('SearchSelectComponent', () => {
   // • CA2H13 - Límite de selección: La cantidad de miembros que se pueden seleccionar son: [1, ∞]
   it('should allow selecting a member', () => {
     component.selectSuggestion({id: assigneeId, name: assigneeToSearch, email: "a00833511@tec.mx", isLeader: true});
-    expect(component.selection()).toContain({id: assigneeId, name: assigneeToSearch, email: "a00833511@tec.mx", isLeader: true});
+    expect(component.selection()).toContain({
+      id: assigneeId,
+      name: assigneeToSearch,
+      email: "a00833511@tec.mx",
+      isLeader: true
+    });
   });
 
   // should allow selecting more than one member
   it('should allow selecting more than one member', () => {
     component.selectSuggestion({id: assigneeId, name: assigneeToSearch, email: "a00833511@tec.mx", isLeader: true});
-    component.selectSuggestion({id: "05d4349f-8466-4b11-a1eb-fc376421bf3a", name: "Leonardo Corona Garza", email: "a00832792@tec.mx", isLeader: false});
-    expect(component.selection().length).toBe(2)});
+    component.selectSuggestion({
+      id: "05d4349f-8466-4b11-a1eb-fc376421bf3a",
+      name: "Leonardo Corona Garza",
+      email: "a00832792@tec.mx",
+      isLeader: false
+    });
+    expect(component.selection().length).toBe(2)
+  });
+
+  it('should alert the user if no leaders are selected', () => {
+
+  });
 });

@@ -8,6 +8,8 @@ import {ConfirmDeletionComponent} from './confirm-deletion.component';
 import {ApiService} from '../../api.service';
 import {StoreService} from '../../store.service';
 
+// Autor: Andrea Badillo - A00833511
+
 describe('ConfirmDeletionComponent', () => {
   let component: ConfirmDeletionComponent;
   let fixture: ComponentFixture<ConfirmDeletionComponent>;
