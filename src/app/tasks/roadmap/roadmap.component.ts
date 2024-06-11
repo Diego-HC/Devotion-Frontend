@@ -2,13 +2,14 @@ import { Component,  Input, OnInit, AfterViewInit, ViewChild, ElementRef, OnDest
 import {Subscription} from "rxjs";
 import {ApiService} from "../../api.service";
 import {StoreService} from "../../store.service";
+import { HttpClientModule } from "@angular/common/http";
+import { Router } from "@angular/router";
+import { OAuthModule } from "angular-oauth2-oidc";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 @Component({
   selector: 'app-roadmap',
   template: `
-    <p>
-      roadmap works!
-    </p>
     <app-tasks-loading *ngIf="store.loadingSubtasks" />
     <div *ngIf="tasks !== undefined">
       <table class="w-full mt-5" #headerTable>
@@ -128,14 +129,18 @@ export class RoadmapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   applyColumnWidths() {
-    const headerRows = this.headerTable.nativeElement.rows;
-    const bodyRows = this.bodyTable.nativeElement.rows;
+    if (this.headerTable?.nativeElement && this.bodyTable?.nativeElement) {
+      const headerRows = this.headerTable.nativeElement.rows;
+      const bodyRows = this.bodyTable.nativeElement.rows;
 
-    if (bodyRows.length > 0) {
-      for (let i = 0; i < headerRows[0].cells.length; i++) {
-        const bodyWidth = bodyRows[0].cells[i].offsetWidth;
-        headerRows[0].cells[i].style.width = `${bodyWidth}px`;
+      if (bodyRows.length > 0) {
+        for (let i = 0; i < headerRows[0].cells.length; i++) {
+          const bodyWidth = bodyRows[0].cells[i].offsetWidth;
+          headerRows[0].cells[i].style.width = `${bodyWidth}px`;
+        }
       }
+    } else {
+      console.warn('headerTable o bodyTable no están disponibles');
     }
   }
 

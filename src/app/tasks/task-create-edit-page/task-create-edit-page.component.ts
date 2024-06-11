@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import {Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ApiService} from "../../api.service";
@@ -9,138 +9,145 @@ import { Subscription } from 'rxjs';
   selector: 'app-task-create-edit-page',
   template: `
     <app-loading *ngIf="showLoading" [message]="loadingMessage"/>
-    <div class="mx-32" *ngIf="!showLoading && (store.membersPool.length > 0)">
-      <a (click)="backPage()" class="flex flex-row items-center gap-3 text-devotionPrimary text-lg font-semibold">
-        <app-left-chevron-icon/>
-        Volver
-      </a>
-      <div class="md:mb-2"></div>
-      <div>
-        <h2 class="font-roboto font-bold">
-          {{ store.task.id ? 'Editar Tarea *' : 'Nueva Tarea *' }}
-        </h2>
-        <form [formGroup]="taskForm" class="mt-4">
-          <div class="flex flex-row items-center mt-2 gap-4">
-            <input type="text"
-                   formControlName="name"
-                   required
-                   class="input-md input-bordered input-['#5CCEFF'] md:w-5/12 md:m-0.5 text-3xl font-helvetica rounded-box font-bold shadow-md"
-            />
-            <div class="flex flex-col items-center">
-              <button
-                (click)="onSubmit()"
-                class="bg-devotionPrimary btn-circle flex items-center justify-center mt-4 w-12 h-12"
-              >
-                <app-checkmark-icon/>
-              </button>
-              <p class="text-xs font-robotoCondensed">Publicar</p>
-            </div>
-          </div>
-          <div class="text-red-500"
-               *ngIf="taskForm.get('name')?.errors?.['required'] && taskForm.get('name')?.touched">
-            * El nombre de la tarea es obligatorio.
-          </div>
-          <div class="flex flex-row items-center mt-2 gap-8">
-            <div class="flex flex-col items-center">
-              <h2 class="font-roboto font-bold">Fecha Inicio</h2>
-              <input type="date"
-                     formControlName="start_date"
-                     class="input-md input-bordered input-['#5CCEFF'] md:w-40 font-helvetica font-bold"
-              />
-            </div>
-            <div class="flex flex-col items-center">
-              <h2 class="font-roboto font-bold">Fecha Fin *</h2>
-              <input type="date"
-                     formControlName="due_date"
+    <div class="mx-12 block lg:flex lg:flex-row" *ngIf="!showLoading && (store.userPool.length > 0)">
+      <div class="min-w-[500px] max-w-[600px] ml-10 pr-4">
+        <button (click)="backPage()" class="flex flex-row items-center gap-3 text-devotionPrimary text-lg font-semibold mb-6">
+          <app-left-chevron-icon/>
+          Volver
+        </button>
+        <div>
+          <h2 class="font-roboto font-bold">
+            {{ store.task.id ? 'Editar Tarea *' : 'Nueva Tarea *' }}
+          </h2>
+          <form [formGroup]="taskForm" class="mt-4">
+            <div class="flex flex-row w-full items-center mt-2 gap-4">
+              <input type="text"
+                     formControlName="name"
                      required
-                     class="input-md input-bordered input-['#5CCEFF'] md:w-40 font-helvetica font-bold"
+                     class="input-md input-bordered input-['#5CCEFF'] w-full text-3xl font-helvetica rounded-box font-bold shadow-md"
               />
-            </div>
-            <div class="flex flex-col items-center">
-              <h2 class="font-roboto font-bold">Prioridad *</h2>
-              <div class="dropdown dropdown-right">
-                <div tabindex="0" role="button" class="btn m-1">{{ selectedPriority }}</div>
-                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box">
-                  <li>
-                    <button (click)="updatePriority('Baja')">
-                      <app-priority-icon
-                        class="pr-6"
-                        [priority]="0"
-                        [animated]="false"
-                      />
-                    </button>
-                  </li>
-                  <li>
-                    <button (click)="updatePriority('Media')">
-                      <app-priority-icon
-                        class="pr-6"
-                        [priority]="1"
-                        [animated]="false"
-                      />
-                    </button>
-                  </li>
-                  <li>
-                    <button (click)="updatePriority('Alta')">
-                      <app-priority-icon
-                        class="pr-6"
-                        [priority]="2"
-                        [animated]="false"
-                      />
-                    </button>
-                  </li>
-                </ul>
+              <div class="flex flex-col items-center">
+                <button
+                  (click)="onSubmit()"
+                  class="bg-devotionPrimary btn-circle flex items-center justify-center mt-4 w-12 h-12"
+                >
+                  <app-checkmark-icon/>
+                </button>
+                <p class="text-xs font-robotoCondensed">Publicar</p>
               </div>
             </div>
-          </div>
-          <div class="flex gap-4">
             <div class="text-red-500"
-                 *ngIf="taskForm.get('start_date')?.errors?.['required'] && taskForm.get('start_date')?.touched">
-              * La fecha de inicio es obligatoria.
+                 *ngIf="taskForm.get('name')?.errors?.['required'] && taskForm.get('name')?.touched">
+              * El nombre de la tarea es obligatorio.
             </div>
+            <div class="flex flex-row justify-evenly items-center mt-2 gap-8">
+              <div class="flex flex-col items-center">
+                <h2 class="font-roboto font-bold">Fecha Inicio</h2>
+                <input type="date"
+                       formControlName="start_date"
+                       class="input-md input-bordered input-['#5CCEFF'] md:w-40 font-helvetica font-bold"
+                />
+              </div>
+              <div class="flex flex-col items-center">
+                <h2 class="font-roboto font-bold">Fecha Fin *</h2>
+                <input type="date"
+                       formControlName="due_date"
+                       required
+                       class="input-md input-bordered input-['#5CCEFF'] md:w-40 font-helvetica font-bold"
+                />
+              </div>
+              <div class="flex flex-col items-center">
+                <h2 class="font-roboto font-bold">Prioridad *</h2>
+                <div class="dropdown dropdown-right">
+                  <div tabindex="0" role="button" class="btn m-1">{{ selectedPriority }}</div>
+                  <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box">
+                    <li>
+                      <button (click)="updatePriority('Baja')">
+                        <app-priority-icon
+                          class="pr-6"
+                          [priority]="0"
+                          [animated]="false"
+                        />
+                      </button>
+                    </li>
+                    <li>
+                      <button (click)="updatePriority('Media')">
+                        <app-priority-icon
+                          class="pr-6"
+                          [priority]="1"
+                          [animated]="false"
+                        />
+                      </button>
+                    </li>
+                    <li>
+                      <button (click)="updatePriority('Alta')">
+                        <app-priority-icon
+                          class="pr-6"
+                          [priority]="2"
+                          [animated]="false"
+                        />
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="flex gap-4">
+              <div class="text-red-500"
+                   *ngIf="taskForm.get('start_date')?.errors?.['required'] && taskForm.get('start_date')?.touched">
+                * La fecha de inicio es obligatoria.
+              </div>
+              <div class="text-red-500"
+                   *ngIf="taskForm.get('due_date')?.errors?.['required'] && taskForm.get('due_date')?.touched">
+                * La fecha de fin es obligatoria.
+              </div>
+            </div>
+            <h2 class="font-roboto font-bold mt-4">Descripción</h2>
+            <textarea
+              formControlName="description"
+              class="w-full textarea-md text-['#5CCEFF'] textarea-bordered h-40 rounded-box shadow-md"
+            ></textarea>
             <div class="text-red-500"
-                 *ngIf="taskForm.get('due_date')?.errors?.['required'] && taskForm.get('due_date')?.touched">
-              * La fecha de fin es obligatoria.
+                 *ngIf="taskForm.get('description')?.errors?.['required'] && taskForm.get('description')?.touched">
+              * La descripción es obligatoria.
             </div>
+          </form>
+          <div class="w-full md:m-1">
+            <h2 class="font-roboto font-bold mt-4 md:m-0.5">Asignado *</h2>
+            <app-search-select selecting="assignee"/>
           </div>
-          <h2 class="font-roboto font-bold mt-4 md:m-0.5">Descripción</h2>
-          <textarea
-            formControlName="description"
-            class="textarea-md text-['#5CCEFF'] textarea-bordered w-1/2 h-40 md:m-0.5 rounded-box shadow-md"
-          >
-        </textarea>
           <div class="text-red-500"
-               *ngIf="taskForm.get('description')?.errors?.['required'] && taskForm.get('description')?.touched">
-            * La descripción es obligatoria.
+               *ngIf="taskForm.get('assignee')?.errors?.['required'] && taskForm.get('assignee')?.touched">
+            * La tarea debe tener un asignado.
           </div>
-        </form>
-        <div class="w-1/2 md:m-1">
-          <h2 class="font-roboto font-bold mt-4 md:m-0.5">Asignado *</h2>
-          <app-search-select selecting="assignee"/>
+          <hr class="w-full md:m-1">
+          <button
+            *ngIf="store.task.id"
+            (click)="store.showConfirmDeletion = true"
+            class="text-cardRed border border-cardRed bg-white text-sm font-roboto font-bold py-2 px-4 rounded-lg mt-4"
+          >
+            Eliminar Tarea
+          </button>
+          <app-confirm-deletion
+            *ngIf="store.showConfirmDeletion"
+            [deletingTask]="true"
+          ></app-confirm-deletion>
+          <app-confirm-go-back
+            *ngIf="store.showConfirmGoBack"
+            [backButtonLink]="backButtonLink"
+          />
+          <div class="md:mt-3"></div>
+          <app-alert *ngIf="showWarning" [message]="warningMessage"/>
         </div>
-        <div class="text-red-500"
-             *ngIf="taskForm.get('assignee')?.errors?.['required'] && taskForm.get('assignee')?.touched">
-          * La tarea debe tener un asignado.
-        </div>
-        <hr class="w-1/2 md:m-1">
-        <button
-          *ngIf="store.task.id"
-          (click)="store.showConfirmDeletion = true"
-          class="text-cardRed border border-cardRed bg-white text-sm font-roboto font-bold py-2 px-4 rounded-lg mt-4"
-        >
-          Eliminar Tarea
-        </button>
-        <app-confirm-deletion
-          *ngIf="store.showConfirmDeletion"
-          [deletingTask]="true"
-        ></app-confirm-deletion>
-        <app-confirm-go-back
-          *ngIf="store.showConfirmGoBack"
-          [backButtonLink]="backButtonLink"
-        />
-        <div class="md:mt-3"></div>
-        <app-alert *ngIf="showWarning" [message]="warningMessage"/>
       </div>
-      <br/><br/><br/><br/><br/><br/><br/>ㅤ
+      <div class="w-full pl-10 lg:pl-4">
+        <app-calendar
+          [projectOrTaskId]="store.task.parentTask || store.task.parentProject"
+          [isTask]="!!store.task.parentTask"
+          [allowNavigation]="false"
+          [forceShowSubtasks]="true"
+        ></app-calendar>
+      </div>
     </div>
   `
 })
@@ -170,16 +177,23 @@ export class TaskCreateEditPageComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit() {
+    // console.log(this.store.task);
+    // this.store.userPool = [{
+    //   id: '',
+    //   name: '',
+    //   email: '',
+    //   isLeader: false,
+    // }];
     // return;
     if (this.store.pageWasReloaded) {
       void this.router.navigateByUrl("/home");
       return;
     }
-    if (this.store.membersPool.length == 0) {
+    if (this.store.userPool.length == 0) {
       this.api.get(
         `projects/${this.store.task.parentProject}/members/`
       ).subscribe((members) => {
-        this.store.membersPool = members;
+        this.store.userPool = members;
       });
     }
 
@@ -255,7 +269,6 @@ export class TaskCreateEditPageComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-
     this.taskForm.patchValue({
       assignee: this.store.task.assignee
     });

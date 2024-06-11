@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
   selector: "app-create-edit-page",
   template: `
     <app-loading *ngIf="showLoading" [message]="loadingMessage"/>
-    <div class="px-16" *ngIf="!showLoading && (store.membersPool.length > 0)">
+    <div class="px-16" *ngIf="!showLoading && (store.userPool.length > 0)">
       <a
         (click)="backPage()"
         class="flex flex-row items-center gap-3 text-devotionPrimary text-lg font-semibold">
@@ -128,9 +128,10 @@ export class CreateEditPageComponent implements OnInit, OnDestroy {
       void this.router.navigateByUrl("/home");
       return;
     }
-    if (this.store.membersPool.length == 0) {
-      this.api.get("users/").subscribe((users) => {
-        this.store.membersPool = users;
+    if (this.store.userPool.length == 0) {
+      const projectId = this.store.project.id ? this.store.project.id : "none";
+      this.api.get(`users/pool/?project=${projectId}`).subscribe((users) => {
+        this.store.userPool = users;
       });
     }
     if (this.store.project.parent) {
@@ -202,7 +203,6 @@ export class CreateEditPageComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-
     this.projectForm.patchValue({
       leaders: this.store.project.leaders,
       members: this.store.project.members,

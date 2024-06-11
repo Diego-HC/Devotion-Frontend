@@ -7,6 +7,8 @@ import {FormsModule} from "@angular/forms";
 
 // Autor: Andrea Badillo - A00833511
 
+// Autor: Andrea Guadalupe Badillo Ibarra - A00833511
+
 describe('SearchSelectComponent', () => {
   let component: SearchSelectComponent;
   let fixture: ComponentFixture<SearchSelectComponent>;

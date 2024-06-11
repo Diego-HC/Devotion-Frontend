@@ -1,6 +1,8 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { TaskPreviewInfoComponent } from './task-preview-info.component';
+import { OAuthService, UrlHelperService, OAuthLogger, DateTimeProvider } from 'angular-oauth2-oidc';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('TaskPreviewInfoComponent', () => {
   let component: TaskPreviewInfoComponent;
@@ -8,7 +10,9 @@ describe('TaskPreviewInfoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TaskPreviewInfoComponent]
+      declarations: [TaskPreviewInfoComponent],
+      imports: [HttpClientTestingModule, RouterTestingModule], 
+      providers: [OAuthService, UrlHelperService, OAuthLogger, DateTimeProvider]
     })
     .compileComponents();
     

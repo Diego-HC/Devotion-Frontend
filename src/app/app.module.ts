@@ -3,6 +3,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { OAuthModule } from "angular-oauth2-oidc";
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -10,7 +11,6 @@ import { AppComponent } from "./app.component";
 import { SidebarComponent } from "./shared/sidebar/sidebar.component";
 import { NavbarComponent } from "./shared/navbar/navbar.component";
 
-import { SubprojectsComponent } from "./projects/subprojects/subprojects.component";
 import { SubprojectCardComponent } from "./projects/subproject-card/subproject-card.component";
 import { BreadcrumbsComponent } from "./shared/breadcrumbs/breadcrumbs.component";
 import { ViewPageComponent } from "./projects/view-page/view-page.component";
@@ -28,10 +28,7 @@ import {
   DashboardTaskListComponent,
   DashboardTaskComponent,
 } from "./dashboards/dashboard-task-list/dashboard-task-list.component";
-import { WidgetComponent } from "./dashboards/widgets/widget/widget.component";
-import { WidgetNumberComponent } from "./dashboards/widgets/widget-number/widget-number.component";
-import { CreateWidgetComponent } from "./dashboards/widgets/create-widget/create-widget.component";
-import { DataSourcesMainPageComponent } from './dashboards/dataSources/data-sources-main-page/data-sources-main-page.component';
+import { WidgetComponent } from "./dashboards/widget/widget.component";
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginComponent } from './login/login.component';
 import { BadgeComponent } from './shared/badge/badge.component';
@@ -67,13 +64,21 @@ import { PencilIconComponent } from './shared/icons/pencil-icon/pencil-icon.comp
 import { IconSidebarComponent } from './shared/icon-sidebar/icon-sidebar.component';
 import { TaskPreviewComponent} from "./tasks/task-preview/task-preview.component";
 import { TaskPreviewInfoComponent } from './tasks/task-preview-info/task-preview-info.component';
+import { KanbanSectionComponent } from './kanban-section/kanban-section.component';
+import { FullscreenIconComponent } from './shared/icons/fullscreen-icon/fullscreen-icon.component';
+import { InvitePageComponent } from './shared/invite-page/invite-page.component';
+import { ProtectedLinkComponent } from './shared/protected-link/protected-link.component';
+import { InviteDashboardComponent } from './shared/invite-dashboard/invite-dashboard.component';
+import { InviteMembersComponent } from './shared/invite-members/invite-members.component';
+import { LinkIconComponent } from './shared/icons/link-icon/link-icon.component';
+import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {BarChartModule, HeatMapModule, NgxChartsModule, PieChartModule} from "@swimlane/ngx-charts";
 
 @NgModule({
   declarations: [
     AppComponent,
     SidebarComponent,
     NavbarComponent,
-    SubprojectsComponent,
     SubprojectCardComponent,
     BreadcrumbsComponent,
     ViewPageComponent,
@@ -117,15 +122,19 @@ import { TaskPreviewInfoComponent } from './tasks/task-preview-info/task-preview
     DashboardTaskListComponent,
     DashboardTaskComponent,
     WidgetComponent,
-    WidgetNumberComponent,
-    CreateWidgetComponent,
-    DataSourcesMainPageComponent,
     ConfirmGoBackComponent,
     NewProjectIconComponent,
     PencilIconComponent,
     IconSidebarComponent,
     TaskPreviewComponent,
-    TaskPreviewInfoComponent
+    TaskPreviewInfoComponent,
+    KanbanSectionComponent,
+    FullscreenIconComponent,
+    InvitePageComponent,
+    ProtectedLinkComponent,
+    InviteDashboardComponent,
+    InviteMembersComponent,
+    LinkIconComponent,
   ],
   imports: [
     BrowserModule,
@@ -135,6 +144,12 @@ import { TaskPreviewInfoComponent } from './tasks/task-preview-info/task-preview
     HttpClientModule,
     NgOptimizedImage,
     ReactiveFormsModule,
+    DragDropModule,
+    BrowserAnimationsModule,
+    PieChartModule,
+    BarChartModule,
+    HeatMapModule,
+    NgxChartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

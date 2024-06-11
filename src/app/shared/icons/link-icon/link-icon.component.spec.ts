@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { WidgetNumberComponent } from './widget-number.component';
+import { LinkIconComponent } from './link-icon.component';
 
-describe('WidgetNumberComponent', () => {
-  let component: WidgetNumberComponent;
-  let fixture: ComponentFixture<WidgetNumberComponent>;
+describe('LinkIconComponent', () => {
+  let component: LinkIconComponent;
+  let fixture: ComponentFixture<LinkIconComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [WidgetNumberComponent]
+      declarations: [LinkIconComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(WidgetNumberComponent);
+    fixture = TestBed.createComponent(LinkIconComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

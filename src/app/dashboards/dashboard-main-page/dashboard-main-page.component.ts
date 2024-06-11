@@ -1,159 +1,320 @@
-import { Component, DoCheck, OnInit } from "@angular/core";
-import { SessionStorageService } from "../../session-storage.service";
-import { ActivatedRoute, Router } from "@angular/router";
+import {Component, Input, OnInit, HostListener} from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import { ApiService } from "../../api.service";
 import { StoreService } from "../../store.service";
-import { Subject } from "rxjs";
+import { ScaleType, Color } from "@swimlane/ngx-charts";
+import { WidgetDisplayType } from "../widget/widget-display-type";
 
 @Component({
   selector: "app-dashboard-main-page",
   template: `
-    @if (tasksToDo && tasksToVerify && widgets) {
-    <div class="ml-20 mr-10">
-      <div class="flex justify-between items-center">
+    @if (response) {
+      <div class="ml-20 mr-10">
         <h1 class="text-3xl font-semibold text-gray-800">
-          {{ projectName }}
+          {{ response.name }}
         </h1>
-        <button class="mr-6" (click)="changeMode()">
-          <app-projects-icon fill="#000000" width="60" height="60" />
-        </button>
-      </div>
-      <div class="flex items-center gap-4">
-        <a
-          href="{{ '/project/' + id }}"
-          class="flex flex-row items-center gap-2"
-        >
-          <app-projects-icon fill="#5CCEFF" width="25" height="25" />
-          <span class="font-bold hover:underline text-base text-devotionAccent"
-            >Ir a proyecto</span
+        <div class="flex items-center gap-4">
+          <a
+            href="{{ inviteId ? ('/invite/' + inviteId) : ('/project/' + id) }}"
+            class="flex flex-row items-center gap-2"
           >
-        </a>
-        <button (click)="viewDataSources()">
-          <span class="font-bold hover:underline text-base text-devotionAccent"
-            >Ver entradas de datos</span
-          >
-        </button>
-      </div>
-
-      <div class="grid grid-cols-2 gap-4 w-full mt-2 mb-6">
-        <div>
-          <h3 class="font-bold mb-1.5">Tus tareas por completar</h3>
-          <app-dashboard-task-list [tasks]="tasksToDo" />
+            <app-projects-icon fill="#5CCEFF" width="25" height="25"/>
+            <span
+              class="font-bold hover:underline text-base text-devotionAccent"
+            >Ir a proyecto</span>
+          </a>
         </div>
-        <div>
-          <h3 class="font-bold mb-1.5">Tus tareas en verificación</h3>
-          <app-dashboard-task-list [tasks]="tasksToVerify" />
-        </div>
-      </div>
-
-      <div class="flex flex-wrap gap-x-8 gap-y-6 mb-10">
-        @for(widget of widgets; track $index) {
-        <div class="grid grid-cols-1 grid-rows-1 relative">
-          <app-widget [widget]="widget" class="row-start-1 col-start-1" />
-          @if (isEditing) {
-          <button
-            class="btn btn-sm row-start-1 col-start-1 absolute top-2 right-2"
-            (click)="startChange(widget.id)"
-          >
-            Edit
-          </button>
-          }
-        </div>
-        }
-        <div class="w-52 h-52 grid" [ngClass]="{ hidden: !isEditing }">
-          <div
-            class="grid place-items-center border-2 border-gray-200 rounded-full p-5 box-shadow place-self-center size-24 hover:cursor-pointer"
-            (click)="startChange()"
-          >
-            <app-plus-icon
-              fill="#2A4365"
-              [width]="'45'"
-              [height]="'45'"
-            ></app-plus-icon>
+        <div class="grid grid-cols-2 gap-4 w-full mt-2 mb-6">
+          <div>
+            <h3 class="font-bold mb-1.5">Tus tareas por completar</h3>
+            <app-dashboard-task-list [tasks]="response.tasksToDo"/>
+          </div>
+          <div>
+            <h3 class="font-bold mb-1.5">Tus tareas en verificación</h3>
+            <app-dashboard-task-list [tasks]="response.tasksToVerify"/>
           </div>
         </div>
+        <div
+          class="grid gap-4 mt-4 mb-8"
+          style="grid-template-columns: repeat(auto-fill, minmax(400px, 1fr))"
+        >
+          <app-widget
+            metricName="Progreso del proyecto"
+          >
+            <ngx-charts-gauge
+              [view]="view"
+              [results]="response.projectProgress.data"
+              [scheme]="colorScheme"
+              [max]="100"
+              [min]="0"
+            >
+            </ngx-charts-gauge>
+          </app-widget>
+          <app-widget
+            metricId="tasks_by_status"
+            metricName="Tareas por estado"
+            [displayTypes]="[W.pie, W.verticalBar, W.horizontalBar]"
+            (onDisplayTypeChange)="refetch($event)"
+          >
+            <ngx-charts-pie-chart
+              *ngIf="response.tasksByStatus.displayType === W.pie.valueOf()"
+              [view]="view"
+              [results]="response.tasksByStatus.data"
+              [doughnut]="false"
+              [labels]="true"
+              [maxLabelLength]="15"
+              [scheme]="colorScheme"
+            />
+            <ngx-charts-bar-vertical
+              *ngIf="response.tasksByStatus.displayType === W.verticalBar.valueOf()"
+              [view]="view"
+              [results]="response.tasksByStatus.data"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [showDataLabel]="true"
+            />
+            <ngx-charts-bar-horizontal
+              *ngIf="response.tasksByStatus.displayType === W.horizontalBar.valueOf()"
+              [view]="view"
+              [results]="response.tasksByStatus.data"
+              [scheme]="colorScheme"
+              [yAxis]="true"
+              [showDataLabel]="true"
+            />
+          </app-widget>
+          <app-widget
+            metricId="done_tasks_by_date"
+            metricName="Tareas completadas por fecha"
+            [displayTypes]="[W.line, W.verticalBar, W.horizontalBar, W.heatMap]"
+            (onDisplayTypeChange)="refetch($event)"
+          >
+            <ngx-charts-line-chart
+              *ngIf="response.doneTasksByDate.displayType === W.line.valueOf()"
+              [view]="view"
+              [results]="response.doneTasksByDate.data"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [yAxis]="true"
+            />
+            <ngx-charts-bar-vertical
+              *ngIf="response.doneTasksByDate.displayType === W.verticalBar.valueOf()"
+              [view]="view"
+              [results]="response.doneTasksByDate.data"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [yAxis]="true"
+              [showDataLabel]="true"
+            />
+            <ngx-charts-bar-horizontal
+              *ngIf="response.doneTasksByDate.displayType === W.horizontalBar.valueOf()"
+              [view]="view"
+              [results]="response.doneTasksByDate.data"
+              [scheme]="colorScheme"
+              [yAxis]="true"
+              [showDataLabel]="true"
+            />
+            <ngx-charts-heat-map
+              *ngIf="response.doneTasksByDate.displayType === W.heatMap.valueOf()"
+              [view]="view"
+              [results]="response.doneTasksByDate.data"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [showYAxisLabel]="true"
+              [showXAxisLabel]="true"
+              [xAxisLabel]="xAxisLabel"
+              [yAxisLabel]="yAxisLabel"
+              [yAxis]="true"
+            />
+          </app-widget>
+          <app-widget
+            metricId="tasks_by_priority"
+            metricName="Tareas existentes por prioridad"
+            [displayTypes]="[W.pie, W.verticalBar, W.horizontalBar]"
+            (onDisplayTypeChange)="refetch($event)"
+          >
+            <ngx-charts-bar-horizontal
+              *ngIf="response.tasksByPriority.displayType === W.horizontalBar.valueOf()"
+              [view]="view"
+              [results]="response.tasksByPriority.data"
+              [scheme]="colorScheme"
+              [yAxis]="true"
+              [showDataLabel]="true"
+            />
+            <ngx-charts-bar-vertical
+              *ngIf="response.tasksByPriority.displayType === W.verticalBar.valueOf()"
+              [view]="view"
+              [results]="response.tasksByPriority.data"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [yAxis]="true"
+              [showDataLabel]="true"
+            />
+            <ngx-charts-pie-chart
+              *ngIf="response.tasksByPriority.displayType === W.pie.valueOf()"
+              [view]="view"
+              [results]="response.tasksByPriority.data"
+              [doughnut]="false"
+              [labels]="true"
+              [maxLabelLength]="15"
+              [scheme]="colorScheme"
+            />
+          </app-widget>
+          <app-widget
+            metricId="user_workload"
+            metricName="Carga de trabajo por usuario"
+            [displayTypes]="[W.heatMap, W.pie, W.verticalBar, W.horizontalBar, W.numbers]"
+            (onDisplayTypeChange)="refetch($event)"
+          >
+            <ngx-charts-heat-map
+              *ngIf="response.userWorkload.displayType === W.heatMap.valueOf()"
+              [view]="view"
+              [results]="response.userWorkload.data"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [showYAxisLabel]="true"
+              [showXAxisLabel]="true"
+              [xAxisLabel]="xAxisLabel"
+              [yAxisLabel]="yAxisLabel"
+              [yAxis]="true"
+            />
+            <ngx-charts-pie-chart
+              *ngIf="response.userWorkload.displayType === W.pie.valueOf()"
+              [view]="view"
+              [results]="response.userWorkload.data"
+              [doughnut]="false"
+              [labels]="true"
+              [maxLabelLength]="15"
+              [scheme]="colorScheme"
+            />
+            <ngx-charts-bar-vertical
+              *ngIf="response.userWorkload.displayType === W.verticalBar.valueOf()"
+              [view]="view"
+              [results]="response.userWorkload.data"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [yAxis]="true"
+              [showDataLabel]="true"
+            />
+            <ngx-charts-bar-horizontal
+              *ngIf="response.userWorkload.displayType === W.horizontalBar.valueOf()"
+              [view]="view"
+              [results]="response.userWorkload.data"
+              [scheme]="colorScheme"
+              [yAxis]="true"
+              [showDataLabel]="true"
+            />
+            <ngx-charts-number-card
+              *ngIf="response.userWorkload.displayType === W.numbers.valueOf()"
+              [view]="view"
+              [results]="response.userWorkload.data"
+              [scheme]="cardColorScheme"
+            />
+          </app-widget>
+          <app-widget
+            metricName="Tareas completadas"
+          >
+            <ngx-charts-number-card
+              [view]="view"
+              [results]="response.doneTasksCount.data"
+              [scheme]="cardColorScheme"
+            />
+          </app-widget>
+          <app-widget
+            metricName="Tareas completadas en total"
+          >
+            <ngx-charts-number-card
+              [view]="view"
+              [results]="response.allDoneTasksCount.data"
+              [scheme]="cardColorScheme"
+            />
+          </app-widget>
+        </div>
       </div>
-
-      <app-create-widget
-        [modal]="modal"
-        [projectId]="id"
-        [position]="widgets.length"
-        [dataSources]="dataSources"
-        [fetchApi]="fetchApi"
-        [startChange$]="startChange$"
-      />
-    </div>
     } @else {
-    <app-loading />
+      <app-loading/>
     }
   `,
 })
-export class DashboardMainPageComponent implements OnInit, DoCheck {
+export class DashboardMainPageComponent implements OnInit {
   constructor(
-    protected storage: SessionStorageService,
     private route: ActivatedRoute,
-    protected api: ApiService,
-    private store: StoreService,
-    private router: Router
+    private api: ApiService,
+    private store: StoreService
   ) {}
 
-  tasksToDo?: DashboardTask[];
-  tasksToVerify?: DashboardTask[];
-  widgets?: Widget[];
+  @Input() projectId = "";
+
   id = "";
-  projectName = "";
-  dataSources: DataSource[] = [];
-  modal: HTMLDialogElement | null = null;
-  private startEditSubject = new Subject<void>();
+  inviteId = "";
+  response?: DashboardResponse;
 
-  startChange$ = this.startEditSubject.asObservable();
+  xAxisLabel = "Estados";
+  yAxisLabel = "Semanas";
 
-  isEditing = false;
-
-  fetchApi = (onResponse?: () => void) => {
-    this.api.get(`dashboards/${this.id}/`).subscribe((response: Dashboard) => {
-      console.log(response);
-
-      this.projectName = response.projectName;
-      this.tasksToDo = response.tasksToDo;
-      this.tasksToVerify = response.tasksToVerify;
-      this.widgets = response.widgets;
-      this.widgets.sort((a, b) => a.position - b.position);
-      this.dataSources = response.dataSources;
-
-      if (onResponse) {
-        onResponse();
-      }
-    });
+  colorScheme: Color = {
+    name: 'custom',
+    selectable: true,
+    group: ScaleType.Ordinal,
+    domain: ['#363636', "#FFC700", "#0094D3", "#00D387"]
   };
+
+  cardColorScheme: Color = {
+    name: 'custom',
+    selectable: true,
+    group: ScaleType.Ordinal,
+    domain: ["#C7FFCD"]
+  }
+
+  view: [number, number] = [400, 200];
 
   ngOnInit(): void {
+    this.setViewDimensions();
     this.route.params.subscribe((params) => {
-      this.id = params["id"];
-
-      this.fetchApi();
+      if (params["id"]) {
+        this.id = params["id"];
+      } else {
+        this.id = this.projectId;
+        this.inviteId = params["inviteId"];
+      }
+      this.api.get(`projects/${this.id}/dashboard/`).subscribe((response) => {
+        this.response = response;
+      });
     });
   }
 
-  ngDoCheck(): void {
-    this.modal = document.getElementById("modal") as HTMLDialogElement;
+  @HostListener('window:resize', ['$event'])
+  onResize(_event: Event): void {
+    this.setViewDimensions();
   }
 
-  changeMode = () => {
-    this.isEditing = !this.isEditing;
+  refetch({ metricId, displayType }: { metricId: string, displayType: number }) {
+    this.store.updatingWidget = metricId;
+    this.api.put(`projects/${this.id}/dashboard/`, {
+      [metricId]: displayType,
+    }).subscribe((response) => {
+      this.response = response;
+      this.store.updatingWidget = null;
+    });
   };
 
-  viewDataSources() {
-    this.store.dataSources = this.dataSources;
-    this.store.project.id = this.id;
-    console.log("View members", this.store.dataSources, this.store.project.id);
-    void this.router.navigateByUrl(`/dashboard/${this.id}/dataSources`);
+  private setViewDimensions(): void {
+    const windowWidth = window.innerWidth;
+    const minColumnWidth = 400; // Minimum column width as per your grid style
+    const numberOfColumns = Math.floor(windowWidth / minColumnWidth);
+    const actualColumnWidth = windowWidth / numberOfColumns;
+
+    // Set the width and height for the view
+    this.view = [actualColumnWidth - 100, actualColumnWidth * 0.6 - 50]; // You can replace 200 with the desired height
   }
 
-  startChange(id?: string) {
-    this.store.widget = this.widgets?.find((widget) => widget.id === id);
-    console.log("Start change", this.store.widget);
+  // doneTasksCount - number cards
+  // allDoneTasksCount - number cards
+  // doneTasksByDate - Line chart, vertical bar chart, horizontal bar chart, heat map
+  // tasksByStatus - Pie chart, vertical bar chart, horizontal bar chart, heat map
+  // tasksByPriority - Pie chart, vertical bar chart, horizontal bar chart, heat map
+  // userWorkload - heat map, pie chart, vertical bar chart, horizontal bar chart, number cards
+  // projectProgress - gauge
+  // allProjectProgress - pendiente este rollito
 
-    this.startEditSubject.next();
-  }
+  protected readonly W = WidgetDisplayType;
 }

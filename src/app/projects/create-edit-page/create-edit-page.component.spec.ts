@@ -25,7 +25,7 @@ describe("CreateEditPageComponent", () => {
       members: [],
     } as Project,
     pageWasReloaded: false,
-    membersPool: [],
+    userPool: [],
     projectRequestBody: () => {
       return {
         id: projectId,
@@ -45,7 +45,7 @@ describe("CreateEditPageComponent", () => {
       members: [],
     };
     mockStoreService.pageWasReloaded = false;
-    mockStoreService.membersPool = [];
+    mockStoreService.userPool = [];
   };
 
   beforeEach(async () => {

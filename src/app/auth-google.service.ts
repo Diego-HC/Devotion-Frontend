@@ -11,7 +11,11 @@ export class AuthGoogleService {
     this.initLogin();
   }
 
-  initLogin(){
+  initLogin() {
+    if (window.location.pathname.includes("invite")) {
+      return;
+    }
+
     const config: AuthConfig = {
       issuer: 'https://accounts.google.com',
       strictDiscoveryDocumentValidation: false,

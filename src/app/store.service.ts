@@ -11,7 +11,7 @@ export class StoreService {
 
   project!: Project;
   task!: Task;
-  membersPool: User[] = [];
+  userPool: User[] = [];
   pageWasReloaded = true;
   showConfirmDeletion = false;
   showConfirmGoBack = false;
@@ -20,6 +20,8 @@ export class StoreService {
 
   needsUpdateSubject = new Subject<void>();
   needsUpdate$ = this.needsUpdateSubject.asObservable();
+
+  updatingWidget: string | null = null;
 
   triggerUpdate() {
     this.disableButton = true;
@@ -47,10 +49,6 @@ export class StoreService {
   get showSubtreeTasks() {
     return this._showSubtreeTasks.getValue();
   }
-
-  // dashboard data
-  dataSources?: DataSource[];
-  widget?: Widget;
 
   clearProject(parent = "") {
     this.project = {
@@ -90,7 +88,7 @@ export class StoreService {
 
   updateProjectFromResponse(projectResponse: ProjectResponse) {
     this.pageWasReloaded = false;
-    this.membersPool = [...projectResponse.members, ...projectResponse.leaders];
+    this.userPool = [...projectResponse.members, ...projectResponse.leaders];
     this.project = {
       ...projectResponse,
     }

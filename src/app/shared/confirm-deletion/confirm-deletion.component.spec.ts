@@ -1,3 +1,4 @@
+
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HttpClientModule} from "@angular/common/http";
 import {OAuthModule} from "angular-oauth2-oidc";
@@ -9,6 +10,7 @@ import {ApiService} from '../../api.service';
 import {StoreService} from '../../store.service';
 
 // Autor: Andrea Badillo - A00833511
+
 
 describe('ConfirmDeletionComponent', () => {
   let component: ConfirmDeletionComponent;
