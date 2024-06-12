@@ -58,7 +58,7 @@ export class SearchSelectComponent {
 
   @Input() selecting: SelectionType = 'members';
 
-  constructor(protected store: StoreService) {}
+  constructor(public store: StoreService) {}
 
   selection(): User[] {
     if (this.selecting === 'assignee') {
@@ -122,5 +122,11 @@ export class SearchSelectComponent {
 
   selectSuggestionMouseDown(event: MouseEvent) {
     event.preventDefault();
+  }
+
+  checkLeaders() {
+    if (this.store.project.leaders.length === 0) {
+      window.alert('Es necesario agregar líderes');
+    }
   }
 }
