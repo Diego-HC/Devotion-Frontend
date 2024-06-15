@@ -4,7 +4,7 @@ import { MainPageComponent } from "./main-page.component";
 import { ApiService } from "../../api.service";
 import { HttpClientModule } from "@angular/common/http";
 import { OAuthModule, OAuthService } from "angular-oauth2-oidc";
-import { ActivatedRoute, RouterModule } from "@angular/router";
+import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { LoadingComponent } from "../../shared/loading/loading.component";
 import { By } from "@angular/platform-browser";
 import { BreadcrumbsComponent } from "../../shared/breadcrumbs/breadcrumbs.component";
@@ -43,6 +43,14 @@ function waitForProperty<T>(
 describe("MainPageComponent", () => {
   let component: MainPageComponent;
   let fixture: ComponentFixture<MainPageComponent>;
+  const mockRouter = {
+    navigateByUrl: jasmine.createSpy("navigateByUrl"),
+    events: {
+      subscribe: () => {},
+    },
+    createUrlTree: () => { },
+    serializeUrl: () => { },
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -100,6 +108,10 @@ describe("MainPageComponent", () => {
             },
           },
         },
+        {
+          provide: Router,
+          useValue: mockRouter,
+        },
       ],
       imports: [HttpClientModule, OAuthModule.forRoot(), RouterModule],
     }).compileComponents();
@@ -120,5 +132,15 @@ describe("MainPageComponent", () => {
   it("should have a button to add a subproject", () => {
     const button = fixture.debugElement.query(By.css("#newSubprojectButton"));
     expect(button).toBeTruthy();
+  });
+
+  // Edición de proyecto
+  // H11T1 - Descripción: Acceso a formulario
+  it("should redirect the user to the edit page when the edit button is clicked", () => {
+    const button = fixture.debugElement.query(By.directive(PencilIconComponent));
+    button.nativeElement.click();
+    fixture.detectChanges();
+
+    expect(mockRouter.navigateByUrl).toHaveBeenCalledWith("/edit/project");
   });
 });
