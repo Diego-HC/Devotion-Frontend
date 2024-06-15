@@ -27,7 +27,7 @@ describe('TaskMainPageComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(TaskMainPageComponent);
     component = fixture.componentInstance;
     mockApiService = TestBed.inject(ApiService) as unknown as MockApiService;
@@ -37,15 +37,13 @@ describe('TaskMainPageComponent', () => {
 
   class MockApiService {
 
-    public isLeader: boolean; 
+    public isLeader: boolean;
 
     constructor (isLeader: boolean){
       this.isLeader = isLeader;
     }
 
     put(url: string, data: any) {
-      console.log('Data:', data);
-      console.log('Leader: ', this.isLeader)
       if (data.status === 3 && !this.isLeader) {
         return throwError({ error: { message: 'No autorizado' } });
       }
@@ -102,7 +100,7 @@ describe('TaskMainPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // H9T1: De no empezado a en proceso como miembro 
+  // H9T1: De no empezado a en proceso como miembro
   it('Should change state from not started to in progress as a member',(done) => {
 
     mockApiService = new MockApiService(false);
@@ -156,7 +154,7 @@ describe('TaskMainPageComponent', () => {
     //
     fixture.whenStable().then(() => {
       component.updateStatus(3);  // Intentar cambiar al estado "Completado"
-      console.log('Nuevo Status', component.task!.status);
+      // console.log('Nuevo Status', component.task!.status);
       fixture.detectChanges();
       fixture.whenStable().then(() => {
         expect(component.showWarning).toBe(true);
@@ -173,7 +171,7 @@ describe('TaskMainPageComponent', () => {
 
     // Cambiando el estado inicial de la tarea a "En revisión"
     component.task!.status = 2;
-    // 
+    //
     fixture.whenStable().then(() => {
       component.updateStatus(3);
       fixture.detectChanges();

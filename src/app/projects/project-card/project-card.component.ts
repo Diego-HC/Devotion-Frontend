@@ -37,6 +37,6 @@ export class ProjectCardComponent {
   @Input() id!: string;
   @Input() name!: string;
   @Input() description!: string;
-  @Input() colors!: { light: string; normal: string };
+  @Input() colors?: { light: string; normal: string };
   @Input() isLeader!: boolean;
 }

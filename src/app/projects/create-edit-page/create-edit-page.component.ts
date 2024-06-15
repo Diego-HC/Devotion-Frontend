@@ -217,7 +217,7 @@ export class CreateEditPageComponent implements OnInit, OnDestroy {
 
 
     if (this.projectForm.invalid) {
-      console.log("Invalid form.");
+      // console.log("Invalid form.");
       return;
     }
 

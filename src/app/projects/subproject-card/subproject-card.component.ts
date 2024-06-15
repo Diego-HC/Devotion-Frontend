@@ -33,7 +33,7 @@ export class SubprojectCardComponent {
     description: "",
     progress: 0,
   };
-  @Input() colors!: { light: string; normal: string };
+  @Input() colors?: { light: string; normal: string };
 
   id: string = "";
   name: string = "";
