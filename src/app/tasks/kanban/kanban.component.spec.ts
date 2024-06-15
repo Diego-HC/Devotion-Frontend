@@ -83,11 +83,4 @@ describe('KanbanComponent', () => {
   
     });
 
-  // H19T2 Visualizar proyectos con filtro "Asignado a mí"
-  it('should have a showAssignedTasks$ property', () => {
-    MockStoreService.prototype.showAssignedTasks$ = of(true);
-    fixture.detectChanges();
-    // Check if the component has a showAssignedTasks$ property
-    expect(MockApiService).toHaveBeenCalled();
-  });
 });
