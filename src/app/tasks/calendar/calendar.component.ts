@@ -5,7 +5,7 @@ import {
   ViewChild,
   ElementRef,
   OnDestroy,
-  HostListener,
+  ChangeDetectorRef,
   AfterViewInit
 } from '@angular/core';
 import { TaskPreviewComponent} from "../task-preview/task-preview.component";
@@ -52,7 +52,12 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre", "Enero"];
   weekdays = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
-  constructor(private api: ApiService, protected calService: CalendarService, protected store: StoreService) { }
+  constructor(
+    private api: ApiService,
+    protected calService: CalendarService,
+    protected store: StoreService,
+    protected cdr: ChangeDetectorRef
+  ) { }
 
   @ViewChild('calendarTable') calendarTable!: ElementRef<HTMLTableElement>;
   @ViewChild(TaskPreviewComponent) taskPreview!: TaskPreviewComponent;
@@ -80,6 +85,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
       this.useShortNames();
     }
     this.generateCalendar();
+    this.cdr.detectChanges();
   }
 
   ngOnDestroy() {

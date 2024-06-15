@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-priority-icon',
   template: `
-    <div class="{{ !animated && 'flex flex-row' }}">
+    <div class="{{ animated ? '' : 'flex flex-row' }}">
       <svg
         *ngIf="priority === 0"
         width="460"
