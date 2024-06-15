@@ -82,6 +82,24 @@ describe('TaskCreateEditPageComponent', () => {
         {
           provide: ApiService,
           useValue: {
+            get: (url: string) => {
+              return {
+                subscribe: () => {
+                  return [];
+                },
+              };
+            },
+            post: (url: string, data: any) => {
+              return {
+                subscribe: (fn: (value: any) => void) => {
+                  fn({
+                    id: taskId,
+                    name: "Task Name",
+                    description: "Task Description",
+                  });
+                }
+              };
+            },
             delete: (url: string) => {
               return {
                 subscribe: () => {
