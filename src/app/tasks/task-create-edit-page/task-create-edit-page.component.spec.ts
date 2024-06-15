@@ -207,4 +207,55 @@ describe('TaskCreateEditPageComponent', () => {
   it("should not create a subtask without having navigated through a project and task previously", () => {
     expect(mockStoreService.task.parentTask).toBe("");
   });
+
+  // H10T2 - Editar tarea: precargar datos en el formulario
+  // Autora: Alexa Jimena Ramírez Ortiz - A00833943
+  it('should preload task data into the form when edit', () => {
+    component.taskForm.controls["name"].setValue("Subtask Name");
+    component.taskForm.controls["description"].setValue("Subtask Description");
+    component.taskForm.controls["start_date"].setValue("2021-08-01");
+    component.taskForm.controls["due_date"].setValue("2021-08-31");
+    component.taskForm.controls["priority"].setValue(1);
+    component.taskForm.controls["assignee"].setValue({ id: "1", name: "User 1", email: "ola@ola.com", isLeader: true});
+
+    component.ngOnInit();
+    expect(component.taskForm.value).toEqual({
+      name: "Subtask Name",
+      description: "Subtask Description",
+      start_date: "2021-08-01",
+      due_date: "2021-08-31",
+      priority: 1,
+      assignee: { id: "1", name: "User 1", email: "ola@ola.com", isLeader: true }
+    });
+  });
+
+  // H10T3 = Happy Path: Editar tarea
+  // Autora: Alexa Jimena Ramírez Ortiz - A00833943
+  it('should edit a task', () => {
+    component.taskForm.controls["name"].setValue("Subtask Name");
+    component.taskForm.controls["description"].setValue("Subtask Description");
+    component.taskForm.controls["start_date"].setValue("2021-08-01");
+    component.taskForm.controls["due_date"].setValue("2021-08-31");
+    component.taskForm.controls["priority"].setValue(1);
+    component.taskForm.controls["assignee"].setValue({ id: "1", name: "User 1", email: "ola@ola.com", isLeader: true});
+
+    spyOn(component, "onSubmit").and.callThrough();
+    component.onSubmit();
+    expect(mockRouter.navigateByUrl).toHaveBeenCalledWith(`/task/${taskId}`);
+  });
+
+  // H10T4 - Editar tarea: intentar editar una tarea sin campos requeridos
+  // Autora: Alexa Jimena Ramírez Ortiz - A00833943
+  it('should not edit a task without required fields', () => {
+    component.taskForm.controls["description"].setValue("");
+    component.taskForm.controls["start_date"].setValue("");
+    component.taskForm.controls["due_date"].setValue("");
+    component.taskForm.controls["priority"].setValue(0);
+    component.taskForm.controls["assignee"].setValue({});
+    component.taskForm.controls["name"].setValue("");
+
+    spyOn(component, "onSubmit").and.callThrough();
+    component.onSubmit();
+    expect(component.taskForm.valid).toBeFalse();
+  });
 });
