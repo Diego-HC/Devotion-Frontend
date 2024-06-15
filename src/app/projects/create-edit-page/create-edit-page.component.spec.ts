@@ -78,6 +78,17 @@ describe("CreateEditPageComponent", () => {
                 },
               };
             },
+            put: (url: string, data: any) => {
+              return {
+                subscribe: (fn: (value: any) => void) => {
+                  fn({
+                    id: projectId,
+                    name: "Project Name",
+                    description: "Project Description",
+                  });
+                },
+              };
+            },
           },
         },
         {
@@ -244,5 +255,131 @@ describe("CreateEditPageComponent", () => {
     expect(mockRouter.navigateByUrl).toHaveBeenCalledWith(
       `/project/${projectId}`
     );
+  });
+
+  // Edición de proyecto
+  // H11T2 - Descripción: Precarga de datos
+  it("should preload the project data", () => {
+    mockStoreService.project = {
+      id: projectId,
+      name: "Project Name",
+      description: "Project Description",
+      parent: "",
+      leaders: [
+        {
+          id: "1",
+          name: "User 1",
+          email: "",
+          isLeader: true,
+        },
+      ],
+      members: [
+        {
+          id: "2",
+          name: "User 2",
+          email: "",
+          isLeader: false,
+        },
+      ],
+    };
+
+    component.ngOnInit();
+
+    expect(component.projectForm.controls["name"].value).toBe("Project Name");
+    expect(component.projectForm.controls["description"].value).toBe(
+      "Project Description"
+    );
+    expect(component.projectForm.controls["leaders"].value).toEqual([
+      {
+        id: "1",
+        name: "User 1",
+        email: "",
+        isLeader: true,
+      },
+    ]);
+    expect(component.projectForm.controls["members"].value).toEqual([
+      {
+        id: "2",
+        name: "User 2",
+        email: "",
+        isLeader: false,
+      },
+    ]);
+  });
+
+  // H11T3 - Descripción: Happy path de edición de proyecto
+  it("should edit a project and redirect the user to the project start page", () => {
+    mockStoreService.project = {
+      id: projectId,
+      name: "Project Name",
+      description: "Project Description",
+      parent: "",
+      leaders: [
+        {
+          id: "1",
+          name: "User 1",
+          email: "",
+          isLeader: true,
+        },
+      ],
+      members: [
+        {
+          id: "2",
+          name: "User 2",
+          email: "",
+          isLeader: false,
+        },
+      ],
+    };
+
+    component.ngOnInit();
+
+    component.projectForm.controls["name"].setValue("Project Name 2");
+    component.projectForm.controls["description"].setValue(
+      "Project Description 2"
+    );
+
+    spyOn(component, "onSubmit").and.callThrough();
+    component.onSubmit();
+
+    expect(mockRouter.navigateByUrl).toHaveBeenCalledWith(
+      `/project/${projectId}`
+    );
+  });
+
+  // H11T4 - Descripción: Datos inválidos en la edición de proyecto
+  it("should not edit a project with invalid data", () => {
+    mockStoreService.project = {
+      id: projectId,
+      name: "Project Name",
+      description: "Project Description",
+      parent: "",
+      leaders: [
+        {
+          id: "1",
+          name: "User 1",
+          email: "",
+          isLeader: true,
+        },
+      ],
+      members: [
+        {
+          id: "2",
+          name: "User 2",
+          email: "",
+          isLeader: false,
+        },
+      ],
+    };
+
+    component.ngOnInit();
+
+    component.projectForm.controls["name"].setValue("");
+    component.projectForm.controls["description"].setValue("");
+
+    spyOn(component, "onSubmit").and.callThrough();
+    component.onSubmit();
+
+    expect(component.projectForm.valid).toBeFalse();
   });
 });
