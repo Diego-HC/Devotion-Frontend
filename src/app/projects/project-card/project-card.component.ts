@@ -4,11 +4,11 @@ import { Component, Input } from "@angular/core";
   selector: "app-project-card",
   template: `
     <div class="flex flex-row gap-0 h-40">
-      <span class="w-2 rounded-l-md" [ngClass]="this.colors.normal"></span>
+      <span class="w-2 rounded-l-md" [ngClass]="this.colors?.normal"></span>
       <a href="/project/{{ this.id }}">
         <div
           class="card card-normal rounded-l-none rounded-md w-60 flex flex-col justify-between h-40"
-          [ngClass]="this.colors.light"
+          [ngClass]="this.colors?.light"
         >
           <div class="flex flex-col gap-2">
             <h2
@@ -19,7 +19,7 @@ import { Component, Input } from "@angular/core";
             @if (this.isLeader) {
             <div
               class="px-2 py-1 opacity-50 rounded-md w-fit text-white text-xs mx-6"
-              [ngClass]="this.colors.normal"
+              [ngClass]="this.colors?.normal"
             >
               <p class="opacity-100">{{ "Líder" }}</p>
             </div>

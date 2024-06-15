@@ -15,7 +15,7 @@ describe('CalendarComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(CalendarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -4,10 +4,10 @@ import { Component, Input } from "@angular/core";
   selector: "app-subproject-card",
   template: `
     <div class="flex flex-row h-24">
-      <span class="w-1.5 rounded-l-md" [ngClass]="this.colors.normal"></span>
+      <span class="w-1.5 rounded-l-md" [ngClass]="this.colors?.normal"></span>
       <app-protected-link href="/project/{{ this.id }}">
         <div
-          [ngClass]="this.colors.light"
+          [ngClass]="this.colors?.light"
           class="flex flex-row items-center px-3 gap-2 card card-compact rounded-l-none rounded-md w-48 h-full"
         >
           <div class="flex flex-col justify-around h-full">
