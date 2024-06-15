@@ -140,7 +140,7 @@ export class RoadmapComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
     } else {
-      console.warn('headerTable o bodyTable no están disponibles');
+      // console.warn('headerTable o bodyTable no están disponibles');
     }
   }
 

@@ -104,6 +104,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   applyColumnWidths() {
+    if (!this.headerTable || !this.bodyTable) return;
+
     const headerRows = this.headerTable.nativeElement.rows;
     const bodyRows = this.bodyTable.nativeElement.rows;
 
