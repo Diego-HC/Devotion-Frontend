@@ -11,6 +11,7 @@ import { DashboardMainPageComponent } from "./dashboards/dashboard-main-page/das
 import { ProjectMembersPageComponent } from "./projects/project-members-page/project-members-page.component";
 import { InvitePageComponent } from "./shared/invite-page/invite-page.component";
 import { InviteDashboardComponent } from "./shared/invite-dashboard/invite-dashboard.component";
+import { ShowoffComponent } from "./shared/showoff/showoff.component";
 
 const routes: Routes = [
   { path: "", component: LandingPageComponent },
@@ -65,6 +66,10 @@ const routes: Routes = [
   {
     path: "invite/:inviteId/members",
     component: ProjectMembersPageComponent,
+  },
+  {
+    path: "showoff",
+    component: ShowoffComponent,
   },
   {
     path: "**",
