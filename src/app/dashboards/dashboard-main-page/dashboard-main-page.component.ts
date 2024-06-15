@@ -71,7 +71,7 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
               [results]="response.tasksByStatus.data"
               [scheme]="colorScheme"
               [xAxis]="true"
-              [yAxis]="true"
+              [showDataLabel]="true"
             />
             <ngx-charts-bar-horizontal
               *ngIf="response.tasksByStatus.displayType === W.horizontalBar.valueOf()"
@@ -79,6 +79,7 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
               [results]="response.tasksByStatus.data"
               [scheme]="colorScheme"
               [yAxis]="true"
+              [showDataLabel]="true"
             />
           </app-widget>
           <app-widget
@@ -102,6 +103,7 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
               [scheme]="colorScheme"
               [xAxis]="true"
               [yAxis]="true"
+              [showDataLabel]="true"
             />
             <ngx-charts-bar-horizontal
               *ngIf="response.doneTasksByDate.displayType === W.horizontalBar.valueOf()"
@@ -109,6 +111,7 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
               [results]="response.doneTasksByDate.data"
               [scheme]="colorScheme"
               [yAxis]="true"
+              [showDataLabel]="true"
             />
             <ngx-charts-heat-map
               *ngIf="response.doneTasksByDate.displayType === W.heatMap.valueOf()"
@@ -135,6 +138,7 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
               [results]="response.tasksByPriority.data"
               [scheme]="colorScheme"
               [yAxis]="true"
+              [showDataLabel]="true"
             />
             <ngx-charts-bar-vertical
               *ngIf="response.tasksByPriority.displayType === W.verticalBar.valueOf()"
@@ -143,6 +147,7 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
               [scheme]="colorScheme"
               [xAxis]="true"
               [yAxis]="true"
+              [showDataLabel]="true"
             />
             <ngx-charts-pie-chart
               *ngIf="response.tasksByPriority.displayType === W.pie.valueOf()"
@@ -188,6 +193,7 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
               [scheme]="colorScheme"
               [xAxis]="true"
               [yAxis]="true"
+              [showDataLabel]="true"
             />
             <ngx-charts-bar-horizontal
               *ngIf="response.userWorkload.displayType === W.horizontalBar.valueOf()"
@@ -195,6 +201,7 @@ import { WidgetDisplayType } from "../widget/widget-display-type";
               [results]="response.userWorkload.data"
               [scheme]="colorScheme"
               [yAxis]="true"
+              [showDataLabel]="true"
             />
             <ngx-charts-number-card
               *ngIf="response.userWorkload.displayType === W.numbers.valueOf()"
