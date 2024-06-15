@@ -125,6 +125,27 @@ describe('TaskCreateEditPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  // H5T1 - Descripción: Crear una tarea (happy path)
+  it("should create a task", () => {
+    component.taskForm.controls["name"].setValue("Task Name");
+    component.taskForm.controls["description"].setValue(
+      "Subtask Description"
+    );
+    component.taskForm.controls["start_date"].setValue("2021-08-01");
+    component.taskForm.controls["due_date"].setValue("2021-08-31");
+    component.taskForm.controls["priority"].setValue(1);
+
+    mockStoreService.task.parentTask = undefined;
+    mockStoreService.task.assignee = { id: "1", name: "User 1", email: "ola@ola.com", isLeader: true };
+
+    spyOn(component, "onSubmit").and.callThrough();
+    component.onSubmit();
+
+    expect(mockRouter.navigateByUrl).toHaveBeenCalledWith(
+      `/task/${taskId}`
+    );
+  });
+
   // H15T1 - Descripción: Crear una subtarea (anidada una vez) (happy path)
   // Leonardo Corona Garza
   it("should create a subtask (nested one level)", () => {

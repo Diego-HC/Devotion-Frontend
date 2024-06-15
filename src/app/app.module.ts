@@ -73,6 +73,7 @@ import { InviteMembersComponent } from './shared/invite-members/invite-members.c
 import { LinkIconComponent } from './shared/icons/link-icon/link-icon.component';
 import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {BarChartModule, HeatMapModule, NgxChartsModule, PieChartModule} from "@swimlane/ngx-charts";
+import { ShowoffComponent } from './shared/showoff/showoff.component';
 
 @NgModule({
   declarations: [
@@ -135,6 +136,7 @@ import {BarChartModule, HeatMapModule, NgxChartsModule, PieChartModule} from "@s
     InviteDashboardComponent,
     InviteMembersComponent,
     LinkIconComponent,
+    ShowoffComponent,
   ],
   imports: [
     BrowserModule,
