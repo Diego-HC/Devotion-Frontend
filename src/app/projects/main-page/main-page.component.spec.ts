@@ -17,6 +17,7 @@ import { KanbanIconComponent } from "../../shared/icons/kanban-icon/kanban-icon.
 import { CalendarIconComponent } from "../../shared/icons/calendar-icon/calendar-icon.component";
 import { RoadmapIconComponent } from "../../shared/icons/roadmap-icon/roadmap-icon.component";
 import { TableComponent } from "../../tasks/table/table.component";
+import { LinkIconComponent } from "../../shared/icons/link-icon/link-icon.component";
 
 function waitForProperty<T>(
   getter: () => T,
@@ -57,7 +58,8 @@ describe("MainPageComponent", () => {
         KanbanIconComponent,
         CalendarIconComponent,
         RoadmapIconComponent,
-        TableComponent
+        TableComponent,
+        LinkIconComponent,
       ],
       providers: [
         {
@@ -88,10 +90,13 @@ describe("MainPageComponent", () => {
           provide: ActivatedRoute,
           useValue: {
             params: {
-              subscribe: (fn: (value: any) => void) =>
-                fn({
-                  id: "632fe89d-7afe-4f8d-ac36-81fb51f63c5a",
-                }),
+              pipe: () => {
+                return {
+                  subscribe: (fn: (value: any) => void) => {
+                    fn({ id: "1" });
+                  },
+                };
+              }
             },
           },
         },

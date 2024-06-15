@@ -88,7 +88,9 @@ export class StoreService {
 
   updateProjectFromResponse(projectResponse: ProjectResponse) {
     this.pageWasReloaded = false;
-    this.userPool = [...projectResponse.members, ...projectResponse.leaders];
+    if (Array.isArray(projectResponse.members) && Array.isArray(projectResponse.leaders)) {
+      this.userPool = [...projectResponse.members, ...projectResponse.leaders];
+    }
     this.project = {
       ...projectResponse,
     }
