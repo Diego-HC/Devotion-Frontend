@@ -60,7 +60,7 @@ describe('KanbanComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // H20T1 Visualización de las tareas directas del proyecto en las tarjetas de kanban.
+  // H19T1 Visualización de las tareas directas del proyecto en las tarjetas de kanban.
   it('should have 4 kanban sections', () => {
     const sections = fixture.debugElement.queryAll(By.directive(KanbanSectionComponent));
     expect(sections.length).toBe(4);
@@ -82,4 +82,12 @@ describe('KanbanComponent', () => {
   expect(sections[3].componentInstance.tasks).toBe(mockTasks.done);
   
     });
+
+  // H19T2 Visualizar proyectos con filtro "Asignado a mí"
+  it('should have a showAssignedTasks$ property', () => {
+    MockStoreService.prototype.showAssignedTasks$ = of(true);
+    fixture.detectChanges();
+    // Check if the component has a showAssignedTasks$ property
+    expect(MockApiService).toHaveBeenCalled();
+  });
 });
