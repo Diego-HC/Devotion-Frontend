@@ -18,6 +18,14 @@ import { CalendarIconComponent } from "../../shared/icons/calendar-icon/calendar
 import { RoadmapIconComponent } from "../../shared/icons/roadmap-icon/roadmap-icon.component";
 import { TableComponent } from "../../tasks/table/table.component";
 import { LinkIconComponent } from "../../shared/icons/link-icon/link-icon.component";
+import { TaskPreviewComponent } from "../../tasks/task-preview/task-preview.component";
+import { XIconComponent } from "../../shared/icons/x-icon/x-icon.component";
+import { TaskPreviewInfoComponent } from "../../tasks/task-preview-info/task-preview-info.component";
+import { FullscreenIconComponent } from "../../shared/icons/fullscreen-icon/fullscreen-icon.component";
+import { PriorityIconComponent } from "../../shared/icons/priority-icon/priority-icon.component";
+import { BadgeComponent } from "../../shared/badge/badge.component";
+import { KanbanSectionComponent } from "../../kanban-section/kanban-section.component";
+import { KanbanComponent } from "../../tasks/kanban/kanban.component";
 
 function waitForProperty<T>(
   getter: () => T,
@@ -68,26 +76,63 @@ describe("MainPageComponent", () => {
         RoadmapIconComponent,
         TableComponent,
         LinkIconComponent,
+        TaskPreviewComponent,
+        XIconComponent,
+        TaskPreviewInfoComponent,
+        FullscreenIconComponent,
+        PriorityIconComponent,
+        BadgeComponent,
+        KanbanComponent,
+        KanbanSectionComponent,
       ],
       providers: [
         {
           provide: ApiService,
           useValue: {
             // return an observable that emits a response
-            get: (id: string) => {
+            get: (url: string) => {
+              if (url.startsWith("tasks")) {
+                return {
+                  subscribe: (fn: (value: any) => void) => {
+                    fn({
+                      id: "632fe89d-7afe-4f8d-ac36-81fb51f63c5c",
+                      name: "Task Name",
+                      description: "Task Description",
+                      startDate: "2021-12-31",
+                      dueDate: "2022-01-31",
+                      assignee: {
+                        name: "Assignee Name",
+                      },
+                      priority: 1,
+                      status: 1,
+                      parentProject: "Parent Project",
+                      tasks: [],
+                      breadcrumbs: [],
+                    });
+                  },
+                };
+              }
+
               return {
                 subscribe: (fn: (value: any) => void) => {
                   fn({
-                    id,
-                    name: "Project Name",
-                    description: "Project Description",
-                    parent: "Parent Project",
-                    members: [],
-                    leaders: [],
-                    breadcrumbs: [],
-                    progress: 0.5,
-                    projects: [],
-                    tasks: [],
+                    id: "632fe89d-7afe-4f8d-ac36-81fb51f63c5c",
+                    name: "Task Name",
+                    description: "Task Description",
+                    assignee: {
+                      name: "Assignee Name",
+                    },
+                    startDate: "2021-12-31",
+                    dueDate: "2022-01-31",
+                  });
+                },
+              };
+            },
+            put: (url: string, body: any) => {
+              return {
+                subscribe: (fn: (value: any) => void) => {
+                  fn({
+                    status: body.status,
                   });
                 },
               };
@@ -98,11 +143,36 @@ describe("MainPageComponent", () => {
           provide: ActivatedRoute,
           useValue: {
             params: {
+              subscribe: (fn: (value: any) => void) =>
+                fn({
+                  id: "632fe89d-7afe-4f8d-ac36-81fb51f63c5a",
+                }),
               pipe: () => {
                 return {
-                  subscribe: (fn: (value: any) => void) => {
-                    fn({ id: "1" });
-                  },
+                  subscribe: (fn: (value: any) => void) =>
+                    fn({
+                      id: "632fe89d-7afe-4f8d-ac36-81fb51f63c5a",
+                      name: "Project Name",
+                      description: "Project Description",
+                      parent: "Parent Project",
+                      members: [],
+                      leaders: [],
+                      breadcrumbs: [],
+                      progress: 0.5,
+                      projects: [],
+                      tasks: [
+                        {
+                          id: "632fe89d-7afe-4f8d-ac36-81fb51f63c5c",
+                          name: "Task Name",
+                          description: "Task Description",
+                          assignee: {
+                            name: "Assignee Name",
+                          },
+                          startDate: "2021-12-31",
+                          dueDate: "2022-01-31",
+                        },
+                      ],
+                    }),
                 };
               }
             },
@@ -127,11 +197,38 @@ describe("MainPageComponent", () => {
     expect(component).toBeTruthy();
   });
 
-  // •CA1H2 - Visualización: Desde la vista del proyecto principal, debe aparecer un botón para agregar un subproyecto
-  // Diego Hernandez
-  it("should have a button to add a subproject", () => {
-    const button = fixture.debugElement.query(By.css("#newSubprojectButton"));
-    expect(button).toBeTruthy();
+  // CA1HU21: La aplicación debe mostrar la información actualizada de una tarea al hacer click en la misma en cualquier vista (tabla, kanban, calendario, roadmap)
+
+  // H20T1: Previsualizar la información de una tarea al hacer click en la misma en la vista de tabla
+  it("should show the task preview when a task is clicked in the table view", async () => {
+    const tableComponent = fixture.debugElement.query(By.directive(TableComponent))
+      .componentInstance as TableComponent;
+
+    tableComponent.selectedTaskId = "632fe89d-7afe-4f8d-ac36-81fb51f63c5a";
+    fixture.detectChanges();
+
+    const taskPreview = fixture.debugElement.query(By.directive(TaskPreviewComponent));
+    expect(taskPreview).toBeTruthy();
+  });
+
+  // CA2HU21: La aplicación debe permitir actualizar dentro del modal el status de tarea.
+
+  // H20T5: Actualizar el status de una tarea desde el modal
+  it("should update the status of a task from the modal", async () => {
+    const tableComponent = fixture.debugElement.query(By.directive(TableComponent))
+      .componentInstance as TableComponent;
+
+    tableComponent.applyColumnWidths = () => {}
+
+    tableComponent.selectedTaskId = "632fe89d-7afe-4f8d-ac36-81fb51f63c5a";
+    fixture.detectChanges();
+
+    const taskPreviewInfo = fixture.debugElement.query(By.directive(TaskPreviewInfoComponent)).componentInstance as TaskPreviewInfoComponent;
+
+    taskPreviewInfo.updateStatus(1);
+    fixture.detectChanges();
+
+    expect(taskPreviewInfo.task?.status).toBe(1);
   });
 
   // Edición de proyecto
@@ -144,3 +241,23 @@ describe("MainPageComponent", () => {
     expect(mockRouter.navigateByUrl).toHaveBeenCalledWith("/edit/project");
   });
 });
+
+  // H20T2: Previsualizar la información de una tarea al hacer click en la misma en la vista de kanban
+  // it("should show the task preview when a task is clicked in the kanban view", async () => {
+  //   const kanbanIcon = fixture.debugElement.query(By.directive(KanbanIconComponent));
+  //   kanbanIcon.nativeElement.click();
+  //   fixture.detectChanges();
+
+  //   const kanbanComponent = fixture.debugElement.query(By.directive(KanbanSectionComponent))
+  //     .componentInstance as KanbanSectionComponent;
+
+  //   kanbanComponent.showTaskPreview("632fe89d-7afe-4f8d-ac36-81fb51f63c5a");
+  //   fixture.detectChanges();
+
+  //   const taskPreview = fixture.debugElement.query(By.directive(TaskPreviewComponent));
+  //   expect(taskPreview).toBeTruthy();
+  // });
+
+  // H20T2: Previsualizar la información de una tarea al hacer click en la misma en la vista de calendario
+
+  // H20T2: Previsualizar la información de una tarea al hacer click en la misma en la vista de roadmap
