@@ -151,4 +151,98 @@ describe("CreateEditPageComponent", () => {
       `/project/${projectId}`
     );
   });
+
+  // H13T1 - Descripción: El usuario crea un subproyecto exitosamente (happy path)
+  it("should create a subproject and redirect the user to the project start page", () => {
+    mockStoreService.project.parent = "64b6f1b0-0b1b-4b3b-8b3b-3b3b3b3b3b3b";
+    component.projectForm.controls["name"].setValue("Project Name");
+    component.projectForm.controls["description"].setValue(
+      "Project Description"
+    );
+    mockStoreService.project.leaders = [
+      { id: "1", name: "User 1", email: "ola@ola.com", isLeader: true },
+    ];
+    mockStoreService.project.members = [
+      { id: "1", name: "User 1", email: "ola2@ola.com", isLeader: false },
+    ];
+
+    spyOn(component, "onSubmit").and.callThrough();
+    component.onSubmit();
+
+    expect(mockRouter.navigateByUrl).toHaveBeenCalledWith(
+      `/project/${projectId}`
+    );
+  });
+
+  // H13T2 - Descripción: El sistema no da de alta un subproyecto sin nombre
+  it("should not create a subproject without a name", () => {
+    mockStoreService.project.parent = "64b6f1b0-0b1b-4b3b-8b3b-3b3b3b3b3b3b";
+    component.projectForm.controls["description"].setValue(
+      "Project Description"
+    );
+    mockStoreService.project.leaders = [
+      { id: "1", name: "User 1", email: "ola@ola.com", isLeader: true },
+    ];
+    mockStoreService.project.members = [
+      { id: "1", name: "User 1", email: "ola2@ola.com", isLeader: false },
+    ];
+
+    spyOn(component, "onSubmit").and.callThrough();
+    component.onSubmit();
+
+    expect(component.projectForm.valid).toBeFalse();
+  });
+
+  // H13T3 - Descripción: El sistema no da de alta un subproyecto sin descripción
+  it("should not create a subproject without a description", () => {
+    mockStoreService.project.parent = "64b6f1b0-0b1b-4b3b-8b3b-3b3b3b3b3b3b";
+    component.projectForm.controls["name"].setValue("Project Name");
+    mockStoreService.project.leaders = [
+      { id: "1", name: "User 1", email: "ola@ola.com", isLeader: true },
+    ];
+    mockStoreService.project.members = [
+      { id: "1", name: "User 1", email: "ola2@ola.com", isLeader: false },
+    ];
+
+    spyOn(component, "onSubmit").and.callThrough();
+    component.onSubmit();
+
+    expect(component.projectForm.valid).toBeFalse();
+  });
+
+  // H13T4 - Descripción: El sistema no da de alta un subproyecto sin líderes
+  it("should not create a subproject without leaders", () => {
+    mockStoreService.project.parent = "64b6f1b0-0b1b-4b3b-8b3b-3b3b3b3b3b3b";
+    component.projectForm.controls["name"].setValue("Project Name");
+    component.projectForm.controls["description"].setValue(
+      "Project Description"
+    );
+    mockStoreService.project.members = [
+      { id: "1", name: "User 1", email: "ola2@ola.com", isLeader: false },
+    ];
+
+    spyOn(component, "onSubmit").and.callThrough();
+    component.onSubmit();
+
+    expect(component.projectForm.valid).toBeFalse();
+  });
+
+  // H13T5 - Descripción: El sistema da de alta un subproyecto sin miembros del proyecto
+  it("should create a subproject without project members", () => {
+    mockStoreService.project.parent = "64b6f1b0-0b1b-4b3b-8b3b-3b3b3b3b3b3b";
+    component.projectForm.controls["name"].setValue("Project Name");
+    component.projectForm.controls["description"].setValue(
+      "Project Description"
+    );
+    mockStoreService.project.leaders = [
+      { id: "1", name: "User 1", email: "ola@ola.com", isLeader: true },
+    ];
+
+    spyOn(component, "onSubmit").and.callThrough();
+    component.onSubmit();
+
+    expect(mockRouter.navigateByUrl).toHaveBeenCalledWith(
+      `/project/${projectId}`
+    );
+  });
 });
